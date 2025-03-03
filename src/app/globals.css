@@ -116,5 +116,5 @@
 }
 
 .px-default {
-  @apply px-5 md:px-10 lg:px-20 xl:px-40;
+  @apply px-5 max-w-[1700px] mx-auto md:px-10 lg:px-20 xl:px-40;
 }

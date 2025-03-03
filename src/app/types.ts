@@ -3,8 +3,8 @@ export type TeacherProps = {
     name: string;
     totalRatingValue: number;
     numberOfVotes: number;
-    subject: string;
-    university: string;
+    subject: string[];
+    university: string[];
     graphX?: number;
     graphY?: number;
     timestamp: number;

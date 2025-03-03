@@ -1,11 +1,11 @@
 import Banner from "@/components/Banner";
-import Navbar from "@/components/Navbar";
+import Presentation from "@/components/Presentation";
 
 export default function Home() {
   return (
-    <div className="font-[family-name:var(--font-montserrat)]">
+    <div className="px-default flex flex-col">
       <Banner />
-      <Navbar />
+      <Presentation />
     </div>
   );
 }
