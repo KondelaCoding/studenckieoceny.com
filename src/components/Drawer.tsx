@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Minus, Plus } from "lucide-react";
-import Modal from "./Modal";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -25,6 +24,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Toaster } from "./ui/sonner";
+import { toast } from "sonner";
 
 export function DrawerDemo() {
   const [goal, setGoal] = React.useState(350);
@@ -35,9 +36,10 @@ export function DrawerDemo() {
 
   return (
     <div>
+      <Toaster closeButton={true} />
       <Drawer>
         <DrawerTrigger asChild>
-          <Button variant="outline">Dodaj Prowadzącego</Button>
+          <Button>Dodaj Prowadzącego</Button>
         </DrawerTrigger>
         <DrawerContent>
           <div className="mx-auto w-full max-w-sm">
@@ -89,7 +91,7 @@ export function DrawerDemo() {
                   <AlertDialogFooter>
                     <AlertDialogCancel>Anuluj</AlertDialogCancel>
                     <AlertDialogAction asChild>
-                      <DrawerClose>
+                      <DrawerClose onClick={() => toast("Prowadzący dodany!")}>
                         <>Dalej</>
                       </DrawerClose>
                     </AlertDialogAction>

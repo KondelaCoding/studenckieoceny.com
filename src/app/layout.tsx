@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.variable} antialiased font-[family-name:var(--font-montserrat)] flex justify-between flex-col min-h-screen`}
+        className={`${montserrat.variable} antialiased font-[family-name:var(--font-montserrat)] flex justify-between flex-col min-h-screen pt-20`}
       >
         <Navbar />
         {children}

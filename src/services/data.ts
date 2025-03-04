@@ -1,89 +1,134 @@
-export interface iProfile {
-    name: string;
-    email: string;
-    photo: string;
-    username: string;
-    role: "Frontend Developer" | "Backend Developer" | "Fullstack Developer";
-}
+import { TeacherProps } from "@/app/types";
 
-export const data: iProfile[] = [];
-
-// generate random names
-
-const RandomNames = [
-    "Alice",
-    "Bob",
-    "Charlie",
-    "David",
-    "Eve",
-    "Frank",
-    "Grace",
-    "Henry",
-    "Ivy",
-    "Jack",
-    "Kate",
-    "Liam",
-    "Mia",
-    "Noah",
-    "Olivia",
-    "Peter",
-    "Quinn",
-    "Rose",
-    "Sam",
-    "Tina",
-    "Uma",
-    "Victor",
-    "Wendy",
-    "Xander",
-    "Yara",
-    "Zane",
-    "Abigail",
-    "Benjamin",
-    "Chloe",
-    "Daniel",
-    "Emily",
-    "Fiona",
-    "George",
-    "Hannah",
-    "Isaac",
-    "Julia",
-    "Kevin",
-    "Lily",
-    "Mason",
-    "Nora",
-    "Oscar",
-    "Penelope",
-    "Quentin",
-    "Rachel",
-    "Simon",
-    "Tiffany",
-    "Ulysses",
-    "Violet",
-    "William",
-    "Xavier",
-    "Yasmine",
-    "Zoey",
-    "Stephen",
-    "Gerrard",
-    "Adewale",
+export const teachers: TeacherProps[] = [
+    {
+        id: 1,
+        name: "John Doe",
+        totalRatingValue: 20,
+        numberOfVotes: 5,
+        subject: ["Matematyka", "Fizyka"],
+        university: ["Politechnika Wrocławska", "Politechnika Poznańska"],
+        timestamp: 1,
+    },
+    {
+        id: 2,
+        name: "Marek Marucha",
+        totalRatingValue: 15,
+        numberOfVotes: 3,
+        subject: ["Matematyka", "Informatyka"],
+        university: ["Politechnika Wrocławska", "Politechnika Poznańska"],
+        timestamp: 2,
+    },
+    {
+        id: 3,
+        name: "Anna Kowalska",
+        totalRatingValue: 25,
+        numberOfVotes: 7,
+        subject: ["Analiza Matematyczna", "Fizyka"],
+        university: ["Uniwersytet Wrocławski", "Politechnika Wrocławska"],
+        timestamp: 3,
+    },
+    {
+        id: 4,
+        name: "Piotr Nowak",
+        totalRatingValue: 30,
+        numberOfVotes: 10,
+        subject: ["Podstawy Elektroniki", "Informatyka"],
+        university: [
+            "Politechnika Wrocławska",
+            "Uniwersytet Ekonomiczny we Wrocławiu",
+        ],
+        timestamp: 4,
+    },
+    {
+        id: 5,
+        name: "Katarzyna Wiśniewska",
+        totalRatingValue: 18,
+        numberOfVotes: 4,
+        subject: ["Podstawy Programowania", "Systemy Operacyjne"],
+        university: [
+            "Politechnika Poznańska",
+            "Uniwersytet Przyrodniczy we Wrocławiu",
+        ],
+        timestamp: 5,
+    },
+    {
+        id: 6,
+        name: "Tomasz Zieliński",
+        totalRatingValue: 22,
+        numberOfVotes: 6,
+        subject: ["Technologie Sieciowe", "Teoria Obwodów"],
+        university: [
+            "Uniwersytet Medyczny we Wrocławiu",
+            "Politechnika Wrocławska",
+        ],
+        timestamp: 6,
+    },
+    {
+        id: 7,
+        name: "Agnieszka Lewandowska",
+        totalRatingValue: 28,
+        numberOfVotes: 8,
+        subject: ["Teoria Sygnałów", "Fizyka"],
+        university: [
+            "Uniwersytet Muzyczny we Wrocławiu",
+            "Uniwersytet Wrocławski",
+        ],
+        timestamp: 7,
+    },
+    {
+        id: 8,
+        name: "Janusz Kowalski",
+        totalRatingValue: 35,
+        numberOfVotes: 12,
+        subject: ["Informatyka", "Systemy Operacyjne"],
+        university: [
+            "Politechnika Wrocławska",
+            "Uniwersytet Ekonomiczny we Wrocławiu",
+        ],
+        timestamp: 8,
+    },
+    {
+        id: 9,
+        name: "Ewa Nowicka",
+        totalRatingValue: 40,
+        numberOfVotes: 15,
+        subject: ["Analiza Matematyczna", "Podstawy Elektroniki"],
+        university: ["Uniwersytet Wrocławski", "Politechnika Poznańska"],
+        timestamp: 9,
+    },
+    {
+        id: 10,
+        name: "Michał Kwiatkowski",
+        totalRatingValue: 45,
+        numberOfVotes: 20,
+        subject: ["Teoria Obwodów", "Technologie Sieciowe"],
+        university: [
+            "Uniwersytet Przyrodniczy we Wrocławiu",
+            "Uniwersytet Medyczny we Wrocławiu",
+        ],
+        timestamp: 10,
+    },
 ];
 
-// Generate 50 sample profiles
-for (let i = 1; i <= RandomNames.length; i++) {
-    if (RandomNames[i]) {
-        const profile: iProfile = {
-            name: RandomNames[i],
-            role: i % 3 === 0
-                ? "Backend Developer"
-                : i % 2 === 0
-                ? "Frontend Developer"
-                : "Fullstack Developer",
-            email: `${RandomNames[i].toLowerCase()}@example.com`,
-            username: `user${RandomNames[i].toLowerCase()}_username`,
-            photo: `https://source.unsplash.com/random/200x200?sig=${i}`,
-        };
-        data.push(profile);
-    } else {
-        console.error("Please wait...");
-    }
-}
+export const subjects = [
+    "Analiza Matematyczna",
+    "Fizyka",
+    "Informatyka",
+    "Podstawy Elektroniki",
+    "Podstawy Programowania",
+    "Systemy Operacyjne",
+    "Technologie Sieciowe",
+    "Teoria Obwodów",
+    "Teoria Sygnałów",
+];
+
+export const universities = [
+    "Politechnika Wrocławska",
+    "Uniwersytet Wrocławski",
+    "Uniwersytet Przyrodniczy we Wrocławiu",
+    "Uniwersytet Ekonomiczny we Wrocławiu",
+    "Uniwersytet Medyczny we Wrocławiu",
+    "Uniwersytet Muzyczny we Wrocławiu",
+    "Politechnika Poznańska",
+];

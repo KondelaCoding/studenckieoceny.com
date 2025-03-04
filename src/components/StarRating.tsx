@@ -15,7 +15,7 @@ const StarRating = ({ numberOfVotes, totalValue }: { numberOfVotes: number; tota
             />
           ))}
         </div>
-        <Dot size={24} fill="var(--accent)" className="text-primary" />
+        <Dot size={24} fill="var(--accent)" className="text-muted-foreground" />
         <div className="text-muted-foreground">
           {rating}
           {` (${numberOfVotes})`}
