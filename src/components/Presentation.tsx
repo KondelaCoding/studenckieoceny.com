@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import StarRating from "./StarRating";
-import QuadrantAnalysis from "./QuadrantAnalysis";
 import { VenetianMask, ChartLine, Globe } from "lucide-react";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts";
@@ -27,12 +26,19 @@ const cardData = [
     header: "Prowadzący z całej Polski",
     description: "Jury w postaci studentów mogących ocenić dowolnego prowadzącego na dowolnej uczelni.",
     icon: <Globe />,
-    presentation: [1, 2, 3, 4, 5].map((i) => <StarRating key={i} rating={i} />),
+    presentation: (
+      <div className="w-fit gap-3 flex flex-col h-full items-start">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <StarRating key={i} numberOfVotes={i} totalValue={i * i} />
+        ))}
+      </div>
+    ),
   },
   {
     header: "Innowacyjny sposób oceniania",
     description: "Zainspirowany rozsyłanymi zdjęciami, wykres 'cech' prowadzącego",
     icon: <ChartLine />,
+    // TODO: Change label in tooltip from "value" to something else
     presentation: (
       <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px] w-full">
         <RadarChart data={chartData}>
@@ -63,7 +69,9 @@ const Presentation = () => {
             </CardTitle>
             <CardDescription>{card.description}</CardDescription>
           </CardHeader>
-          <CardContent className="flex justify-center flex-col items-center gap-5">{card.presentation}</CardContent>
+          <CardContent className="flex justify-center flex-col items-center gap-5 h-full">
+            {card.presentation}
+          </CardContent>
         </Card>
       ))}
     </div>
