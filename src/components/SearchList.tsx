@@ -1,24 +1,18 @@
-import { TeacherProps } from "@/types";
+import { ReturnedTeacherProps } from "@/types";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import StarRating from "./StarRating";
 import Link from "next/link";
 import DrawerDemo from "./Drawer";
-import { split } from "@/lib/utils";
 
-const SearchList = async ({ teachers, query }: { teachers: TeacherProps[]; query?: string }) => {
+const SearchList = async ({ teachers, query }: { teachers: ReturnedTeacherProps[]; query?: string }) => {
   //TODO: make the filters get the data from propper place instead of a query
-
-  const getPrimarySubject = (subjects: string) => {
-    return;
-  };
-
-  const filterName = (teacher: TeacherProps) => {
+  const filterName = (teacher: ReturnedTeacherProps) => {
     return teacher.name.toLowerCase().includes((query ?? "").toLowerCase());
   };
-  const filterSubject = (subjects: string[]) => {
+  const filterSubject = (subjects: string) => {
     return subjects[0].toLowerCase().includes((query ?? "").toLowerCase());
   };
-  const filterUniversity = (universities: string[]) => {
+  const filterUniversity = (universities: string) => {
     return universities[0].toLowerCase().includes((query ?? "").toLowerCase());
   };
 
@@ -48,7 +42,7 @@ const SearchList = async ({ teachers, query }: { teachers: TeacherProps[]; query
               </TableCell>
             </TableRow>
           ) : (
-            filteredTeachers.map((teacher: TeacherProps) => (
+            filteredTeachers.map((teacher: ReturnedTeacherProps) => (
               <TableRow key={teacher.id}>
                 <TableCell>
                   <Link href={`profile/${teacher.name.toLowerCase().replace(" ", "+")}`} className="hover:underline">

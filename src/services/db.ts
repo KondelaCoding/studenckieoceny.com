@@ -1,5 +1,5 @@
 import sqlite3 from "sqlite3";
-import { Comment, TeacherProps } from "@/types";
+import { Comment, ReturnedTeacherProps, TeacherProps } from "@/types";
 
 export const db = new sqlite3.Database("database.db");
 
@@ -65,10 +65,6 @@ export const init = () => {
     });
 };
 
-//TODO: I cant seem to get this to work, i need the object to give array of numbers as universities and subjects but the functions in list are not working, i need to fix this
-
-// Update: I can now show the data properly, but adding teachers doesnt work
-
 export const addTeacher = async (teacher: TeacherProps) => {
     return new Promise<void>((resolve, reject) => {
         db.run(
@@ -127,7 +123,7 @@ export const addTeacher = async (teacher: TeacherProps) => {
 // Example function to get teachers with their universities and subjects
 export const getTeachers = () => {
     return new Promise((resolve, reject) => {
-        db.all(
+        db.all<ReturnedTeacherProps>(
             `SELECT t.*, 
                     GROUP_CONCAT(DISTINCT u.name) AS universities, 
                     GROUP_CONCAT(DISTINCT s.name) AS subjects 
