@@ -1,25 +1,33 @@
-import { TeacherProps } from "@/app/types";
-import { teachers } from "@/services/data";
+import { TeacherProps } from "@/types";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import StarRating from "./StarRating";
 import Link from "next/link";
 import DrawerDemo from "./Drawer";
+import { split } from "@/lib/utils";
 
-const SearchList = async ({ query }: { query?: string }) => {
+const SearchList = async ({ teachers, query }: { teachers: TeacherProps[]; query?: string }) => {
   //TODO: make the filters get the data from propper place instead of a query
+
+  const getPrimarySubject = (subjects: string) => {
+    return;
+  };
+
   const filterName = (teacher: TeacherProps) => {
     return teacher.name.toLowerCase().includes((query ?? "").toLowerCase());
   };
-  const filterSubject = (teacher: TeacherProps) => {
-    return teacher.subject[0].toLowerCase().includes((query ?? "").toLowerCase());
+  const filterSubject = (subjects: string[]) => {
+    return subjects[0].toLowerCase().includes((query ?? "").toLowerCase());
   };
-  const filterUniversity = (teacher: TeacherProps) => {
-    return teacher.university[0].toLowerCase().includes((query ?? "").toLowerCase());
+  const filterUniversity = (universities: string[]) => {
+    return universities[0].toLowerCase().includes((query ?? "").toLowerCase());
   };
 
-  const filteredTeachers = teachers.filter(
-    (teacher) => filterName(teacher) || filterSubject(teacher) || filterUniversity(teacher)
-  );
+  const filteredTeachers =
+    teachers.filter(
+      (teacher) => filterName(teacher)
+      // || filterSubject(subjectsArray) || filterUniversity(universitiesArray)
+    ) || [];
+  console.log(filteredTeachers);
   return (
     <div>
       <Table>
@@ -48,8 +56,8 @@ const SearchList = async ({ query }: { query?: string }) => {
                     {teacher.name}
                   </Link>
                 </TableCell>
-                <TableCell>{teacher.subject[0]}</TableCell>
-                <TableCell>{teacher.university[0]}</TableCell>
+                <TableCell>{teacher.subjects ? teacher.subjects.split(",")[0] : "null"}</TableCell>
+                <TableCell>{teacher.universities ? teacher.universities.split(",")[0] : "null"}</TableCell>
                 <TableCell>
                   <StarRating numberOfVotes={teacher.numberOfVotes} totalValue={teacher.totalRatingValue} />
                 </TableCell>

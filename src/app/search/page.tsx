@@ -2,13 +2,15 @@ import SearchBar from "@/components/SearchBar";
 import SearchList from "@/components/SearchList";
 import { Separator } from "@/components/ui/separator";
 
-const Page = ({
+const Page = async ({
   searchParams,
 }: {
   searchParams: {
     query?: string;
   };
 }) => {
+  const teachers = await fetch("http://localhost:3000/api/teachers").then((res) => res.json());
+  console.log(teachers);
   const query = searchParams.query?.toString() ?? "";
   return (
     <div className="px-default w-full flex flex-col gap-10 pt-12 pb-20">
@@ -19,7 +21,7 @@ const Page = ({
       <Separator orientation="horizontal" />
       <div>
         <h1 className="text-xl mb-5">Wyniki wyszukiwania: {query ? <q className="text-primary">{query}</q> : null}</h1>
-        <SearchList query={query} />
+        <SearchList teachers={teachers} query={query} />
       </div>
     </div>
   );

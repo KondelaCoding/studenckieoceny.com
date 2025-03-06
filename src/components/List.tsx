@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { TeacherProps } from "@/app/types";
+import { TeacherProps } from "@/types";
 
 const List = () => {
   const [x, setX] = useState(0);
