@@ -19,7 +19,6 @@ export default async function handler(
     } else if (req.method === "POST") {
         try {
             const body: TeacherProps = req.body;
-            console.log("Adding teacher:", body);
             await addTeacher({
                 id: body.id,
                 name: body.name,
@@ -28,8 +27,8 @@ export default async function handler(
                 graphX: body.graphX,
                 graphY: body.graphY,
                 timestamp: Date.now(),
-                university: body.university,
-                subject: body.subject,
+                universities: body.universities,
+                subjects: body.subjects,
             });
             res.status(200).json({ message: "Teacher added successfully" });
         } catch (error) {

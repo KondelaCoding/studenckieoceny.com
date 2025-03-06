@@ -2,16 +2,9 @@ import SearchBar from "@/components/SearchBar";
 import SearchList from "@/components/SearchList";
 import { Separator } from "@/components/ui/separator";
 
-const Page = async ({
-  searchParams,
-}: {
-  searchParams: {
-    query?: string;
-  };
-}) => {
+const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }> }) => {
+  const { query } = await searchParams;
   const teachers = await fetch("http://localhost:3000/api/teachers").then((res) => res.json());
-  console.log(teachers);
-  const query = searchParams.query?.toString() ?? "";
   return (
     <div className="px-default w-full flex flex-col gap-10 pt-12 pb-20">
       <div>

@@ -27,7 +27,6 @@ const SearchList = async ({ teachers, query }: { teachers: TeacherProps[]; query
       (teacher) => filterName(teacher)
       // || filterSubject(subjectsArray) || filterUniversity(universitiesArray)
     ) || [];
-  console.log(filteredTeachers);
   return (
     <div>
       <Table>
