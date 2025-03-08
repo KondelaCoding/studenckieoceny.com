@@ -5,22 +5,19 @@ import Link from "next/link";
 import DrawerDemo from "./Drawer";
 
 const SearchList = async ({ teachers, query }: { teachers: ReturnedTeacherProps[]; query?: string }) => {
-  //TODO: make the filters get the data from propper place instead of a query
-  const filterName = (teacher: ReturnedTeacherProps) => {
-    return teacher.name.toLowerCase().includes((query ?? "").toLowerCase());
-  };
-  const filterSubject = (subjects: string) => {
-    return subjects[0].toLowerCase().includes((query ?? "").toLowerCase());
-  };
-  const filterUniversity = (universities: string) => {
-    return universities[0].toLowerCase().includes((query ?? "").toLowerCase());
+  const filterName = (name: string) => {
+    return query ? name.toLowerCase().includes(query.toLowerCase()) : true;
   };
 
-  const filteredTeachers =
-    teachers.filter(
-      (teacher) => filterName(teacher)
-      // || filterSubject(subjectsArray) || filterUniversity(universitiesArray)
-    ) || [];
+  // TODO: v1.1 - Implement filtering by subject and university
+  // const filterSubject = (subjects: string) => {
+  //   console.log("subjects", subjects);
+  //   console.log("query", query);
+  //   return query && subjects ? subjects.toLowerCase().includes(query.toLowerCase()) : true;
+  // };
+
+  const filteredTeachers = teachers.filter((teacher) => filterName(teacher.name)) || [];
+
   return (
     <div>
       <Table>

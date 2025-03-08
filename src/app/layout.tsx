@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
-import Navbar from "@/components/Navbar";
 import "./globals.css";
 import Footer from "@/components/Footer";
 
@@ -24,7 +23,6 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} antialiased font-[family-name:var(--font-montserrat)] flex justify-between flex-col min-h-screen pt-20`}
       >
-        <Navbar />
         {children}
         <Footer />
       </body>

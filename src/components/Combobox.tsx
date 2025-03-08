@@ -8,7 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-export function Combobox({ data, title }: { data: string[]; title: string }) {
+export function Combobox({
+  data,
+  title,
+  onChange,
+}: {
+  data: string[];
+  title: string;
+  onChange: (value: string) => void;
+}) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
@@ -34,7 +42,9 @@ export function Combobox({ data, title }: { data: string[]; title: string }) {
                   key={label}
                   value={label}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    const newValue = currentValue === value ? "" : currentValue;
+                    setValue(newValue);
+                    onChange(newValue);
                     setOpen(false);
                   }}
                 >
