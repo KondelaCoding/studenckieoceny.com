@@ -66,6 +66,7 @@ export const init = () => {
 };
 
 export const addTeacher = async (teacher: TeacherProps) => {
+    const timestamp = Date.now();
     return new Promise<void>((resolve, reject) => {
         db.run(
             "INSERT INTO teachers (name, totalRatingValue, numberOfVotes, graphX, graphY, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
@@ -75,7 +76,7 @@ export const addTeacher = async (teacher: TeacherProps) => {
                 teacher.numberOfVotes,
                 teacher.graphX,
                 teacher.graphY,
-                teacher.timestamp,
+                timestamp,
             ],
             function (err) {
                 if (err) {
@@ -349,13 +350,26 @@ export const getSubjectByName = (name: string) => {
 
 // Example function to get a teacher by name
 export const getTeacherByName = (name: string) => {
-    return new Promise((resolve, reject) => {
-        db.get("SELECT * FROM teachers WHERE name = ?", [name], (err, row) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(row);
-            }
-        });
+    return new Promise<ReturnedTeacherProps>((resolve, reject) => {
+        db.get<ReturnedTeacherProps>(
+            `SELECT t.*, 
+                    GROUP_CONCAT(DISTINCT u.name) AS universities, 
+                    GROUP_CONCAT(DISTINCT s.name) AS subjects 
+             FROM teachers t
+             LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
+             LEFT JOIN universities u ON tu.universityId = u.id
+             LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
+             LEFT JOIN subjects s ON ts.subjectId = s.id
+             WHERE t.name = ?
+             GROUP BY t.id`,
+            [name],
+            (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row);
+                }
+            },
+        );
     });
 };

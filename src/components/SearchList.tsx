@@ -3,6 +3,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import StarRating from "./StarRating";
 import Link from "next/link";
 import DrawerDemo from "./Drawer";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const SearchList = async ({ teachers, query }: { teachers: ReturnedTeacherProps[]; query?: string }) => {
   const filterName = (name: string) => {
@@ -42,8 +43,14 @@ const SearchList = async ({ teachers, query }: { teachers: ReturnedTeacherProps[
             filteredTeachers.map((teacher: ReturnedTeacherProps) => (
               <TableRow key={teacher.id}>
                 <TableCell>
-                  <Link href={`profile/${teacher.name.toLowerCase().replace(" ", "+")}`} className="hover:underline">
-                    {teacher.name}
+                  <Link
+                    href={`/${teacher.name.toLowerCase().replace(" ", "+")}`}
+                    className="inline-flex items-center gap-3"
+                  >
+                    <Avatar className="uppercase">
+                      <AvatarFallback>{teacher.name.split("+")[0][0] ?? ""}</AvatarFallback>
+                    </Avatar>
+                    <span className="hover:underline">{teacher.name}</span>
                   </Link>
                 </TableCell>
                 <TableCell>{teacher.subjects ? teacher.subjects.split(",")[0] : "null"}</TableCell>

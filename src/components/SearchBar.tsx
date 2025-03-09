@@ -99,12 +99,12 @@ const SearchBar = ({ isFull, isInstant }: { isFull: boolean; isInstant: boolean 
       {isInstant ? null : isLoading ? (
         <Button type="button" disabled>
           <Loader2 className="animate-spin" />
-          Szukaj
+          <span className="hidden sm:block">Szukaj</span>
         </Button>
       ) : (
         <Button type="button" onClick={handleSearch}>
           <SearchIcon />
-          Szukaj
+          <span className="hidden sm:block">Szukaj</span>
         </Button>
       )}
     </div>

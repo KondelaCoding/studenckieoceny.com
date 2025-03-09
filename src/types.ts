@@ -7,7 +7,7 @@ export type TeacherProps = {
     universities: string[];
     graphX?: number;
     graphY?: number;
-    timestamp: number;
+    timestamp?: number;
     comments?: Comment[];
 };
 /*

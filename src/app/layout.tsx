@@ -19,9 +19,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl">
+    <html lang="pl" className="overflow-x-hidden">
       <body
-        className={`${montserrat.variable} antialiased font-[family-name:var(--font-montserrat)] flex justify-between flex-col min-h-screen pt-20`}
+        className={`${montserrat.variable} antialiased font-[family-name:var(--font-montserrat)] flex justify-between flex-col min-h-screen pt-20 overflow-hidden`}
       >
         {children}
         <Footer />

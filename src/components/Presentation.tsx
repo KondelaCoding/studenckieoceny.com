@@ -3,23 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import StarRating from "./StarRating";
 import { VenetianMask, ChartLine, Globe } from "lucide-react";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts";
-
-const chartData = [
-  { trait: "Klarowność", value: 50 },
-  { trait: "Zaangażowanie", value: 60 },
-  { trait: "Interakcja", value: 40 },
-  { trait: "Organizacja", value: 100 },
-  { trait: "Humor", value: 80 },
-];
-
-const chartConfig = {
-  trait: {
-    label: "trait",
-    color: "hsl(var(--chart-1))",
-  },
-} satisfies ChartConfig;
+import TraitChart from "./TraitChart";
 
 const cardData = [
   {
@@ -39,16 +23,7 @@ const cardData = [
     description: "Zainspirowany rozsyłanymi zdjęciami, wykres 'cech' prowadzącego",
     icon: <ChartLine />,
     // TODO: Change label in tooltip from "value" to something else
-    presentation: (
-      <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px] w-full">
-        <RadarChart data={chartData}>
-          <ChartTooltip cursor={true} content={<ChartTooltipContent />} />
-          <PolarAngleAxis dataKey="trait" />
-          <PolarGrid />
-          <Radar dataKey="value" fill="var(--primary)" fillOpacity={0.6} />
-        </RadarChart>
-      </ChartContainer>
-    ),
+    presentation: <TraitChart />,
   },
   {
     header: "Anonimowość",
