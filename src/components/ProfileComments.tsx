@@ -53,28 +53,6 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
 
   return (
     <div className="w-full flex flex-col gap-10 overflow-y-auto max-h-[70vh] h-full">
-      {filteredComments.map((comment) => (
-        <div key={comment.id} className="grid grid-cols-[auto_1fr] gap-5 w-full">
-          <Avatar className="capitalize w-12 h-12">
-            <AvatarFallback>{comment.user.slice(0, 2)}</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col gap-1">
-            <div className="inline-flex items-center w-full gap-5">
-              <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">{comment.user}</h4>
-              <p className="text-muted-foreground">{date(comment.timestamp)}</p>
-            </div>
-            <Separator orientation="horizontal" />
-            <q className="italic text-muted-foreground">
-              {comment.comment.length > 150 ? comment.comment.slice(0, 150) + "..." : comment.comment}
-            </q>
-          </div>
-        </div>
-      ))}
-      {filteredComments.length < comments.length ? (
-        <Button variant="ghost" onClick={increaseCommentCount}>
-          Pokaż więcej
-        </Button>
-      ) : null}
       {isLoading ? (
         <div className="w-full h-full">
           <div className="grid grid-cols-[auto_1fr] gap-5 w-full">
@@ -130,6 +108,34 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
             </div>
           </div>
         </div>
+      ) : filteredComments.length ? (
+        filteredComments.map((comment) => (
+          <div key={comment.id} className="grid grid-cols-[auto_1fr] gap-5 w-full">
+            <Avatar className="capitalize w-12 h-12">
+              <AvatarFallback>{comment.user.slice(0, 2)}</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col gap-1">
+              <div className="inline-flex items-center w-full gap-5">
+                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">{comment.user}</h4>
+                <p className="text-muted-foreground">{date(comment.timestamp)}</p>
+              </div>
+              <Separator orientation="horizontal" />
+              <q className="italic text-muted-foreground">
+                {comment.comment.length > 150 ? comment.comment.slice(0, 150) + "..." : comment.comment}
+              </q>
+            </div>
+          </div>
+        ))
+      ) : (
+        <span className="w-full text-center text-muted-foreground">
+          Ten prowadzący nie otrzymał jeszcze komentarzy 😔 <br />
+          Bądź pierwszy i podziel się <span className="text-primary">swoją</span> opinią!
+        </span>
+      )}
+      {filteredComments.length < comments.length ? (
+        <Button variant="ghost" onClick={increaseCommentCount}>
+          Pokaż więcej
+        </Button>
       ) : null}
     </div>
   );

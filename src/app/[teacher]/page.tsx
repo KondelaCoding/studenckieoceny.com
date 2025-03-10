@@ -6,7 +6,7 @@ import { ReturnedTeacherProps } from "@/types";
 const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: string }> }) => {
   try {
     const { teacher } = await params;
-    const response = await fetch(`http://localhost:3000/api/teacher-profile?name=${teacher}`);
+    const response = await fetch(`http://localhost:3000/api/teacher-profile?id=${teacher}`);
     if (!response.ok) {
       throw new Error("Failed to fetch teacher");
     }

@@ -376,3 +376,28 @@ export const getTeacherByName = (name: string) => {
         );
     });
 };
+// Example function to get a teacher by id
+export const getTeacherById = (id: string) => {
+    return new Promise<ReturnedTeacherProps>((resolve, reject) => {
+        db.get<ReturnedTeacherProps>(
+            `SELECT t.*, 
+                        GROUP_CONCAT(DISTINCT u.name) AS universities, 
+                        GROUP_CONCAT(DISTINCT s.name) AS subjects 
+                 FROM teachers t
+                 LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
+                 LEFT JOIN universities u ON tu.universityId = u.id
+                 LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
+                 LEFT JOIN subjects s ON ts.subjectId = s.id
+                 WHERE t.id = ?
+                 GROUP BY t.id`,
+            [id],
+            (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row);
+                }
+            },
+        );
+    });
+};

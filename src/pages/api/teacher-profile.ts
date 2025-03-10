@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getTeacherByName, init } from "@/services/db";
+import { getTeacherById, init } from "@/services/db";
 
 init();
 
@@ -9,8 +9,8 @@ export default async function handler(
 ) {
     if (req.method === "GET") {
         try {
-            const name = req.query.name as string;
-            const teacher = await getTeacherByName(name);
+            const id = req.query.id as string;
+            const teacher = await getTeacherById(id);
             res.status(200).json(teacher);
         } catch (error) {
             console.error("Error fetching teacher:", error);

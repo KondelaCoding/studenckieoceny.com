@@ -5,7 +5,7 @@ import Link from "next/link";
 import AddTeacherDrawer from "./AddTeacherDrawer";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-const SearchList = async ({ teachers, query }: { teachers: ReturnedTeacherProps[]; query?: string }) => {
+const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; query?: string }) => {
   const filterName = (name: string) => {
     return query ? name.toLowerCase().includes(query.toLowerCase()) : true;
   };
@@ -43,10 +43,7 @@ const SearchList = async ({ teachers, query }: { teachers: ReturnedTeacherProps[
             filteredTeachers.map((teacher: ReturnedTeacherProps) => (
               <TableRow key={teacher.id}>
                 <TableCell>
-                  <Link
-                    href={`/${teacher.name.toLowerCase().replace(" ", "+")}`}
-                    className="inline-flex items-center gap-3"
-                  >
+                  <Link href={`/${teacher.id}`} className="inline-flex items-center gap-3">
                     <Avatar className="uppercase">
                       <AvatarFallback>{teacher.name.split("+")[0][0] ?? ""}</AvatarFallback>
                     </Avatar>
