@@ -1,5 +1,5 @@
 export type TeacherProps = {
-    id: number;
+    id: string;
     name: string;
     totalRatingValue: number;
     numberOfVotes: number;
@@ -15,7 +15,7 @@ export type TeacherProps = {
  * This is the type that should be used for the returned data from the API.
  */
 export type ReturnedTeacherProps = {
-    id: number;
+    id: string;
     name: string;
     totalRatingValue: number;
     numberOfVotes: number;
@@ -28,8 +28,8 @@ export type ReturnedTeacherProps = {
 };
 
 export type Comment = {
-    id: number;
-    teacherId: number;
+    id: string;
+    teacherId: string;
     user: string;
     comment: string;
     timestamp: number;

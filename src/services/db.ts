@@ -146,10 +146,10 @@ export const getTeachers = () => {
 };
 
 // Example function to get teacher comments
-export const getTeacherComments = (teacherId: number) => {
+export const getTeacherComments = (teacherId: string) => {
     return new Promise((resolve, reject) => {
         db.all(
-            "SELECT * FROM comments WHERE teacherId = ?",
+            "SELECT * FROM comments WHERE teacherId = ? ORDER BY timestamp DESC",
             [teacherId],
             (err, rows) => {
                 if (err) {
@@ -164,13 +164,16 @@ export const getTeacherComments = (teacherId: number) => {
 
 export const getComments = () => {
     return new Promise((resolve, reject) => {
-        db.all("SELECT * FROM comments", (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(rows);
-            }
-        });
+        db.all(
+            "SELECT * FROM comments",
+            (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            },
+        );
     });
 };
 

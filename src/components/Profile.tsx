@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ReturnedTeacherProps } from "@/types";
-import ProfileComments from "./ProfileComments";
+import ProfileCards from "./ProfileCards";
 import { Separator } from "./ui/separator";
 import StarRating from "./StarRating";
 import { User, BookOpenText, University, CalendarClock } from "lucide-react";
@@ -66,7 +66,7 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
           </div>
         </div>
       </div>
-      <ProfileComments />
+      <ProfileCards teacherData={teacherData} />
     </div>
   );
 };

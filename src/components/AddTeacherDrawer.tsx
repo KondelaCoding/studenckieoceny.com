@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -27,7 +27,7 @@ import {
 import { Toaster } from "./ui/sonner";
 import { toast } from "sonner";
 
-export function DrawerDemo() {
+export function AddTeacherDrawer() {
   const [goal, setGoal] = React.useState(350);
 
   function onClick(adjustment: number) {
@@ -39,7 +39,10 @@ export function DrawerDemo() {
       <Toaster closeButton={true} />
       <Drawer>
         <DrawerTrigger asChild>
-          <Button>Dodaj Prowadzącego</Button>
+          <Button>
+            <UserPlus />
+            Dodaj Prowadzącego
+          </Button>
         </DrawerTrigger>
         <DrawerContent>
           <div className="mx-auto w-full max-w-sm">
@@ -109,4 +112,4 @@ export function DrawerDemo() {
   );
 }
 
-export default DrawerDemo;
+export default AddTeacherDrawer;

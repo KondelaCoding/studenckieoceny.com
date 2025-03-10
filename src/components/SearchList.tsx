@@ -2,7 +2,7 @@ import { ReturnedTeacherProps } from "@/types";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import StarRating from "./StarRating";
 import Link from "next/link";
-import DrawerDemo from "./Drawer";
+import AddTeacherDrawer from "./AddTeacherDrawer";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const SearchList = async ({ teachers, query }: { teachers: ReturnedTeacherProps[]; query?: string }) => {
@@ -36,7 +36,7 @@ const SearchList = async ({ teachers, query }: { teachers: ReturnedTeacherProps[
             <TableRow>
               <TableCell colSpan={4} className="text-center space-y-5">
                 <p>Nie znaleziono prowadzącego pasującego do kryteriów wyszukiwania.</p>
-                <DrawerDemo />
+                <AddTeacherDrawer />
               </TableCell>
             </TableRow>
           ) : (
