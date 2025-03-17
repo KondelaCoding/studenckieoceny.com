@@ -401,3 +401,25 @@ export const getTeacherById = (id: string) => {
         );
     });
 };
+
+export const updateRating = async (id: string, rating: number) => {
+    try {
+        new Promise<void>((resolve, reject) => {
+            db.run(
+                `UPDATE teachers SET totalRatingValue = totalRatingValue + ?, numberOfVotes = numberOfVotes + 1 WHERE id = ?`,
+                [rating, id],
+                (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                },
+            );
+        });
+        return true;
+    } catch (error) {
+        console.error("Error updating rating:", error);
+        return false;
+    }
+};

@@ -1,6 +1,6 @@
 import { Star, Dot } from "lucide-react";
 
-const StarRating = ({ numberOfVotes, totalValue }: { numberOfVotes: number; totalValue: number }) => {
+const StarRatingDisplay = ({ numberOfVotes, totalValue }: { numberOfVotes: number; totalValue: number }) => {
   const rating: number = parseFloat((totalValue / numberOfVotes).toFixed(1));
   return (
     <div className="flex flex-col items-center">
@@ -25,4 +25,4 @@ const StarRating = ({ numberOfVotes, totalValue }: { numberOfVotes: number; tota
   );
 };
 
-export default StarRating;
+export default StarRatingDisplay;

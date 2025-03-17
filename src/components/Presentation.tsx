@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import StarRating from "./StarRating";
+import StarRatingDisplay from "./StarRatingDisplay";
 import { VenetianMask, ChartLine, Globe } from "lucide-react";
 import TraitChart from "./TraitChart";
 
@@ -13,7 +13,7 @@ const cardData = [
     presentation: (
       <div className="w-fit gap-3 flex flex-col h-full items-start">
         {[1, 2, 3, 4, 5].map((i) => (
-          <StarRating key={i} numberOfVotes={i} totalValue={i * i} />
+          <StarRatingDisplay key={i} numberOfVotes={i} totalValue={i * i} />
         ))}
       </div>
     ),

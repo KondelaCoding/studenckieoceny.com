@@ -1,6 +1,6 @@
 import { ReturnedTeacherProps } from "@/types";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import StarRating from "./StarRating";
+import StarRatingDisplay from "./StarRatingDisplay";
 import Link from "next/link";
 import AddTeacherDrawer from "./AddTeacherDrawer";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -53,7 +53,7 @@ const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; que
                 <TableCell>{teacher.subjects ? teacher.subjects.split(",")[0] : "null"}</TableCell>
                 <TableCell>{teacher.universities ? teacher.universities.split(",")[0] : "null"}</TableCell>
                 <TableCell>
-                  <StarRating numberOfVotes={teacher.numberOfVotes} totalValue={teacher.totalRatingValue} />
+                  <StarRatingDisplay numberOfVotes={teacher.numberOfVotes} totalValue={teacher.totalRatingValue} />
                 </TableCell>
               </TableRow>
             ))

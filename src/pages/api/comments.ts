@@ -22,7 +22,6 @@ export default async function handler(
                 user: string;
                 comment: string;
             } = req.body;
-            console.log("Received data:", { teacherId, user, comment }); // Log the received data
             if (!teacherId || !user || !comment) {
                 return res.status(400).json({
                     error: "Missing required fields",
