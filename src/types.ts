@@ -35,3 +35,18 @@ export type Comment = {
     timestamp: number;
     likes: number;
 };
+
+export const Months = {
+    1: "Stycznia",
+    2: "Lutego",
+    3: "Marca",
+    4: "Kwietnia",
+    5: "Maja",
+    6: "Czerwca",
+    7: "Lipca",
+    8: "Sierpnia",
+    9: "Września",
+    10: "Października",
+    11: "Listopada",
+    12: "Grudnia 🎅",
+};
