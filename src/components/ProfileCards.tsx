@@ -1,11 +1,12 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import TraitChart from "./TraitChart";
 import { Skeleton } from "./ui/skeleton";
-import { ChartLine, MessageCircle, Trophy } from "lucide-react";
+import { ChartLine, MessageCircle, Trophy, PiggyBank } from "lucide-react";
 import ProfileComments from "./ProfileComments";
 import { ReturnedTeacherProps } from "@/types";
 import { Separator } from "./ui/separator";
 import AddCommentDrawer from "./AddCommentDrawer";
+import { Button } from "./ui/button";
 
 const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
   return (
@@ -29,7 +30,23 @@ const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps
         </CardContent>
       </Card>
       <div className="grid grid-rows-2 gap-5">
-        <Card>
+        <Card className="relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full flex justify-center flex-col p-10 items-center z-20 backdrop-blur-[1px] backdrop-brightness-25 text-center">
+            <h3 className="text-2xl font-semibold tracking-tight text-muted-foreground">
+              Niestety funkcja wykresu <q className="text-primary">cech</q> prowadzącego nie jest jeszcze gotowa 😔
+            </h3>
+            <br /> <br />
+            <p>
+              Chcesz
+              <span className="text-primary font-bold"> przyśpieszyć </span>rozwój? <br />
+              Piwko tego nie zrobi ale przynajmniej poprawi mi humor ♥️
+            </p>
+            {/* TODO: Add link to patreon or something */}
+            <Button className="mt-10">
+              <PiggyBank />
+              Wesprzyj
+            </Button>
+          </div>
           <CardHeader>
             <CardTitle className="inline-flex gap-3 items-center">
               <ChartLine /> Wykres cech
@@ -41,7 +58,23 @@ const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps
             <TraitChart />
           </CardContent>
         </Card>
-        <Card>
+        <Card className="relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full flex justify-center flex-col p-10 items-center z-20 backdrop-blur-[1px] backdrop-brightness-25 text-center">
+            <h3 className="text-2xl font-semibold tracking-tight text-muted-foreground">
+              Niestety funkcja <q className="text-primary">odznak</q> nie jest jeszcze gotowa 😔
+            </h3>
+            <br /> <br />
+            <p>
+              Chcesz
+              <span className="text-primary font-bold"> przyśpieszyć </span>rozwój? <br />
+              Piwko tego nie zrobi ale przynajmniej poprawi mi humor ♥️
+            </p>
+            {/* TODO: Add link to patreon or something */}
+            <Button className="mt-10">
+              <PiggyBank />
+              Wesprzyj
+            </Button>
+          </div>
           <CardHeader>
             <CardTitle className="inline-flex gap-3 items-center">
               <Trophy />
