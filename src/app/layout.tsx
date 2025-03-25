@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
+import DebugRWD from "@/components/DebugRWD";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -25,6 +26,7 @@ export default function RootLayout({
       >
         {children}
         <Footer />
+        <DebugRWD />
       </body>
     </html>
   );

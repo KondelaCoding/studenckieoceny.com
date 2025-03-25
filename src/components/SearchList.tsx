@@ -2,8 +2,9 @@ import { ReturnedTeacherProps } from "@/types";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import StarRatingDisplay from "./StarRatingDisplay";
 import Link from "next/link";
-import AddTeacherDrawer from "./AddTeacherDrawer";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { UserPlus } from "lucide-react";
 
 const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; query?: string }) => {
   const filterName = (name: string) => {
@@ -36,7 +37,12 @@ const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; que
             <TableRow>
               <TableCell colSpan={4} className="text-center space-y-5">
                 <p>Nie znaleziono prowadzącego pasującego do kryteriów wyszukiwania.</p>
-                <AddTeacherDrawer />
+                <Link href="/dodaj">
+                  <Button>
+                    <UserPlus />
+                    Dodaj prowadzącego
+                  </Button>
+                </Link>
               </TableCell>
             </TableRow>
           ) : (

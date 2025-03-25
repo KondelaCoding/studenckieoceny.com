@@ -36,6 +36,16 @@ export type Comment = {
     likes: number;
 };
 
+export type University = {
+    id: string;
+    name: string;
+};
+
+export type Subject = {
+    id: string;
+    name: string;
+};
+
 export const Months = {
     1: "Stycznia",
     2: "Lutego",
