@@ -1,5 +1,5 @@
 export type TeacherProps = {
-    id: string;
+    id?: string;
     name: string;
     totalRatingValue: number;
     numberOfVotes: number;

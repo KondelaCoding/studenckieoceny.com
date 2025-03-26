@@ -41,24 +41,42 @@ const AddTeacherForm = () => {
   });
 
   const onSubmit = async (data: FormData) => {
+    // Prepare the data for submission, the API only needs the id of the university and subject
+    const newData = {
+      name: data.name,
+      totalRatingValue: 0,
+      numberOfVotes: 0,
+      universities: [data.primaryUniversity?.id ?? "", data.secondaryUniversity?.id ?? ""],
+      subjects: [data.primarySubject?.id ?? "", data.secondarySubject?.id ?? ""],
+    };
     if (data.otherUniversity || data.otherSubject) {
       console.log("Send email for approval:", data);
-      // TODO: send email for approval
-      toast.info("Wysłano email, dostaniesz informacje o zgłoszeniu!");
+      try {
+        const response = await fetch("/api/notify-admin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            teacherProps: { name: data.name, otherUniversity: data.otherUniversity, otherSubject: data.otherSubject },
+            email: data.email,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to send email");
+        }
+
+        toast.success("Email sent to admin for approval!");
+      } catch (error) {
+        console.error("Error sending email:", error);
+        toast.error("Failed to send email. Please try again later.");
+      }
     } else {
       if (!data.primaryUniversity || !data.primarySubject) {
         toast.error("Musisz wybrać przynajmniej jedną uczelnie i przedmiot");
         return;
       }
-
-      // Prepare the data for submission, the API only needs the id of the university and subject
-      const newData = {
-        name: data.name,
-        totalRatingValue: 0,
-        numberOfVotes: 0,
-        universities: [data.primaryUniversity.id, data.secondaryUniversity?.id],
-        subjects: [data.primarySubject.id, data.secondarySubject?.id],
-      };
       console.log("Add teacher to database:", newData);
       const response = await fetch("/api/teachers", {
         method: "POST",
@@ -97,11 +115,11 @@ const AddTeacherForm = () => {
                 />
                 {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
               </div>
-              <div>
+              <div className="w-full">
                 <label htmlFor="universities" className="w-full">
                   Uczelnie
                 </label>
-                <div className="inline-flex w-full gap-5 mt-3">
+                <div className="flex flex-col w-full gap-5 mt-3 sm:flex-row">
                   <Controller
                     name="primaryUniversity"
                     control={control}
@@ -115,11 +133,11 @@ const AddTeacherForm = () => {
                 </div>
                 <Input placeholder="Inna" className="mt-3 bg-background" {...register("otherUniversity")} />
               </div>
-              <div>
+              <div className="w-full">
                 <label htmlFor="subjects" className="w-full">
                   Przedmioty
                 </label>
-                <div className="inline-flex w-full gap-5 mt-3">
+                <div className="flex flex-col w-full gap-5 mt-3 sm:flex-row">
                   <Controller
                     name="primarySubject"
                     control={control}
@@ -154,7 +172,10 @@ const AddTeacherForm = () => {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="justify-end mt-10">
+        <CardFooter className="mt-10 flex-col items-end">
+          <p className="leading-7 text-muted-foreground text-sm text-right mb-3">
+            Wybierając inną uczelnie bądź przedmiot nasza moderacja weryfikuje podane informacje.
+          </p>
           <Button type="submit">Dodaj</Button>
         </CardFooter>
       </form>

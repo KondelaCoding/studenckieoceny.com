@@ -7,7 +7,7 @@ const Page = () => {
   return (
     <div className="min-h-[calc(100vh-20rem)] flex justify-center items-center -mt-5">
       <Navbar />
-      <Card className="max-w-min my-10 mx-10">
+      <Card className="sm:max-w-min my-10 mx-10">
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
             <UserPlus />
