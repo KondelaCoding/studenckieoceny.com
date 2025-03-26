@@ -10,9 +10,9 @@ import { Button } from "./ui/button";
 
 const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
   return (
-    <div className="bg-background rounded-xl border grid grid-cols-2 w-full p-5 gap-5">
+    <div className="bg-background rounded-xl border grid grid-cols-1 w-full p-5 gap-5 md:grid-cols-2">
       <Card className="w-full">
-        <CardHeader className="flex-row justify-between items-center gap-10">
+        <CardHeader className="flex-col w-full justify-between items-start gap-10 sm:flex-row sm:items-center">
           <div>
             <CardTitle className="inline-flex gap-3 items-center">
               <MessageCircle />

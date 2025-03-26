@@ -22,31 +22,29 @@ const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; que
 
   return (
     <div>
-      <Table>
-        <TableCaption>Lista Prowadzących</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Imię</TableHead>
-            <TableHead>Główny przedmiot</TableHead>
-            <TableHead>Główna uczelnia</TableHead>
-            <TableHead>Ocena</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredTeachers.length === 0 ? (
+      {filteredTeachers.length === 0 ? (
+        <div className="flex flex-col items-center gap-5 text-center text-muted-foreground">
+          <p>Nie znaleziono prowadzącego pasującego do kryteriów wyszukiwania.</p>
+          <Link href="/dodaj">
+            <Button>
+              <UserPlus />
+              Dodaj prowadzącego
+            </Button>
+          </Link>
+        </div>
+      ) : (
+        <Table>
+          <TableCaption>Lista Prowadzących</TableCaption>
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={4} className="text-center space-y-5">
-                <p>Nie znaleziono prowadzącego pasującego do kryteriów wyszukiwania.</p>
-                <Link href="/dodaj">
-                  <Button>
-                    <UserPlus />
-                    Dodaj prowadzącego
-                  </Button>
-                </Link>
-              </TableCell>
+              <TableHead>Imię</TableHead>
+              <TableHead>Główny przedmiot</TableHead>
+              <TableHead>Główna uczelnia</TableHead>
+              <TableHead>Ocena</TableHead>
             </TableRow>
-          ) : (
-            filteredTeachers.map((teacher: ReturnedTeacherProps) => (
+          </TableHeader>
+          <TableBody>
+            {filteredTeachers.map((teacher: ReturnedTeacherProps) => (
               <TableRow key={teacher.id}>
                 <TableCell>
                   <Link href={`/${teacher.id}`} className="inline-flex items-center gap-3">
@@ -62,10 +60,10 @@ const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; que
                   <StarRatingDisplay numberOfVotes={teacher.numberOfVotes} totalValue={teacher.totalRatingValue} />
                 </TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 };
