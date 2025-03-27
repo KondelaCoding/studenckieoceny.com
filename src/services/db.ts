@@ -114,7 +114,7 @@ export const addTeacher = async (teacher: TeacherProps) => {
                         });
                     }
 
-                    resolve();
+                    resolve(undefined);
                 }
             },
         );
@@ -187,7 +187,7 @@ export const addComment = (comment: Comment) => {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve();
+                    resolve(undefined);
                 }
             },
         );
@@ -227,7 +227,7 @@ export const addUniversity = (name: string) => {
             if (err) {
                 reject(err);
             } else {
-                resolve();
+                resolve(undefined);
             }
         });
     });
@@ -240,7 +240,7 @@ export const addSubject = (name: string) => {
             if (err) {
                 reject(err);
             } else {
-                resolve();
+                resolve(undefined);
             }
         });
     });
@@ -297,7 +297,7 @@ export const addTeacherUniversity = (
                 if (err) {
                     reject(err);
                 } else {
-                    resolve();
+                    resolve(undefined);
                 }
             },
         );
@@ -314,7 +314,7 @@ export const addTeacherSubject = (teacherId: number, subjectId: number) => {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve();
+                    resolve(undefined);
                 }
             },
         );

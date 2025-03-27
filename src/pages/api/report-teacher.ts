@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { addTeacherNotification } from "@/services/mail";
+import { reportTeacherNotification } from "@/services/mail";
 
 export default async function handler(
     req: NextApiRequest,
@@ -9,14 +9,14 @@ export default async function handler(
         return res.status(405).json({ message: "Method not allowed" });
     }
 
-    const { teacherProps, email } = req.body;
+    const { teacherId, message } = req.body;
 
-    if (!teacherProps || !email) {
+    if (!teacherId) {
         return res.status(400).json({ message: "Missing required fields" });
     }
 
     try {
-        await addTeacherNotification({ teacherProps, email });
+        await reportTeacherNotification(teacherId, message || "");
         res.status(200).json({ message: "Email sent successfully" });
     } catch (error) {
         console.error("Error sending email:", error);

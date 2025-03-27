@@ -4,6 +4,7 @@ import ProfileCards from "./ProfileCards";
 import { Separator } from "./ui/separator";
 import StarRatingDisplay from "./StarRatingDisplay";
 import { User, BookOpenText, University, CalendarClock } from "lucide-react";
+import ReportTeacherDrawer from "./ReportTeacherDrawer";
 
 const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
   const seperatedSubjects = teacherData.subjects.split(",");
@@ -16,14 +17,17 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
     new Date(teacherData.timestamp).getFullYear();
   return (
     <div className="grid grid-cols-1 grid-rows-1 w-full lg:grid-cols-[auto_1fr]">
-      <div className="flex flex-col items-center py-10 -mt-5 gap-5 xl:px-6 lg:max-w-lg lg:w-min">
+      <div className="flex flex-col items-center py-10 -mt-5 gap-5 lg:max-w-lg lg:w-min xl:px-6">
         <Avatar className="uppercase w-40 h-40 text-4xl border mx-14">
           <AvatarFallback>{teacherData.name.split(" ")[0][0] ?? ""}</AvatarFallback>
         </Avatar>
-        <div className="w-full flex flex-col gap-5 justify-center items-center">
-          <h2 className="scroll-m-20 mt-5 text-3xl font-semibold tracking-tight transition-colors capitalize inline-flex gap-3 items-center">
-            <User size={30} />
-            {teacherData.name}
+        <div className="w-full flex flex-col gap-5 justify-center items-center lg:items-start">
+          <h2 className="scroll-m-20 mt-5 text-3xl font-semibold tracking-tight transition-colors capitalize inline-flex justify-center w-full gap-10 lg:justify-between">
+            <div className="inline-flex gap-3 items-center">
+              <User size={30} />
+              {teacherData.name}
+            </div>
+            <ReportTeacherDrawer teacherId={teacherData.id} />
           </h2>
           <StarRatingDisplay totalValue={teacherData.totalRatingValue} numberOfVotes={teacherData.numberOfVotes} />
           <Separator orientation="horizontal" />

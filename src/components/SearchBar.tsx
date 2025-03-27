@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Loader2, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { subjects, universities } from "@/services/data";
 import Combobox from "@/components/Combobox";
 import { useState, useEffect } from "react";
 
@@ -27,14 +26,14 @@ const SearchBar = ({ isFull, isInstant }: { isFull: boolean; isInstant: boolean 
     if (isInstant) handleInstantSearch(value, subject, university);
   };
 
-  const setSelectedSubject = (value: string) => {
-    setSubject(value);
-    if (isInstant) handleInstantSearch(searchQuery, value, university);
+  const setSelectedSubject = (value: { id: string; name: string }) => {
+    setSubject(value.name);
+    if (isInstant) handleInstantSearch(searchQuery, value.name, university);
   };
 
-  const setSelectedUniversity = (value: string) => {
-    setUniversity(value);
-    if (isInstant) handleInstantSearch(searchQuery, subject, value);
+  const setSelectedUniversity = (value: { id: string; name: string }) => {
+    setUniversity(value.name);
+    if (isInstant) handleInstantSearch(searchQuery, subject, value.name);
   };
 
   const handleInstantSearch = (query: string, subject: string, university: string) => {
@@ -92,8 +91,8 @@ const SearchBar = ({ isFull, isInstant }: { isFull: boolean; isInstant: boolean 
       />
       {false /* TODO: v1.1 - Implement filtering, change "false" to isFull */ ? (
         <>
-          <Combobox data={subjects} title="przedmiot" onChange={setSelectedSubject} />
-          <Combobox data={universities} title="uczelnie" onChange={setSelectedUniversity} />
+          <Combobox data="subjects" title="przedmiot" onChange={setSelectedSubject} />
+          <Combobox data="universities" title="uczelnie" onChange={setSelectedUniversity} />
         </>
       ) : null}
       {isInstant ? null : isLoading ? (
