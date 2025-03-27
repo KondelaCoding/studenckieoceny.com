@@ -82,7 +82,7 @@ const SearchBar = ({ isFull, isInstant }: { isFull: boolean; isInstant: boolean 
     <div className="inline-flex gap-3 w-full max-w-lg">
       <Input
         type="search"
-        placeholder="Wyszukaj prowadzącego"
+        placeholder="Wyszukaj prowadzącego zajęcia"
         value={isInstant ? undefined : searchQuery}
         onChange={(e) => {
           setSelectedQuery(e.target.value);

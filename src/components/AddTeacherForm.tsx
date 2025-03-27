@@ -93,7 +93,7 @@ const AddTeacherForm = () => {
       }
     }
 
-    reset(); // Reset the form after submission
+    reset();
   };
 
   return (
@@ -109,7 +109,7 @@ const AddTeacherForm = () => {
                 </label>
                 <Input
                   type="text"
-                  placeholder="Imię i nazwisko prowadzącego"
+                  placeholder="Imię i nazwisko prowadzącego zajęcia"
                   className="w-full mt-3 bg-background"
                   {...register("name", { required: "Imię i nazwisko jest wymagane" })}
                 />

@@ -6,7 +6,7 @@ const Footer = () => {
       <Separator orientation="horizontal" />
       <footer className="px-default py-10">
         <h1 className="text-xl font-semibold">
-          <span className="text-primary font-bold">Ranking</span> prowadzących
+          Studenckie <span className="text-primary font-bold">oceny</span>
         </h1>
       </footer>
     </div>

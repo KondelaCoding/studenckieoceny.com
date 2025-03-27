@@ -17,6 +17,7 @@ import { Toaster } from "./ui/sonner";
 import { toast } from "sonner";
 import { Textarea } from "./ui/textarea";
 import { Input } from "./ui/input";
+import Link from "next/link";
 
 export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
   const [message, setMessage] = useState<string | null>(null);
@@ -106,7 +107,7 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
             <DrawerHeader>
               <DrawerTitle>Napisz komentarz</DrawerTitle>
               <DrawerDescription>
-                Powiedz <span className="text-primary">anonimowo</span> co myślisz o tym prowadzącym
+                Powiedz <span className="text-primary">anonimowo</span> co myślisz o tych zajęciach.
               </DrawerDescription>
             </DrawerHeader>
             <div className="p-4 pb-0 flex flex-col items-center gap-5">
@@ -137,7 +138,12 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
               </div>
             </div>
             <DrawerFooter>
-              <p className="leading-7 text-muted-foreground text-sm mt-10">Dodając komentarz akceptujesz regulamin.</p>
+              <p className="leading-7 text-muted-foreground text-sm mt-10">
+                Dodając komentarz akceptujesz{" "}
+                <Link href="/regulamin" className="text-primary underline hover:text-foreground">
+                  regulamin.
+                </Link>
+              </p>
               {message || isRatingClicked ? (
                 <DrawerClose onClick={handleAddOpinion} asChild>
                   <Button className="w-full">Dodaj</Button>
