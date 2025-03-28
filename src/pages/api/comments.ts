@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { addComment, getComments, init } from "@/services/db";
+import { addComment, init } from "@/services/db";
 import { Comment } from "@/types";
 
 init();
@@ -8,14 +8,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse,
 ) {
-    if (req.method === "GET") {
-        try {
-            const comments = await getComments();
-            res.status(200).json(comments);
-        } catch {
-            res.status(500).json({ error: "Failed to fetch comments" });
-        }
-    } else if (req.method === "POST") {
+    if (req.method === "POST") {
         try {
             const { teacherId, user, comment }: {
                 teacherId: string;

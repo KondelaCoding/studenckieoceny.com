@@ -8,6 +8,7 @@ import { useForm, Controller } from "react-hook-form";
 import { University, Subject } from "@/types";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
+import { UserPlus } from "lucide-react";
 
 interface FormData {
   name: string;
@@ -49,8 +50,17 @@ const AddTeacherForm = () => {
       universities: [data.primaryUniversity?.id ?? "", data.secondaryUniversity?.id ?? ""],
       subjects: [data.primarySubject?.id ?? "", data.secondarySubject?.id ?? ""],
     };
+
+    if (data.otherSubject) {
+      const subjectsArray = data.otherSubject
+        .toLowerCase()
+        .split(",")
+        .map((subject) => subject.trim());
+
+      await addSubjectToDatabase(subjectsArray);
+    }
+
     if (data.otherUniversity || data.otherSubject) {
-      console.log("Send email for approval:", data);
       try {
         const response = await fetch("/api/notify-admin", {
           method: "POST",
@@ -96,6 +106,29 @@ const AddTeacherForm = () => {
     reset();
   };
 
+  const addSubjectToDatabase = async (subjects: string[]) => {
+    const subjectsData = await fetch("/api/subjects");
+    const subjectsJson = await subjectsData.json();
+
+    subjects.forEach(async (subject) => {
+      if (subjectsJson.some((s: Subject) => s.name === subject)) return;
+      try {
+        const response = await fetch("/api/subjects", {
+          method: "POST",
+          body: JSON.stringify({ name: subject }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to add subject");
+        }
+      } catch (error) {
+        console.error("Error adding subject:", error);
+      }
+    });
+  };
   return (
     <>
       <Toaster closeButton={true} />
@@ -104,21 +137,15 @@ const AddTeacherForm = () => {
           <div className="flex flex-col items-center gap-5">
             <div className="flex flex-col items-center text-left justify-center gap-10 w-full">
               <div className="w-full">
-                <label htmlFor="name" className="w-full">
-                  Imię i nazwisko
-                </label>
                 <Input
                   type="text"
                   placeholder="Imię i nazwisko prowadzącego zajęcia"
-                  className="w-full mt-3 bg-background"
+                  className="w-full bg-background"
                   {...register("name", { required: "Imię i nazwisko jest wymagane" })}
                 />
                 {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
               </div>
               <div className="w-full">
-                <label htmlFor="universities" className="w-full">
-                  Uczelnie
-                </label>
                 <div className="flex flex-col w-full gap-5 mt-3 sm:flex-row">
                   <Controller
                     name="primaryUniversity"
@@ -134,9 +161,6 @@ const AddTeacherForm = () => {
                 <Input placeholder="Inna" className="mt-3 bg-background" {...register("otherUniversity")} />
               </div>
               <div className="w-full">
-                <label htmlFor="subjects" className="w-full">
-                  Przedmioty
-                </label>
                 <div className="flex flex-col w-full gap-5 mt-3 sm:flex-row">
                   <Controller
                     name="primarySubject"
@@ -149,12 +173,16 @@ const AddTeacherForm = () => {
                     render={({ field }) => <Combobox data="subjects" title="przedmiot" onChange={field.onChange} />}
                   />
                 </div>
-                <Input placeholder="Inne" className="mt-3 bg-background" {...register("otherSubject")} />
+                <Input
+                  placeholder="Inne (Fizyka, Matematyka)"
+                  className="mt-3 bg-background"
+                  {...register("otherSubject")}
+                />
+                <p className="text-sm text-muted-foreground">
+                  Wpisuj przedmioty separując je przecinkiem <q> , </q>
+                </p>
               </div>
               <div className="w-full">
-                <label htmlFor="email" className="w-full text-md mt-5">
-                  Twój email
-                </label>
                 <Input
                   type="email"
                   placeholder="Twój email"
@@ -176,7 +204,10 @@ const AddTeacherForm = () => {
           <p className="leading-7 text-muted-foreground text-sm text-right mb-3">
             Wybierając inną uczelnie bądź przedmiot nasza moderacja weryfikuje podane informacje.
           </p>
-          <Button type="submit">Dodaj</Button>
+          <Button type="submit">
+            <UserPlus />
+            Dodaj
+          </Button>
         </CardFooter>
       </form>
     </>
