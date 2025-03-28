@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import SearchBar from "./SearchBar";
-import { GraduationCap } from "lucide-react";
+import Logo from "../../public/logo.svg";
+import Image from "next/image";
 
 export function Navbar() {
   return (
     <div className="fixed top-0 left-0 z-50 w-full bg-card">
       <nav className="py-3 flex justify-between items-center px-default  w-full gap-5">
         <Link href={"/"} className="inline-flex gap-3 items-center text-xl font-semibold">
-          <GraduationCap size={32} />
+          <Image src={Logo} alt="absolwent-uczelni" width={32} className="foreground-filter" />
           <span className="hidden md:block">Studenckie oceny</span>
         </Link>
         <div className="inline-flex gap-3 flex-grow max-w-md justify-end">

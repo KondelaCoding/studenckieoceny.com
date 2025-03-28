@@ -139,7 +139,7 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
             </div>
             <DrawerFooter>
               <p className="leading-7 text-muted-foreground text-sm mt-10">
-                Dodając komentarz akceptujesz{" "}
+                Dodając komentarz akceptujesz
                 <Link href="/regulamin" className="text-primary underline hover:text-foreground">
                   regulamin.
                 </Link>
