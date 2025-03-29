@@ -25,6 +25,7 @@ export type ReturnedTeacherProps = {
     graphY?: number;
     timestamp: number;
     comments?: Comment[];
+    hidden: boolean;
 };
 
 export type Comment = {

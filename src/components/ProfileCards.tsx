@@ -7,6 +7,7 @@ import { ReturnedTeacherProps } from "@/types";
 import { Separator } from "./ui/separator";
 import AddCommentDrawer from "./AddCommentDrawer";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
   return (
@@ -69,11 +70,12 @@ const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps
               <span className="text-primary font-bold"> przyśpieszyć </span>rozwój? <br />
               Piwko tego nie zrobi ale przynajmniej poprawi mi humor ♥️
             </p>
-            {/* TODO: Add link to patreon or something */}
-            <Button className="mt-10">
-              <PiggyBank />
-              Wesprzyj
-            </Button>
+            <Link href="https://buymeacoffee.com/mikolajkondela" target="_blank" rel="noopener noreferrer">
+              <Button className="mt-10">
+                <PiggyBank />
+                Wesprzyj
+              </Button>
+            </Link>
           </div>
           <CardHeader>
             <CardTitle className="inline-flex gap-3 items-center">

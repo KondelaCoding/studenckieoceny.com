@@ -121,18 +121,42 @@ export const addTeacher = async (teacher: TeacherProps) => {
     });
 };
 
-export const getTeachers = () => {
+export const getAllTeachers = () => {
     return new Promise((resolve, reject) => {
         db.all<ReturnedTeacherProps>(
             `SELECT t.*, 
-                    GROUP_CONCAT(DISTINCT u.name) AS universities, 
-                    GROUP_CONCAT(DISTINCT s.name) AS subjects 
-             FROM teachers t
-             LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
-             LEFT JOIN universities u ON tu.universityId = u.id
-             LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
-             LEFT JOIN subjects s ON ts.subjectId = s.id
-             GROUP BY t.id`,
+                GROUP_CONCAT(DISTINCT u.name) AS universities, 
+                GROUP_CONCAT(DISTINCT s.name) AS subjects 
+         FROM teachers t
+         LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
+         LEFT JOIN universities u ON tu.universityId = u.id
+         LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
+         LEFT JOIN subjects s ON ts.subjectId = s.id
+         GROUP BY t.id`,
+            (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            },
+        );
+    });
+};
+
+export const getVisibleTeachers = () => {
+    return new Promise((resolve, reject) => {
+        db.all<ReturnedTeacherProps>(
+            `SELECT t.*, 
+                GROUP_CONCAT(DISTINCT u.name) AS universities, 
+                GROUP_CONCAT(DISTINCT s.name) AS subjects 
+         FROM teachers t
+         LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
+         LEFT JOIN universities u ON tu.universityId = u.id
+         LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
+         LEFT JOIN subjects s ON ts.subjectId = s.id
+         WHERE t.hidden = 0
+         GROUP BY t.id`,
             (err, rows) => {
                 if (err) {
                     reject(err);
@@ -154,6 +178,22 @@ export const getTeacherComments = (teacherId: string) => {
                     reject(err);
                 } else {
                     resolve(rows);
+                }
+            },
+        );
+    });
+};
+
+export const hideTeacher = (id: string) => {
+    return new Promise((resolve, reject) => {
+        db.run(
+            "UPDATE teachers SET hidden = 1 WHERE id = ?",
+            [id],
+            (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(undefined);
                 }
             },
         );

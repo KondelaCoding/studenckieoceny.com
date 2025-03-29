@@ -53,6 +53,8 @@ export const reportTeacherNotification = async (
             <hr />
             <h1>Message:</h1>
             <p>${message}</p>
+            <hr />
+            <h2>Verify if the teacher should be hidden</h2>
         `,
     });
 

@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { Mail } from "lucide-react";
 import Instagram from "../../public/instagram.svg";
 import Github from "../../public/github.svg";
-import Patreon from "../../public/patreon.svg";
+import BuyMeACoffee from "../../public/buy-me-a-coffee.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -44,15 +44,15 @@ const Footer = () => {
                 </TooltipContent>
               </Tooltip>
 
-              {/* Patreon */}
+              {/* BuyMeACoffee */}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Link href="https://www.patreon.com/studenckieoceny" target="_blank" rel="noopener noreferrer">
-                    <Image src={Patreon} alt="patreon-logo" width={40} />
+                  <Link href="https://buymeacoffee.com/mikolajkondela" target="_blank" rel="noopener noreferrer">
+                    <Image src={BuyMeACoffee} alt="buy-me-a-coffee-logo" width={40} />
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Patreon</p>
+                  <p>Buy me a coffee</p>
                 </TooltipContent>
               </Tooltip>
 
