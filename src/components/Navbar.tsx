@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import SearchBar from "./SearchBar";
-import Logo from "../../public/logo.svg";
+import Logo from "../../public/Logo.svg";
 import Image from "next/image";
 
 export function Navbar() {

@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
-import Logo from "../../../public/logo.svg";
+import Logo from "../../../public/Logo.svg";
 import { Separator } from "@/components/ui/separator";
 
 const PolitykaPrywatności = () => {

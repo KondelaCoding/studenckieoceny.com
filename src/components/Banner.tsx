@@ -1,5 +1,5 @@
 import SearchBar from "./SearchBar";
-import Logo from "../../public/logo.svg";
+import Logo from "../../public/Logo.svg";
 import Image from "next/image";
 
 const Banner = () => {
