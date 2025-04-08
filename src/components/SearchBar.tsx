@@ -7,7 +7,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Combobox from "@/components/Combobox";
 import { useState, useEffect } from "react";
 
-const SearchBar = ({ isFull, isInstant }: { isFull: boolean; isInstant: boolean }) => {
+const SearchBar = ({ isInstant }: { isFull: boolean; isInstant: boolean }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [subject, setSubject] = useState("");
