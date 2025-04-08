@@ -9,7 +9,7 @@ import { Undo2 } from "lucide-react";
 const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: string }> }) => {
   try {
     const { teacher } = await params;
-    const response = await fetch(`http://localhost:3000/api/teacher-profile?id=${teacher}`);
+    const response = await fetch(`${process.env.BASE_URL}/api/teacher-profile?id=${teacher}`);
     if (!response.ok) {
       throw new Error("Failed to fetch teacher");
     }

@@ -39,7 +39,7 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
   const postRating = async (rating: number) => {
     if (!isRatingClicked) return false;
     try {
-      const response = await fetch("http://localhost:3000/api/rating", {
+      const response = await fetch(`${process.env.BASE_URL}/api/rating`, {
         method: "PATCH",
         body: JSON.stringify({ teacherId: teacherId, rating }),
         headers: {
@@ -63,7 +63,7 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
     const message = messageRef.current?.value;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/comments`, {
+      const response = await fetch(`${process.env.BASE_URL}/api/comments`, {
         method: "POST",
         body: JSON.stringify({ teacherId: teacherId, user: nick, comment: message }),
         headers: {
