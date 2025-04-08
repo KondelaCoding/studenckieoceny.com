@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Combobox from "@/components/Combobox";
 import { useState, useEffect } from "react";
+import { Suspense } from "react";
 
 const SearchBar = ({ isInstant }: { isFull: boolean; isInstant: boolean }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -79,34 +80,36 @@ const SearchBar = ({ isInstant }: { isFull: boolean; isInstant: boolean }) => {
   };
 
   return (
-    <div className="inline-flex gap-3 w-full max-w-lg">
-      <Input
-        type="search"
-        placeholder="Wyszukaj prowadzącego zajęcia"
-        value={isInstant ? undefined : searchQuery}
-        onChange={(e) => {
-          setSelectedQuery(e.target.value);
-        }}
-        onKeyDown={isInstant ? undefined : handleKeyDown}
-      />
-      {false /* TODO: v1.1 - Implement filtering, change "false" to isFull */ ? (
-        <>
-          <Combobox data="subjects" title="przedmiot" onChange={setSelectedSubject} />
-          <Combobox data="universities" title="uczelnie" onChange={setSelectedUniversity} />
-        </>
-      ) : null}
-      {isInstant ? null : isLoading ? (
-        <Button type="button" disabled>
-          <Loader2 className="animate-spin" />
-          <span className="hidden sm:block">Szukaj</span>
-        </Button>
-      ) : (
-        <Button type="button" onClick={handleSearch}>
-          <SearchIcon />
-          <span className="hidden sm:block">Szukaj</span>
-        </Button>
-      )}
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="inline-flex gap-3 w-full max-w-lg">
+        <Input
+          type="search"
+          placeholder="Wyszukaj prowadzącego zajęcia"
+          value={isInstant ? undefined : searchQuery}
+          onChange={(e) => {
+            setSelectedQuery(e.target.value);
+          }}
+          onKeyDown={isInstant ? undefined : handleKeyDown}
+        />
+        {false /* TODO: v1.1 - Implement filtering, change "false" to isFull */ ? (
+          <>
+            <Combobox data="subjects" title="przedmiot" onChange={setSelectedSubject} />
+            <Combobox data="universities" title="uczelnie" onChange={setSelectedUniversity} />
+          </>
+        ) : null}
+        {isInstant ? null : isLoading ? (
+          <Button type="button" disabled>
+            <Loader2 className="animate-spin" />
+            <span className="hidden sm:block">Szukaj</span>
+          </Button>
+        ) : (
+          <Button type="button" onClick={handleSearch}>
+            <SearchIcon />
+            <span className="hidden sm:block">Szukaj</span>
+          </Button>
+        )}
+      </div>
+    </Suspense>
   );
 };
 
