@@ -13,7 +13,7 @@ export function Navbar() {
           <span className="hidden md:block">Studenckie oceny</span>
         </Link>
         <div className="inline-flex gap-3 flex-grow max-w-md justify-end">
-          <SearchBar isFull={false} isInstant={false} />
+          <SearchBar isInstant={false} />
         </div>
       </nav>
       <Separator orientation="horizontal" />

@@ -10,7 +10,7 @@ const Banner = () => {
         <h1 className="text-3xl font-semibold sm:text-5xl">Studenckie oceny</h1>
         <p className="max-w-md opacity-50 mx-auto">Dowiedz się czy warto iść na wykład.</p>
       </div>
-      <SearchBar isFull={true} isInstant={false} />
+      <SearchBar isInstant={false} />
     </div>
   );
 };

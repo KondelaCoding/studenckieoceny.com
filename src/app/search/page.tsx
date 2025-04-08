@@ -12,7 +12,7 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }
       <Navbar />
       <div>
         <h1 className="text-xl mb-5">Szukaj wybranego prowadzącego</h1>
-        <SearchBar isFull={true} isInstant={true} />
+        <SearchBar isInstant={true} />
       </div>
       <Separator orientation="horizontal" />
       <div>
