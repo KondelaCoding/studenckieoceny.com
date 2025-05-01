@@ -13,7 +13,8 @@ export const init = () => {
                 numberOfVotes INTEGER,
                 graphX INTEGER,
                 graphY INTEGER,
-                timestamp INTEGER
+                timestamp INTEGER,
+                hidden INTEGER DEFAULT 0
             )
         `);
 
