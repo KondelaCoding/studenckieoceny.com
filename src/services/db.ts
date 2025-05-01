@@ -1,5 +1,5 @@
 import sqlite3 from "sqlite3";
-import { Comment, ReturnedTeacherProps, TeacherProps } from "@/types";
+import { Comment, ReturnedTeacherProps, Subject, TeacherProps } from "@/types";
 
 export const db = new sqlite3.Database("database.db");
 
@@ -114,26 +114,25 @@ export const addTeacher = async (teacher: TeacherProps) => {
                         });
                     }
 
-                    resolve();
+                    resolve(undefined);
                 }
             },
         );
     });
 };
 
-// Example function to get teachers with their universities and subjects
-export const getTeachers = () => {
+export const getAllTeachers = () => {
     return new Promise((resolve, reject) => {
         db.all<ReturnedTeacherProps>(
             `SELECT t.*, 
-                    GROUP_CONCAT(DISTINCT u.name) AS universities, 
-                    GROUP_CONCAT(DISTINCT s.name) AS subjects 
-             FROM teachers t
-             LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
-             LEFT JOIN universities u ON tu.universityId = u.id
-             LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
-             LEFT JOIN subjects s ON ts.subjectId = s.id
-             GROUP BY t.id`,
+                GROUP_CONCAT(DISTINCT u.name) AS universities, 
+                GROUP_CONCAT(DISTINCT s.name) AS subjects 
+         FROM teachers t
+         LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
+         LEFT JOIN universities u ON tu.universityId = u.id
+         LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
+         LEFT JOIN subjects s ON ts.subjectId = s.id
+         GROUP BY t.id`,
             (err, rows) => {
                 if (err) {
                     reject(err);
@@ -145,7 +144,30 @@ export const getTeachers = () => {
     });
 };
 
-// Example function to get teacher comments
+export const getVisibleTeachers = () => {
+    return new Promise((resolve, reject) => {
+        db.all<ReturnedTeacherProps>(
+            `SELECT t.*, 
+                GROUP_CONCAT(DISTINCT u.name) AS universities, 
+                GROUP_CONCAT(DISTINCT s.name) AS subjects 
+         FROM teachers t
+         LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
+         LEFT JOIN universities u ON tu.universityId = u.id
+         LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
+         LEFT JOIN subjects s ON ts.subjectId = s.id
+         WHERE t.hidden = 0
+         GROUP BY t.id`,
+            (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            },
+        );
+    });
+};
+
 export const getTeacherComments = (teacherId: string) => {
     return new Promise((resolve, reject) => {
         db.all(
@@ -162,22 +184,22 @@ export const getTeacherComments = (teacherId: string) => {
     });
 };
 
-export const getComments = () => {
+export const hideTeacher = (id: string) => {
     return new Promise((resolve, reject) => {
-        db.all(
-            "SELECT * FROM comments",
-            (err, rows) => {
+        db.run(
+            "UPDATE teachers SET hidden = 1 WHERE id = ?",
+            [id],
+            (err) => {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(rows);
+                    resolve(undefined);
                 }
             },
         );
     });
 };
 
-// Example function to add a comment
 export const addComment = (comment: Comment) => {
     return new Promise((resolve, reject) => {
         db.run(
@@ -187,14 +209,13 @@ export const addComment = (comment: Comment) => {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve();
+                    resolve(undefined);
                 }
             },
         );
     });
 };
 
-// Example function to get universities
 export const getUniversities = () => {
     return new Promise((resolve, reject) => {
         db.all("SELECT * FROM universities", (err, rows) => {
@@ -207,176 +228,59 @@ export const getUniversities = () => {
     });
 };
 
-// Example function to get subjects
-export const getSubjects = () => {
-    return new Promise((resolve, reject) => {
-        db.all("SELECT * FROM subjects", (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(rows);
-            }
-        });
-    });
-};
-
-// Example function to add a university
+// ! Used only by the admin
 export const addUniversity = (name: string) => {
     return new Promise((resolve, reject) => {
         db.run("INSERT INTO universities (name) VALUES (?)", [name], (err) => {
             if (err) {
                 reject(err);
             } else {
-                resolve();
+                resolve(undefined);
             }
         });
     });
 };
 
-// Example function to add a subject
 export const addSubject = (name: string) => {
     return new Promise((resolve, reject) => {
         db.run("INSERT INTO subjects (name) VALUES (?)", [name], (err) => {
             if (err) {
                 reject(err);
             } else {
-                resolve();
+                resolve(undefined);
             }
         });
     });
 };
 
-// Example function to get teacher universities
-export const getTeacherUniversities = (teacherId: number) => {
-    return new Promise((resolve, reject) => {
-        db.all(
-            `SELECT u.* FROM universities u
-             JOIN teacher_universities tu ON u.id = tu.universityId
-             WHERE tu.teacherId = ?`,
-            [teacherId],
-            (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            },
-        );
-    });
-};
-
-// Example function to get teacher subjects
-export const getTeacherSubjects = (teacherId: number) => {
-    return new Promise((resolve, reject) => {
-        db.all(
-            `SELECT s.* FROM subjects s
-             JOIN teacher_subjects ts ON s.id = ts.subjectId
-             WHERE ts.teacherId = ?`,
-            [teacherId],
-            (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            },
-        );
-    });
-};
-
-// Example function to add a university to a teacher
-export const addTeacherUniversity = (
-    teacherId: number,
-    universityId: number,
-) => {
-    return new Promise((resolve, reject) => {
-        db.run(
-            "INSERT INTO teacher_universities (teacherId, universityId) VALUES (?, ?)",
-            [teacherId, universityId],
-            (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            },
-        );
-    });
-};
-
-// Example function to add a subject to a teacher
-export const addTeacherSubject = (teacherId: number, subjectId: number) => {
-    return new Promise((resolve, reject) => {
-        db.run(
-            "INSERT INTO teacher_subjects (teacherId, subjectId) VALUES (?, ?)",
-            [teacherId, subjectId],
-            (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            },
-        );
-    });
-};
-
-// Example function to get a university by name
-export const getUniversityByName = (name: string) => {
-    return new Promise((resolve, reject) => {
-        db.get(
-            "SELECT * FROM universities WHERE name = ?",
-            [name],
-            (err, row) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(row);
-                }
-            },
-        );
-    });
-};
-
-// Example function to get a subject by name
-export const getSubjectByName = (name: string) => {
-    return new Promise((resolve, reject) => {
-        db.get("SELECT * FROM subjects WHERE name = ?", [name], (err, row) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(row);
-            }
+export const getSubjectsByName = (name?: string) => {
+    if (name) {
+        return new Promise((resolve, reject) => {
+            db.all<Subject[]>(
+                "SELECT * FROM subjects WHERE name LIKE ?",
+                [`%${name}%`],
+                (err, rows) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
+                },
+            );
         });
-    });
-};
-
-// Example function to get a teacher by name
-export const getTeacherByName = (name: string) => {
-    return new Promise<ReturnedTeacherProps>((resolve, reject) => {
-        db.get<ReturnedTeacherProps>(
-            `SELECT t.*, 
-                    GROUP_CONCAT(DISTINCT u.name) AS universities, 
-                    GROUP_CONCAT(DISTINCT s.name) AS subjects 
-             FROM teachers t
-             LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
-             LEFT JOIN universities u ON tu.universityId = u.id
-             LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
-             LEFT JOIN subjects s ON ts.subjectId = s.id
-             WHERE t.name = ?
-             GROUP BY t.id`,
-            [name],
-            (err, row) => {
+    } else {
+        return new Promise((resolve, reject) => {
+            db.all("SELECT * FROM subjects", (err, rows) => {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(row);
+                    resolve(rows);
                 }
-            },
-        );
-    });
+            });
+        });
+    }
 };
-// Example function to get a teacher by id
+
 export const getTeacherById = (id: string) => {
     return new Promise<ReturnedTeacherProps>((resolve, reject) => {
         db.get<ReturnedTeacherProps>(
@@ -400,4 +304,26 @@ export const getTeacherById = (id: string) => {
             },
         );
     });
+};
+
+export const updateRating = async (id: string, rating: number) => {
+    try {
+        new Promise<void>((resolve, reject) => {
+            db.run(
+                `UPDATE teachers SET totalRatingValue = totalRatingValue + ?, numberOfVotes = numberOfVotes + 1 WHERE id = ?`,
+                [rating, id],
+                (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                },
+            );
+        });
+        return true;
+    } catch (error) {
+        console.error("Error updating rating:", error);
+        return false;
+    }
 };

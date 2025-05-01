@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { addTeacher, getTeachers, init } from "@/services/db";
+import { addTeacher, getVisibleTeachers, init } from "@/services/db";
 import { TeacherProps } from "@/types";
 
 init();
@@ -10,7 +10,7 @@ export default async function handler(
 ) {
     if (req.method === "GET") {
         try {
-            const teachers = await getTeachers();
+            const teachers = await getVisibleTeachers();
             res.status(200).json(teachers);
         } catch (error) {
             console.error("Error fetching teachers:", error);

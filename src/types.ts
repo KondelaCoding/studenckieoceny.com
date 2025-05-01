@@ -1,5 +1,5 @@
 export type TeacherProps = {
-    id: string;
+    id?: string;
     name: string;
     totalRatingValue: number;
     numberOfVotes: number;
@@ -25,6 +25,7 @@ export type ReturnedTeacherProps = {
     graphY?: number;
     timestamp: number;
     comments?: Comment[];
+    hidden: boolean;
 };
 
 export type Comment = {
@@ -34,4 +35,29 @@ export type Comment = {
     comment: string;
     timestamp: number;
     likes: number;
+};
+
+export type University = {
+    id: string;
+    name: string;
+};
+
+export type Subject = {
+    id: string;
+    name: string;
+};
+
+export const Months = {
+    1: "Stycznia",
+    2: "Lutego",
+    3: "Marca",
+    4: "Kwietnia",
+    5: "Maja",
+    6: "Czerwca",
+    7: "Lipca",
+    8: "Sierpnia",
+    9: "Września",
+    10: "Października",
+    11: "Listopada",
+    12: "Grudnia 🎅",
 };

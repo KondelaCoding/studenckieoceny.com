@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Comment } from "@/types";
+import { Comment, Months } from "@/types";
 import { Separator } from "./ui/separator";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Skeleton } from "./ui/skeleton";
@@ -16,7 +16,7 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
   const date = (timestamp: number) => {
     const date = new Date(timestamp);
     const day = date.getDate();
-    const month = date.getMonth() + 1;
+    const month = (date.getMonth() + 1).toString() as unknown as keyof typeof Months;
     const year = date.getFullYear();
     const hours = date.getHours();
     const minutes = date.getMinutes();
@@ -28,7 +28,7 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
     } else if (date.getDate() === new Date().getDate() - 1) {
       return "Wczoraj " + formattedTime;
     } else {
-      return `${day}.${month}.${year} ${hours < 9 ? `0${hours}` : hours}:${minutes < 9 ? `0${minutes}` : minutes}`;
+      return `${day} ${Months[month]} ${year}`;
     }
   };
 
@@ -38,7 +38,7 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
 
   useEffect(() => {
     const fetchComments = async () => {
-      const response = await fetch(`http://localhost:3000/api/teacher-comments?teacherId=${teacherId}`);
+      const response = await fetch(`${process.env.BASE_URL}/api/teacher-comments?teacherId=${teacherId}`);
       const data = await response.json();
       setComments(data);
       setIsLoading(false);

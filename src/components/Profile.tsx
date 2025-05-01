@@ -2,12 +2,13 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ReturnedTeacherProps } from "@/types";
 import ProfileCards from "./ProfileCards";
 import { Separator } from "./ui/separator";
-import StarRating from "./StarRating";
+import StarRatingDisplay from "./StarRatingDisplay";
 import { User, BookOpenText, University, CalendarClock } from "lucide-react";
+import ReportTeacherDrawer from "./ReportTeacherDrawer";
 
 const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
-  const seperatedSubjects = teacherData.subjects.split(", ");
-  const seperatedUniversities = teacherData.universities.split(", ");
+  const seperatedSubjects = teacherData.subjects.split(",");
+  const seperatedUniversities = teacherData.universities.split(",");
   const date =
     new Date(teacherData.timestamp).getDate() +
     "." +
@@ -15,19 +16,22 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
     "." +
     new Date(teacherData.timestamp).getFullYear();
   return (
-    <div className="grid grid-cols-[auto_1fr] grid-rows-1 w-full">
-      <div className="flex flex-col items-center py-10 -mt-5 max-w-lg gap-5 px-6 w-min">
+    <div className="grid grid-cols-1 grid-rows-1 w-full lg:grid-cols-[auto_1fr]">
+      <div className="flex flex-col items-center py-10 -mt-5 gap-5 lg:max-w-lg lg:w-min xl:px-6">
         <Avatar className="uppercase w-40 h-40 text-4xl border mx-14">
           <AvatarFallback>{teacherData.name.split(" ")[0][0] ?? ""}</AvatarFallback>
         </Avatar>
-        <div className="w-full flex flex-col gap-5">
-          <h2 className="scroll-m-20 mt-5 text-3xl font-semibold tracking-tight transition-colors capitalize inline-flex gap-3 items-center">
-            <User size={30} />
-            {teacherData.name.replace("+", " ")}
+        <div className="w-full flex flex-col gap-5 justify-center items-center lg:items-start">
+          <h2 className="scroll-m-20 mt-5 text-3xl font-semibold tracking-tight transition-colors capitalize inline-flex justify-center w-full gap-10 lg:justify-between">
+            <div className="inline-flex gap-3 items-center">
+              <User size={30} />
+              {teacherData.name}
+            </div>
+            <ReportTeacherDrawer teacherId={teacherData.id} />
           </h2>
-          <StarRating totalValue={teacherData.totalRatingValue} numberOfVotes={teacherData.numberOfVotes} />
+          <StarRatingDisplay totalValue={teacherData.totalRatingValue} numberOfVotes={teacherData.numberOfVotes} />
           <Separator orientation="horizontal" />
-          <div className="flex flex-col gap-10">
+          <div className="grid gap-10 grid-cols-1 md:grid-cols-3 lg:grid-cols-1">
             <div className="flex gap-3 flex-col">
               <span className="inline-flex items-center gap-3">
                 <BookOpenText size={24} />
@@ -46,7 +50,7 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
                 <University size={24} />
                 <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">Uczelnie</h3>
               </span>
-              <ul className="list-disc">
+              <ul className="list-disc space-y-3">
                 {seperatedUniversities.map((subject, index) => (
                   <li key={index} className="ml-6">
                     {subject}

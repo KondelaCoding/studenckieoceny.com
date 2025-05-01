@@ -11,6 +11,3 @@ export default function Home() {
     </div>
   );
 }
-/*
-!every teacher should have properties like: name, rating(0-5 stars float), number of votes, subject, university, graph
-*/
