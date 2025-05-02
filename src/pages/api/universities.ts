@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getUniversities, init } from "@/services/db";
+import { getUniversities, init } from "@/lib/db";
 
 init();
 

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { addSubject, getSubjectsByName, init } from "@/services/db";
+import { addSubject, getSubjectsByName, init } from "@/lib/db";
 
 init();
 

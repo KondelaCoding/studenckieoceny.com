@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { addComment, init } from "@/services/db";
+import { addComment, init } from "@/lib/db";
 import { Comment } from "@/types";
 
 init();

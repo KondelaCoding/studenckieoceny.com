@@ -6,7 +6,13 @@ import { useState, useRef } from "react";
 import { Suspense } from "react";
 import Search from "@/components/Search";
 
-const SearchBar = ({ isInstant }: { isInstant: boolean }) => {
+const SearchBar = ({
+  isInstant,
+  buttonVariant = "default",
+}: {
+  isInstant: boolean;
+  buttonVariant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost";
+}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Ref to access the handleSearch function from the Search component
@@ -25,12 +31,12 @@ const SearchBar = ({ isInstant }: { isInstant: boolean }) => {
         <Search ref={searchRef} isInstant={isInstant} onSearch={handleSearch} />
       </Suspense>
       {isInstant ? null : isLoading ? (
-        <Button type="button" disabled>
+        <Button variant={buttonVariant} type="button" disabled>
           <Loader2 className="animate-spin" />
           <span className="hidden sm:block">Szukaj</span>
         </Button>
       ) : (
-        <Button type="button" onClick={() => searchRef.current?.handleSearch()}>
+        <Button variant={buttonVariant} type="button" onClick={() => searchRef.current?.handleSearch()}>
           <SearchIcon />
           <span className="hidden sm:block">Szukaj</span>
         </Button>

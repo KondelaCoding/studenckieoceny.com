@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { addTeacher, getVisibleTeachers, init } from "@/services/db";
+import { addTeacher, getVisibleTeachers, init } from "@/lib/db";
 import { TeacherProps } from "@/types";
 
 init();

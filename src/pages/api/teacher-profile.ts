@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getTeacherById, init } from "@/services/db";
+import { getTeacherById, init } from "@/lib/db";
 
 init();
 

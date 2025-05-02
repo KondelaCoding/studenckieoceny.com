@@ -3,8 +3,10 @@ import { Separator } from "@/components/ui/separator";
 import SearchBar from "./SearchBar";
 import Logo from "../../public/Logo.svg";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { LogIn, CirclePlus } from "lucide-react";
 
-export function Navbar() {
+export function Navbar({ isSearchBarVisible = true }: { isSearchBarVisible?: boolean }) {
   return (
     <div className="fixed top-0 left-0 z-50 w-full bg-card">
       <nav className="py-3 flex justify-between items-center px-default  w-full gap-5">
@@ -12,8 +14,24 @@ export function Navbar() {
           <Image src={Logo} alt="absolwent-uczelni" width={32} className="foreground-filter" />
           <span className="hidden md:block">Studenckie oceny</span>
         </Link>
-        <div className="inline-flex gap-3 flex-grow max-w-md justify-end">
-          <SearchBar isInstant={false} />
+        <div className="inline-flex gap-3 flex-grow justify-end">
+          <div className="w-full max-w-md">
+            {isSearchBarVisible ? <SearchBar isInstant={false} buttonVariant="secondary" /> : null}
+          </div>
+        </div>
+        <div className="flex gap-3 items-center">
+          <Button variant={"secondary"}>
+            <Link href={"/rejestracja"} className="inline-flex gap-2 items-center">
+              <CirclePlus />
+              <span className="hidden sm:block">Dołącz</span>
+            </Link>
+          </Button>
+          <Button>
+            <Link href={"/login"} className="inline-flex gap-2 items-center">
+              <LogIn />
+              <span className="hidden sm:block">Zaloguj się</span>
+            </Link>
+          </Button>
         </div>
       </nav>
       <Separator orientation="horizontal" />

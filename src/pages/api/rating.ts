@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { init, updateRating } from "@/services/db";
+import { init, updateRating } from "@/lib/db";
 
 init();
 

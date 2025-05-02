@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { reportTeacherNotification } from "@/services/mail";
-import { hideTeacher, init } from "@/services/db";
+import { hideTeacher, init } from "@/lib/db";
 
 init();
 
