@@ -49,7 +49,7 @@ export const reportTeacherNotification = async (
         text: message,
         html: `
             <h1>User reported a teacher with ID: ${teacherId}</h1>
-            <a href="${process.env.BASE_URL}/${teacherId}">Click here to view the teacher</a>
+            <a href="${process.env.NEXT_PUBLIC_BASE_URL}/${teacherId}">Click here to view the teacher</a>
             <hr />
             <h1>Message:</h1>
             <p>${message}</p>

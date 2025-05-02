@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 
 const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }> }) => {
   const { query } = await searchParams;
-  const teachers = await fetch(`${process.env.BASE_URL}/api/teachers`).then((res) => res.json());
+  const teachers = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`).then((res) => res.json());
 
   return (
     <div className="px-default w-full flex flex-col gap-10 pt-12 pb-20">

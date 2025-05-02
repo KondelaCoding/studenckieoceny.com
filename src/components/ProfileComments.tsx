@@ -38,7 +38,7 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
 
   useEffect(() => {
     const fetchComments = async () => {
-      const response = await fetch(`${process.env.BASE_URL}/api/teacher-comments?teacherId=${teacherId}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teacher-comments?teacherId=${teacherId}`);
       const data = await response.json();
       setComments(data);
       setIsLoading(false);
