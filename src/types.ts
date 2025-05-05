@@ -61,3 +61,13 @@ export const Months = {
     11: "Listopada",
     12: "Grudnia 🎅",
 };
+
+export type User = {
+    id: string;
+    name: string;
+    email: string;
+    password: string;
+    role: "user" | "admin";
+    createdAt: number;
+    updatedAt: number;
+};

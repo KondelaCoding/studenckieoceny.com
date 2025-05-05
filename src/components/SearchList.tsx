@@ -47,7 +47,7 @@ const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; que
             {filteredTeachers.map((teacher: ReturnedTeacherProps) => (
               <TableRow key={teacher.id}>
                 <TableCell>
-                  <Link href={`/${teacher.id}`} className="inline-flex items-center gap-3">
+                  <Link href={`/profil/${teacher.id}`} className="inline-flex items-center gap-3">
                     <Avatar className="uppercase">
                       <AvatarFallback>{teacher.name.split("+")[0][0] ?? ""}</AvatarFallback>
                     </Avatar>

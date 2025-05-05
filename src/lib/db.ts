@@ -1,5 +1,11 @@
 import sqlite3 from "sqlite3";
-import { Comment, ReturnedTeacherProps, Subject, TeacherProps } from "@/types";
+import {
+    Comment,
+    ReturnedTeacherProps,
+    Subject,
+    TeacherProps,
+    User,
+} from "@/types";
 
 export const db = new sqlite3.Database("database.db");
 
@@ -61,6 +67,18 @@ export const init = () => {
                 FOREIGN KEY (teacherId) REFERENCES teachers(id),
                 FOREIGN KEY (subjectId) REFERENCES subjects(id),
                 PRIMARY KEY (teacherId, subjectId)
+            )
+        `);
+
+        db.run(`
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                name TEXT NOT NULL,
+                role TEXT DEFAULT 'user',
+                createdAt INTEGER DEFAULT (strftime('%s', 'now')),
+                updatedAt INTEGER DEFAULT (strftime('%s', 'now'))
             )
         `);
     });
@@ -327,4 +345,40 @@ export const updateRating = async (id: string, rating: number) => {
         console.error("Error updating rating:", error);
         return false;
     }
+};
+
+export const addUser = async (
+    email: string,
+    hashedPassword: string,
+    name: string,
+) => {
+    return new Promise<void>((resolve, reject) => {
+        db.run(
+            "INSERT INTO users (email, password, name) VALUES (?, ?, ?)",
+            [email, hashedPassword, name],
+            (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            },
+        );
+    });
+};
+
+export const getUserByEmail = (email: string) => {
+    return new Promise<User>((resolve, reject) => {
+        db.get(
+            "SELECT * FROM users WHERE email = ?",
+            [email],
+            (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row as User);
+                }
+            },
+        );
+    });
 };

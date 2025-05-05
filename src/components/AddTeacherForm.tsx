@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { useForm, Controller } from "react-hook-form";
 import { University, Subject } from "@/types";
 import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
 import { UserPlus } from "lucide-react";
 
 interface FormData {
@@ -87,7 +86,7 @@ const AddTeacherForm = () => {
         toast.error("Musisz wybrać przynajmniej jedną uczelnie i przedmiot");
         return;
       }
-      console.log("Add teacher to database:", newData);
+
       const response = await fetch("/api/teachers", {
         method: "POST",
         body: JSON.stringify(newData),
@@ -131,7 +130,6 @@ const AddTeacherForm = () => {
   };
   return (
     <>
-      <Toaster closeButton={true} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent>
           <div className="flex flex-col items-center gap-5">

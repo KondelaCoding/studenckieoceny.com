@@ -13,7 +13,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Toaster } from "./ui/sonner";
 import { toast } from "sonner";
 import { Textarea } from "./ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -45,7 +44,6 @@ export function ReportTeacherDrawer({ teacherId }: { teacherId: string }) {
 
   return (
     <div>
-      <Toaster closeButton={true} />
       <Drawer>
         <TooltipProvider>
           <Tooltip>

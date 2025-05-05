@@ -13,7 +13,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Toaster } from "./ui/sonner";
 import { toast } from "sonner";
 import { Textarea } from "./ui/textarea";
 import { Input } from "./ui/input";
@@ -94,7 +93,6 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
 
   return (
     <div>
-      <Toaster closeButton={true} />
       <Drawer onClose={() => setIsRatingClicked(false)}>
         <DrawerTrigger asChild>
           <Button>
