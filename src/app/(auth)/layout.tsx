@@ -8,7 +8,7 @@ const AuthLayout = ({
   return (
     <div>
       <Navbar isSearchBarVisible={false} />
-      {children}
+      <div>{children}</div>
     </div>
   );
 };

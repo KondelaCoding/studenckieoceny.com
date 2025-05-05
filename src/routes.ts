@@ -2,6 +2,8 @@ export const publicRoutes = [
     "/",
     "/search",
     /^\/profil\/\d+$/, // Allow /profil/:id where :id is a number
+    "/regulamin",
+    "/polityka-prywatnosci",
 ];
 
 // routes used for authentication

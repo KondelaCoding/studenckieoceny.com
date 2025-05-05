@@ -6,9 +6,9 @@ import AddTeacherForm from "@/components/AddTeacherForm";
 
 const Page = () => {
   return (
-    <div className="min-h-[calc(100vh-20rem)] flex justify-center items-center -mt-5">
+    <div>
       <Navbar />
-      <Card className="sm:max-w-min my-10 mx-10">
+      <Card className="sm:max-w-min sm:mx-auto my-5 mx-5">
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
             <UserPlus />

@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="pl" className="overflow-x-hidden">
       <body
-        className={`${montserrat.variable} antialiased font-[family-name:var(--font-montserrat)] flex justify-between flex-col min-h-screen pt-20 overflow-hidden`}
+        className={`${montserrat.variable} antialiased font-[family-name:var(--font-montserrat)] flex justify-between min-h-svh pt-[60px] flex-col overflow-hidden`}
       >
         <Toaster closeButton={true} />
         {children}
