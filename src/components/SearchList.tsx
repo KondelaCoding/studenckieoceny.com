@@ -11,7 +11,6 @@ const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; que
     return query ? name.toLowerCase().includes(query.toLowerCase()) : true;
   };
 
-  // TODO: v1.1 - Implement filtering by subject and university
   // const filterSubject = (subjects: string) => {
   //   console.log("subjects", subjects);
   //   console.log("query", query);

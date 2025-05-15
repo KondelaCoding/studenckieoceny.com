@@ -1,11 +1,5 @@
 import sqlite3 from "sqlite3";
-import {
-    Comment,
-    ReturnedTeacherProps,
-    Subject,
-    TeacherProps,
-    User,
-} from "@/types";
+import { Comment, ReturnedTeacherProps, User } from "@/types";
 
 export const db = new sqlite3.Database("database.db");
 
@@ -15,12 +9,11 @@ export const init = () => {
             CREATE TABLE IF NOT EXISTS teachers (
                 id INTEGER PRIMARY KEY,
                 name TEXT,
-                totalRatingValue INTEGER,
-                numberOfVotes INTEGER,
-                graphX INTEGER,
-                graphY INTEGER,
-                timestamp INTEGER,
-                hidden INTEGER DEFAULT 0
+                totalRatingValue INTEGER DEFAULT 0,
+                numberOfVotes INTEGER DEFAULT 0,
+                subjects TEXT,
+                timestamp INTEGER DEFAULT (strftime('%s', 'now')),
+                reason TEXT DEFAULT null
             )
         `);
 
@@ -44,13 +37,6 @@ export const init = () => {
         `);
 
         db.run(`
-            CREATE TABLE IF NOT EXISTS subjects (
-                id INTEGER PRIMARY KEY,
-                name TEXT
-            )
-        `);
-
-        db.run(`
             CREATE TABLE IF NOT EXISTS teacher_universities (
                 teacherId INTEGER,
                 universityId INTEGER,
@@ -61,20 +47,10 @@ export const init = () => {
         `);
 
         db.run(`
-            CREATE TABLE IF NOT EXISTS teacher_subjects (
-                teacherId INTEGER,
-                subjectId INTEGER,
-                FOREIGN KEY (teacherId) REFERENCES teachers(id),
-                FOREIGN KEY (subjectId) REFERENCES subjects(id),
-                PRIMARY KEY (teacherId, subjectId)
-            )
-        `);
-
-        db.run(`
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 email TEXT UNIQUE NOT NULL,
-                password TEXT NOT NULL,
+                password TEXT,
                 name TEXT NOT NULL,
                 role TEXT DEFAULT 'user',
                 createdAt INTEGER DEFAULT (strftime('%s', 'now')),
@@ -84,18 +60,16 @@ export const init = () => {
     });
 };
 
-export const addTeacher = async (teacher: TeacherProps) => {
-    const timestamp = Date.now();
+export const addTeacher = async (
+    teacher: { name: string; subjects: string; universities: number[] },
+) => {
+    console.log("Adding teacher:", teacher);
     return new Promise<void>((resolve, reject) => {
         db.run(
-            "INSERT INTO teachers (name, totalRatingValue, numberOfVotes, graphX, graphY, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO teachers (name, subjects) VALUES (?, ?)",
             [
                 teacher.name,
-                teacher.totalRatingValue,
-                teacher.numberOfVotes,
-                teacher.graphX,
-                teacher.graphY,
-                timestamp,
+                teacher.subjects,
             ],
             function (err) {
                 if (err) {
@@ -117,22 +91,6 @@ export const addTeacher = async (teacher: TeacherProps) => {
                             );
                         });
                     }
-
-                    // Insert into teacher_subjects
-                    if (Array.isArray(teacher.subjects)) {
-                        teacher.subjects.forEach((subject) => {
-                            db.run(
-                                "INSERT INTO teacher_subjects (teacherId, subjectId) VALUES (?, ?)",
-                                [teacherId, subject],
-                                (err) => {
-                                    if (err) {
-                                        reject(err);
-                                    }
-                                },
-                            );
-                        });
-                    }
-
                     resolve(undefined);
                 }
             },
@@ -144,13 +102,10 @@ export const getAllTeachers = () => {
     return new Promise((resolve, reject) => {
         db.all<ReturnedTeacherProps>(
             `SELECT t.*, 
-                GROUP_CONCAT(DISTINCT u.name) AS universities, 
-                GROUP_CONCAT(DISTINCT s.name) AS subjects 
+                GROUP_CONCAT(DISTINCT u.name) AS universities
          FROM teachers t
          LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
          LEFT JOIN universities u ON tu.universityId = u.id
-         LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
-         LEFT JOIN subjects s ON ts.subjectId = s.id
          GROUP BY t.id`,
             (err, rows) => {
                 if (err) {
@@ -167,14 +122,11 @@ export const getVisibleTeachers = () => {
     return new Promise((resolve, reject) => {
         db.all<ReturnedTeacherProps>(
             `SELECT t.*, 
-                GROUP_CONCAT(DISTINCT u.name) AS universities, 
-                GROUP_CONCAT(DISTINCT s.name) AS subjects 
+                GROUP_CONCAT(DISTINCT u.name) AS universities
          FROM teachers t
          LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
          LEFT JOIN universities u ON tu.universityId = u.id
-         LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
-         LEFT JOIN subjects s ON ts.subjectId = s.id
-         WHERE t.hidden = 0
+         WHERE t.reason IS NULL
          GROUP BY t.id`,
             (err, rows) => {
                 if (err) {
@@ -203,10 +155,26 @@ export const getTeacherComments = (teacherId: string) => {
     });
 };
 
-export const hideTeacher = (id: string) => {
+export const hideTeacher = (id: string, reason: string) => {
     return new Promise((resolve, reject) => {
         db.run(
-            "UPDATE teachers SET hidden = 1 WHERE id = ?",
+            "UPDATE teachers SET reason = ? WHERE id = ?",
+            [reason, id],
+            (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(undefined);
+                }
+            },
+        );
+    });
+};
+
+export const unhideTeacher = (id: string) => {
+    return new Promise((resolve, reject) => {
+        db.run(
+            "UPDATE teachers SET reason = NULL WHERE id = ?",
             [id],
             (err) => {
                 if (err) {
@@ -260,57 +228,14 @@ export const addUniversity = (name: string) => {
     });
 };
 
-export const addSubject = (name: string) => {
-    return new Promise((resolve, reject) => {
-        db.run("INSERT INTO subjects (name) VALUES (?)", [name], (err) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(undefined);
-            }
-        });
-    });
-};
-
-export const getSubjectsByName = (name?: string) => {
-    if (name) {
-        return new Promise((resolve, reject) => {
-            db.all<Subject[]>(
-                "SELECT * FROM subjects WHERE name LIKE ?",
-                [`%${name}%`],
-                (err, rows) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(rows);
-                    }
-                },
-            );
-        });
-    } else {
-        return new Promise((resolve, reject) => {
-            db.all("SELECT * FROM subjects", (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            });
-        });
-    }
-};
-
 export const getTeacherById = (id: string) => {
     return new Promise<ReturnedTeacherProps>((resolve, reject) => {
         db.get<ReturnedTeacherProps>(
             `SELECT t.*, 
-                        GROUP_CONCAT(DISTINCT u.name) AS universities, 
-                        GROUP_CONCAT(DISTINCT s.name) AS subjects 
+                        GROUP_CONCAT(DISTINCT u.name) AS universities
                  FROM teachers t
                  LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
                  LEFT JOIN universities u ON tu.universityId = u.id
-                 LEFT JOIN teacher_subjects ts ON t.id = ts.teacherId
-                 LEFT JOIN subjects s ON ts.subjectId = s.id
                  WHERE t.id = ?
                  GROUP BY t.id`,
             [id],
@@ -377,6 +302,22 @@ export const getUserByEmail = (email: string) => {
                     reject(err);
                 } else {
                     resolve(row as User);
+                }
+            },
+        );
+    });
+};
+
+export const deleteTeacher = (id: string) => {
+    return new Promise<void>((resolve, reject) => {
+        db.run(
+            "DELETE FROM teachers WHERE id = ?",
+            [id],
+            (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
                 }
             },
         );

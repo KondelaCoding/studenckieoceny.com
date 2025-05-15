@@ -5,12 +5,10 @@ export type TeacherProps = {
     numberOfVotes: number;
     subjects: string[];
     universities: string[];
-    graphX?: number;
-    graphY?: number;
     timestamp?: number;
     comments?: Comment[];
 };
-/*
+/**
  * TeacherProps has indexes as subjects and universities, but the returned data from the API has them as strings.
  * This is the type that should be used for the returned data from the API.
  */
@@ -21,11 +19,9 @@ export type ReturnedTeacherProps = {
     numberOfVotes: number;
     subjects: string;
     universities: string;
-    graphX?: number;
-    graphY?: number;
     timestamp: number;
     comments?: Comment[];
-    hidden: boolean;
+    reason?: string | null;
 };
 
 export type Comment = {

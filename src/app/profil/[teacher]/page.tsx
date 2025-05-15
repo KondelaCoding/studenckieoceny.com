@@ -5,9 +5,11 @@ import { ReturnedTeacherProps } from "@/types";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Undo2 } from "lucide-react";
+import { auth } from "@/auth";
 
 const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: string }> }) => {
   try {
+    const session = await auth();
     const { teacher } = await params;
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teacher-profile?id=${teacher}`);
     if (!response.ok) {
@@ -18,7 +20,7 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
       notFound();
     }
 
-    if (teacherData.hidden) {
+    if (teacherData.reason && session?.user?.role === "user") {
       return (
         <>
           <Navbar />
@@ -42,7 +44,7 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
       return (
         <>
           <Navbar />
-          <div className="w-full bg-card p-2 -mt-5 flex-grow flex-column flex justify-center">
+          <div className="w-screen bg-card p-2 flex-grow flex-column flex justify-center -ml-5 md:-ml-10 lg:-ml-20 xl:-ml-40">
             <Profile teacherData={teacherData} />
           </div>
         </>

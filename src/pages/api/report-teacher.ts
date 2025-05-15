@@ -24,7 +24,7 @@ export default async function handler(
         }
 
         try {
-            await hideTeacher(teacherId);
+            await hideTeacher(teacherId, message || "No message provided");
             res.status(200).json({ message: "Teacher hidden successfully" });
         } catch (error) {
             console.error("Error hiding teacher:", error);

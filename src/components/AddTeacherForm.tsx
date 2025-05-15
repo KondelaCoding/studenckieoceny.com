@@ -1,214 +1,154 @@
 "use client";
 
-import { CardContent, CardFooter } from "@/components/ui/card";
-import Combobox from "@/components/Combobox";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useForm, Controller } from "react-hook-form";
-import { University, Subject } from "@/types";
-import { toast } from "sonner";
-import { UserPlus } from "lucide-react";
-
-interface FormData {
-  name: string;
-  email: string;
-  primaryUniversity: University | null;
-  secondaryUniversity: University | null;
-  primarySubject: Subject | null;
-  secondarySubject: Subject | null;
-  otherUniversity: string;
-  otherSubject: string;
-}
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { Input } from "./ui/input";
+import { UserPlus, Loader2, TriangleAlert, Smile } from "lucide-react";
+import { Button } from "./ui/button";
+import { useTransition, useState } from "react";
+import { AddTeacherSchema } from "@/schemas";
+import Combobox from "./Combobox";
 
 const AddTeacherForm = () => {
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm<FormData>({
+  const [isPending, startTransition] = useTransition();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const form = useForm<z.infer<typeof AddTeacherSchema>>({
+    resolver: zodResolver(AddTeacherSchema),
     defaultValues: {
       name: "",
-      email: "",
-      primaryUniversity: null,
-      secondaryUniversity: null,
-      primarySubject: null,
-      secondarySubject: null,
-      otherUniversity: "",
-      otherSubject: "",
+      subjects: "",
+      primaryUniversity: {
+        id: 0,
+        name: "",
+      },
+      secondaryUniversity: {
+        id: 0,
+        name: "",
+      },
     },
   });
 
-  const onSubmit = async (data: FormData) => {
-    // Prepare the data for submission, the API only needs the id of the university and subject
-    const newData = {
-      name: data.name,
-      totalRatingValue: 0,
-      numberOfVotes: 0,
-      universities: [data.primaryUniversity?.id ?? "", data.secondaryUniversity?.id ?? ""],
-      subjects: [data.primarySubject?.id ?? "", data.secondarySubject?.id ?? ""],
-    };
-
-    if (data.otherSubject) {
-      const subjectsArray = data.otherSubject
-        .toLowerCase()
-        .split(",")
-        .map((subject) => subject.trim());
-
-      await addSubjectToDatabase(subjectsArray);
+  const onSubmit = (values: z.infer<typeof AddTeacherSchema>) => {
+    console.log("Form submitted", values);
+    if (values.primaryUniversity.id === 0 && values.secondaryUniversity.id === 0) {
+      setErrorMessage("Wybierz przynajmniej jedną uczelnię");
+      setSuccessMessage(null);
+      return;
     }
-
-    if (data.otherUniversity || data.otherSubject) {
-      try {
-        const response = await fetch("/api/notify-admin", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            teacherProps: { name: data.name, otherUniversity: data.otherUniversity, otherSubject: data.otherSubject },
-            email: data.email,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to send email");
-        }
-
-        toast.success("Email sent to admin for approval!");
-      } catch (error) {
-        console.error("Error sending email:", error);
-        toast.error("Failed to send email. Please try again later.");
-      }
-    } else {
-      if (!data.primaryUniversity || !data.primarySubject) {
-        toast.error("Musisz wybrać przynajmniej jedną uczelnie i przedmiot");
-        return;
-      }
-
-      const response = await fetch("/api/teachers", {
+    startTransition(async () => {
+      const result = await fetch("/api/teachers", {
         method: "POST",
-        body: JSON.stringify(newData),
+        body: JSON.stringify({
+          name: values.name,
+          subjects: values.subjects,
+          primaryUniversity: values.primaryUniversity.id,
+          secondaryUniversity: values.secondaryUniversity.id,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
-      });
-      if (response.ok) {
-        toast.success("Prowadzący dodany pomyślnie!");
+      }).then((res) => res.json());
+      if (result?.error) {
+        setErrorMessage(result.error);
+        setSuccessMessage(null);
       } else {
-        toast.error("Wystąpił błąd podczas dodawania prowadzącego, spróbuj ponownie później.");
-        return;
-      }
-    }
-
-    reset();
-  };
-
-  const addSubjectToDatabase = async (subjects: string[]) => {
-    const subjectsData = await fetch("/api/subjects");
-    const subjectsJson = await subjectsData.json();
-
-    subjects.forEach(async (subject) => {
-      if (subjectsJson.some((s: Subject) => s.name === subject)) return;
-      try {
-        const response = await fetch("/api/subjects", {
-          method: "POST",
-          body: JSON.stringify({ name: subject }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to add subject");
-        }
-      } catch (error) {
-        console.error("Error adding subject:", error);
+        setSuccessMessage("Dodano zajęcia do bazy!");
+        setErrorMessage(null);
       }
     });
   };
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CardContent>
-          <div className="flex flex-col items-center gap-5">
-            <div className="flex flex-col items-center text-left justify-center gap-10 w-full">
-              <div className="w-full">
-                <Input
-                  type="text"
-                  placeholder="Imię i nazwisko prowadzącego zajęcia"
-                  className="w-full bg-background"
-                  {...register("name", { required: "Imię i nazwisko jest wymagane" })}
-                />
-                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
-              </div>
-              <div className="w-full">
-                <div className="flex flex-col w-full gap-5 mt-3 sm:flex-row">
-                  <Controller
-                    name="primaryUniversity"
-                    control={control}
-                    render={({ field }) => <Combobox data="universities" title="uczelnię" onChange={field.onChange} />}
-                  />
-                  <Controller
-                    name="secondaryUniversity"
-                    control={control}
-                    render={({ field }) => <Combobox data="universities" title="uczelnię" onChange={field.onChange} />}
-                  />
-                </div>
-                <Input placeholder="Inna" className="mt-3 bg-background" {...register("otherUniversity")} />
-              </div>
-              <div className="w-full">
-                <div className="flex flex-col w-full gap-5 mt-3 sm:flex-row">
-                  <Controller
-                    name="primarySubject"
-                    control={control}
-                    render={({ field }) => <Combobox data="subjects" title="przedmiot" onChange={field.onChange} />}
-                  />
-                  <Controller
-                    name="secondarySubject"
-                    control={control}
-                    render={({ field }) => <Combobox data="subjects" title="przedmiot" onChange={field.onChange} />}
-                  />
-                </div>
-                <Input
-                  placeholder="Inne (Fizyka, Matematyka)"
-                  className="mt-3 bg-background"
-                  {...register("otherSubject")}
-                />
-                <p className="text-sm text-muted-foreground">
-                  Wpisuj przedmioty separując je przecinkiem <q> , </q>
-                </p>
-              </div>
-              <div className="w-full">
-                <Input
-                  type="email"
-                  placeholder="Twój email"
-                  className="w-full bg-background mt-3"
-                  {...register("email", {
-                    required: "Email jest wymagany",
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "Nieprawidłowy adres email",
-                    },
-                  })}
-                />
-                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
-              </div>
+    <Card className="max-w-md mx-auto">
+      <CardHeader>
+        <CardTitle className="inline-flex items-center gap-2">
+          <UserPlus />
+          Dodaj zajęcia
+        </CardTitle>
+        <CardDescription>Jeśli nie znalazłeś zajęć, dodaj je do naszej bazy!</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        <Form {...form}>
+          <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Imię prowadzącego</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Jan K" {...field} disabled={isPending} />
+                  </FormControl>
+                  <FormLabel className="text-primary">* Pamiętaj! NIE podawaj nazwiska</FormLabel>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="subjects"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Przedmiot</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Fizyka, Probabilistyka" {...field} disabled={isPending} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="inline-flex w-full justify-between gap-x-2 flex-wrap gap-y-4">
+              <FormField
+                control={form.control}
+                name="primaryUniversity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Uczelnia</FormLabel>
+                    <FormControl>
+                      <Combobox title="uczelnie" data="universities" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="secondaryUniversity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>&nbsp;</FormLabel>
+                    <FormControl>
+                      <Combobox title="uczelnie" data="universities" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
-          </div>
-        </CardContent>
-        <CardFooter className="mt-10 flex-col items-end">
-          <p className="leading-7 text-muted-foreground text-sm text-right mb-3">
-            Wybierając inną uczelnie bądź przedmiot nasza moderacja weryfikuje podane informacje.
-          </p>
-          <Button type="submit">
-            <UserPlus />
-            Dodaj
-          </Button>
-        </CardFooter>
-      </form>
-    </>
+            {errorMessage && (
+              <div className="bg-destructive p-5 text-sm rounded-xl inline-flex items-center gap-2 w-full">
+                <TriangleAlert className="shrink-0" />
+                {errorMessage}
+              </div>
+            )}
+            {successMessage && (
+              <div className="bg-green-600 p-5 text-sm rounded-xl inline-flex items-center gap-2 w-full">
+                <Smile className="shrink-0" />
+                {successMessage}
+              </div>
+            )}
+            <Button type="submit" className="w-full mt-5" disabled={isPending}>
+              {isPending ? <Loader2 className="animate-spin" /> : <UserPlus />}
+              <span>Dodaj</span>
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 

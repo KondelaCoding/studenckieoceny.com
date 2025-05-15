@@ -16,11 +16,11 @@ export function Combobox({
 }: {
   data: string;
   title: string;
-  onChange: (value: { id: string; name: string }) => void;
+  onChange: (value: { id: number; name: string }) => void;
 }) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState<{ id: string; name: string } | null>(null);
-  const [dataArray, setDataArray] = React.useState<{ id: string; name: string }[]>([]);
+  const [value, setValue] = React.useState<{ id: number; name: string } | null>(null);
+  const [dataArray, setDataArray] = React.useState<{ id: number; name: string }[]>([]);
 
   React.useEffect(() => {
     async function fetchData() {
@@ -28,21 +28,23 @@ export function Combobox({
         const dataArray = await fetch("/api/universities").then((res) => res.json());
         setDataArray(dataArray);
       }
-      if (data === "subjects") {
-        const dataArray = await fetch("/api/subjects").then((res) => res.json());
-        setDataArray(dataArray);
-      }
     }
     fetchData();
   }, [data]);
 
   const handleSelect = (currentValue: string) => {
-    const newValue = currentValue === value?.name ? null : dataArray.find((item) => item.name === currentValue) || null;
-    setValue(newValue);
-    if (newValue) {
-      onChange(newValue);
+    if (currentValue === value?.name) {
+      setValue(null);
+      onChange({ id: 0, name: "" });
+      setOpen(false);
+    } else {
+      const newValue = dataArray.find((item) => item.name === currentValue);
+      setValue(newValue || null);
+      if (newValue) {
+        onChange(newValue);
+      }
+      setOpen(false);
     }
-    setOpen(false);
   };
 
   return (
@@ -51,7 +53,7 @@ export function Combobox({
         <Tooltip>
           <TooltipTrigger asChild>
             <PopoverTrigger asChild>
-              <Button variant="outline" role="combobox" aria-expanded={open} className="w-[200px] justify-between">
+              <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between bg-card">
                 {value
                   ? dataArray.find((item) => item.name === value.name)?.name.slice(0, 15) +
                     (dataArray.find((item) => item.name === value.name)?.name.length ?? 0 > 15 ? "..." : "")
@@ -74,7 +76,7 @@ export function Combobox({
             <CommandEmpty>Nie znaleziono {title}.</CommandEmpty>
             <CommandGroup>
               {dataArray.map((item) => (
-                <CommandItem key={item.id} value={item.id} onSelect={handleSelect}>
+                <CommandItem key={item.id} value={item.id as unknown as string} onSelect={handleSelect}>
                   {item.name}
                   <Check className={cn("ml-auto", value?.name === item.name ? "opacity-100" : "opacity-0")} />
                 </CommandItem>

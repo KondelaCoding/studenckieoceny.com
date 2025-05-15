@@ -79,13 +79,13 @@ const LoginForm = () => {
             />
             {errorMessage && (
               <div className="bg-destructive p-5 text-sm rounded-xl inline-flex items-center gap-2 w-full">
-                <TriangleAlert />
+                <TriangleAlert className="shrink-0" />
                 {errorMessage}
               </div>
             )}
             {successMessage && (
               <div className="bg-green-600 p-5 text-sm rounded-xl inline-flex items-center gap-2 w-full">
-                <Smile />
+                <Smile className="shrink-0" />
                 {successMessage}
               </div>
             )}

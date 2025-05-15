@@ -13,8 +13,6 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 export async function Navbar({ isSearchBarVisible = true }: { isSearchBarVisible?: boolean }) {
   const session = await auth();
 
-  console.log("Session in navbar", session);
-
   const handleSignOut = async () => {
     "use server";
     console.log("Logging out...");
@@ -96,7 +94,7 @@ export async function Navbar({ isSearchBarVisible = true }: { isSearchBarVisible
             ) : (
               <div className="block md:hidden">
                 <SheetTrigger>
-                  <Button asChild>
+                  <Button className="p-2" size="icon" asChild>
                     <Menu />
                   </Button>
                 </SheetTrigger>

@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { addTeacher, getVisibleTeachers, init } from "@/lib/db";
-import { TeacherProps } from "@/types";
 
 init();
 
@@ -18,17 +17,14 @@ export default async function handler(
         }
     } else if (req.method === "POST") {
         try {
-            const body: TeacherProps = req.body;
+            const body = req.body;
             await addTeacher({
-                id: body.id,
                 name: body.name,
-                totalRatingValue: body.totalRatingValue,
-                numberOfVotes: body.numberOfVotes,
-                graphX: body.graphX,
-                graphY: body.graphY,
-                timestamp: Date.now(),
-                universities: body.universities,
                 subjects: body.subjects,
+                universities: [
+                    body.primaryUniversity,
+                    body.secondaryUniversity,
+                ],
             });
             res.status(200).json({ message: "Teacher added successfully" });
         } catch (error) {

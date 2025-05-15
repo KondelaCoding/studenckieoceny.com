@@ -3,8 +3,21 @@ import { ReturnedTeacherProps } from "@/types";
 import ProfileCards from "./ProfileCards";
 import { Separator } from "./ui/separator";
 import StarRatingDisplay from "./StarRatingDisplay";
-import { User, BookOpenText, University, CalendarClock } from "lucide-react";
+import { User, BookOpenText, University, CalendarClock, Info } from "lucide-react";
 import ReportTeacherDrawer from "./ReportTeacherDrawer";
+import { Button } from "./ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
   const seperatedSubjects = teacherData.subjects.split(",");
@@ -15,6 +28,39 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
     (new Date(teacherData.timestamp).getMonth() + 1) +
     "." +
     new Date(teacherData.timestamp).getFullYear();
+
+  const handleUnhide = async () => {
+    "use server";
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/unhide-teacher`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ teacherId: teacherData.id }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to unhide teacher");
+    }
+    const data = await response.json();
+    console.log("Unhide response:", data.message);
+  };
+
+  const handleDelete = async () => {
+    "use server";
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/delete-teacher`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ teacherId: teacherData.id }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to delete teacher");
+    }
+    const data = await response.json();
+    console.log("Delete response:", data.message);
+  };
+
   return (
     <div className="grid grid-cols-1 grid-rows-1 w-full lg:grid-cols-[auto_1fr]">
       <div className="flex flex-col items-center py-10 -mt-5 gap-5 lg:max-w-lg lg:w-min xl:px-6">
@@ -22,6 +68,34 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
           <AvatarFallback>{teacherData.name.split(" ")[0][0] ?? ""}</AvatarFallback>
         </Avatar>
         <div className="w-full flex flex-col gap-5 justify-center items-center lg:items-start">
+          {teacherData.reason ? (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="flex gap-3 w-full justify-center items-center text-primary border border-primary rounded-md p-2 bg-primary/10"
+                >
+                  <span>Profil jest zgłoszony</span>
+                  <Info />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Wiadomość</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    <q>{teacherData.reason}</q>
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Anuluj</AlertDialogCancel>
+                  <AlertDialogAction className="!bg-destructive" asChild>
+                    <Button onClick={handleDelete}>Usuń z bazy</Button>
+                  </AlertDialogAction>
+                  <AlertDialogAction onClick={handleUnhide}>Przywróć konto</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          ) : null}
           <h2 className="scroll-m-20 mt-5 text-3xl font-semibold tracking-tight transition-colors capitalize inline-flex justify-center w-full gap-10 lg:justify-between">
             <div className="inline-flex gap-3 items-center">
               <User size={30} />

@@ -4,6 +4,7 @@ import * as z from "zod";
 import { LoginSchema } from "@/schemas";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
     const validatedFields = LoginSchema.safeParse(values);
@@ -18,21 +19,17 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         await signIn("credentials", {
             email,
             password,
-            redirectTo: "/",
+            redirectTo: DEFAULT_LOGIN_REDIRECT,
         });
     } catch (error) {
         if (error instanceof AuthError) {
-            switch (error.type) {
-                case "CredentialsSignin": {
-                    return { error: "Nieprawidłowy adres e-mail lub hasło" };
-                }
-                case "OAuthCallback": {
-                    return { error: "Nieoczekiwany błąd, spróbuj ponownie" };
-                }
-                default: {
-                    return { error: "Nieoczekiwany błąd, spróbuj ponownie" };
-                }
-            }
+            const slicedError = error.message.slice(
+                0,
+                error.message.indexOf("."),
+            );
+            return {
+                error: slicedError,
+            };
         }
 
         throw error;

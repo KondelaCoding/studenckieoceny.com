@@ -26,7 +26,7 @@ export default function RootLayout({
         className={`${montserrat.variable} antialiased font-[family-name:var(--font-montserrat)] flex justify-between min-h-svh pt-[60px] flex-col overflow-hidden`}
       >
         <Toaster closeButton={true} />
-        {children}
+        <div className="px-default w-full">{children}</div>
         <Footer />
         <DebugRWD />
       </body>

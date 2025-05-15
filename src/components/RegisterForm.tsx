@@ -13,7 +13,7 @@ import { useTransition } from "react";
 import { RegisterSchema } from "@/schemas";
 import Link from "next/link";
 import { useState } from "react";
-import { signIn } from "@/auth";
+import Socials from "./Socials";
 
 const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -107,14 +107,14 @@ const RegisterForm = () => {
               )}
             />
             {errorMessage && (
-              <div className="bg-destructive p-5 text-sm rounded-xl inline-flex items-center gap-2">
-                <TriangleAlert />
+              <div className="bg-destructive p-5 text-sm rounded-xl inline-flex items-center gap-2 w-full">
+                <TriangleAlert className="shrink-0" />
                 {errorMessage}
               </div>
             )}
             {successMessage && (
-              <div className="bg-green-600 p-5 text-sm rounded-xl inline-flex items-center gap-2">
-                <Smile />
+              <div className="bg-green-600 p-5 text-sm rounded-xl inline-flex items-center gap-2 w-full">
+                <Smile className="shrink-0" />
                 {successMessage}
               </div>
             )}
@@ -122,9 +122,7 @@ const RegisterForm = () => {
               {isPending ? <Loader2 className="animate-spin" /> : <CirclePlus />}
               <span className="hidden sm:block">Stwórz konto</span>
             </Button>
-            <Button type="button" onClick={() => signIn("github", { callbackUrl: "/" })} className="w-full mt-2">
-              Zaloguj się przez GitHub
-            </Button>
+            <Socials />
           </form>
         </Form>
       </CardContent>

@@ -10,25 +10,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
             return session;
         },
-        async jwt({ token }) {
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/validate?email=${token.email}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
+        async jwt({ token, account, profile }) {
+            // Only check DB for OAuth logins (Google, etc.)
+            if (account?.provider && token.email) {
+                const response = await fetch(
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/api/validate?email=${token.email}`,
+                    {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" },
                     },
-                },
-            );
-
-            if (!response.ok) {
-                console.error(
-                    "[auth][error] Invalid credentials: User not found",
                 );
-            }
 
-            const { user } = await response.json();
-            token.role = user.role;
+                let user;
+                if (response.ok) {
+                    ({ user } = await response.json());
+                } else {
+                    // User not found, create them in the DB
+                    const createRes = await fetch(
+                        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users`,
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                email: token.email,
+                                // password for OAuth users is not needed
+                                password: null,
+                                name: profile?.name || token.name,
+                            }),
+                        },
+                    );
+                    user = await createRes.json();
+                }
+
+                token.role = user?.role ?? "user";
+            }
             return token;
         },
     },

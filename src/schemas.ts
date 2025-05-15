@@ -21,3 +21,16 @@ export const RegisterSchema = z
     .refine((data) => data.password === data.confirmPassword, {
         message: "Hasła muszą być takie same",
     });
+
+export const AddTeacherSchema = z.object({
+    name: z.string().min(2, "Podaj prawidłowe imię"),
+    subjects: z.string().min(2, "Podaj prawidłowe przedmioty"),
+    primaryUniversity: z.object({
+        id: z.number(),
+        name: z.string(),
+    }),
+    secondaryUniversity: z.object({
+        id: z.number(),
+        name: z.string(),
+    }),
+});
