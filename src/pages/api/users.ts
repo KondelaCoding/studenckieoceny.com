@@ -12,7 +12,7 @@ export default async function handler(
             const body = req.body;
             await addUser(
                 body.email,
-                body.password,
+                body.password ?? null,
                 body.name,
             );
             res.status(200).json({ message: "User added successfully" });

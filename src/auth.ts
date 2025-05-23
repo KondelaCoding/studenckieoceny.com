@@ -33,8 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
                                 email: token.email,
-                                // password for OAuth users is not needed
-                                password: null,
+                                password: null, // explicitly null for OAuth
                                 name: profile?.name || token.name,
                             }),
                         },

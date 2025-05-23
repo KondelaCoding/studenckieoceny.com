@@ -274,7 +274,7 @@ export const updateRating = async (id: string, rating: number) => {
 
 export const addUser = async (
     email: string,
-    hashedPassword: string,
+    hashedPassword: string | null,
     name: string,
 ) => {
     return new Promise<void>((resolve, reject) => {
