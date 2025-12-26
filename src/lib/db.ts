@@ -46,6 +46,8 @@ export const init = () => {
             )
         `);
 
+        //TODO: fix table to include role
+        //TODO: after adding a teacher to the db it allways has some more unis than it should
         db.run(`
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

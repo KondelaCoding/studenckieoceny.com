@@ -32,22 +32,23 @@ const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps
       </Card>
       <div className="grid grid-rows-2 gap-5">
         <Card className="relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full flex justify-center flex-col p-10 items-center z-20 backdrop-blur-[1px] backdrop-brightness-25 text-center">
-            <h3 className="text-2xl font-semibold tracking-tight text-muted-foreground">
-              Niestety funkcja wykresu <q className="text-primary">cech</q> prowadzącego nie jest jeszcze gotowa 😔
-            </h3>
-            <br /> <br />
-            <p>
-              Chcesz
-              <span className="text-primary font-bold"> przyśpieszyć </span>rozwój? <br />
-              Piwko tego nie zrobi ale przynajmniej poprawi mi humor ♥️
-            </p>
-            {/* TODO: Add link to patreon or something */}
-            <Button className="mt-10">
-              <PiggyBank />
-              Wesprzyj
-            </Button>
-          </div>
+          {true ? (
+            <div className="absolute top-0 left-0 w-full h-full flex justify-center flex-col p-10 items-center z-20 backdrop-blur-[1px] backdrop-brightness-25 text-center">
+              <h3 className="text-2xl font-semibold tracking-tight text-muted-foreground">
+                Niestety funkcja wykresu <q className="text-primary">cech</q> prowadzącego nie jest jeszcze gotowa 😔
+              </h3>
+              <br /> <br />
+              <p>
+                Chcesz
+                <span className="text-primary font-bold"> przyśpieszyć </span>rozwój? <br />
+                Piwko tego nie zrobi ale przynajmniej poprawi mi humor ♥️
+              </p>
+              <Button className="mt-10">
+                <PiggyBank />
+                Wesprzyj
+              </Button>
+            </div>
+          ) : null}
           <CardHeader>
             <CardTitle className="inline-flex gap-3 items-center">
               <ChartLine /> Wykres cech
@@ -60,23 +61,25 @@ const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps
           </CardContent>
         </Card>
         <Card className="relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full flex justify-center flex-col p-10 items-center z-20 backdrop-blur-[1px] backdrop-brightness-25 text-center">
-            <h3 className="text-2xl font-semibold tracking-tight text-muted-foreground">
-              Niestety funkcja <q className="text-primary">odznak</q> nie jest jeszcze gotowa 😔
-            </h3>
-            <br /> <br />
-            <p>
-              Chcesz
-              <span className="text-primary font-bold"> przyśpieszyć </span>rozwój? <br />
-              Piwko tego nie zrobi ale przynajmniej poprawi mi humor ♥️
-            </p>
-            <Link href="https://buymeacoffee.com/mikolajkondela" target="_blank" rel="noopener noreferrer">
-              <Button className="mt-10">
-                <PiggyBank />
-                Wesprzyj
-              </Button>
-            </Link>
-          </div>
+          {true ? (
+            <div className="absolute top-0 left-0 w-full h-full flex justify-center flex-col p-10 items-center z-20 backdrop-blur-[1px] backdrop-brightness-25 text-center">
+              <h3 className="text-2xl font-semibold tracking-tight text-muted-foreground">
+                Niestety funkcja <q className="text-primary">odznak</q> nie jest jeszcze gotowa 😔
+              </h3>
+              <br /> <br />
+              <p>
+                Chcesz
+                <span className="text-primary font-bold"> przyśpieszyć </span>rozwój? <br />
+                Piwko tego nie zrobi ale przynajmniej poprawi mi humor ♥️
+              </p>
+              <Link href="https://buymeacoffee.com/mikolajkondela" target="_blank" rel="noopener noreferrer">
+                <Button className="mt-10">
+                  <PiggyBank />
+                  Wesprzyj
+                </Button>
+              </Link>
+            </div>
+          ) : null}
           <CardHeader>
             <CardTitle className="inline-flex gap-3 items-center">
               <Trophy />
