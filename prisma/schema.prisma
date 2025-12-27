@@ -15,13 +15,49 @@ datasource db {
   directUrl = env("DATABASE_DIRECT_URL")
 }
 
+model Teacher {
+  id                  String               @id @default(cuid())
+  name                String
+  totalRatingValue    Int                  @default(0)
+  numberOfVotes       Int                  @default(0)
+  subjects            String
+  timestamp           DateTime             @default(now())
+  reason              String?
+  comments            Comment[]
+  teacherUniversities TeacherUniversity[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  teacherId String
+  user      String
+  comment   String
+  timestamp DateTime @default(now())
+  likes     Int      @default(0)
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+}
+
+model University {
+  id                  String               @id @default(cuid())
+  name                String               @unique
+  teacherUniversities TeacherUniversity[]
+}
+
+model TeacherUniversity {
+  teacherId    String
+  universityId String
+  teacher      Teacher    @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  @@id([teacherId, universityId])
+}
+
 model User {
-  id             String    @id @default(cuid())
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  email          String    @unique
-  name           String?
-  hashedPassword String?
-  // role           UserRole  @default(USER)
-  // reviews        Review[]
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String?
+  name      String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

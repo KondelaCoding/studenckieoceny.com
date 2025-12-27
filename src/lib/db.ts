@@ -1,271 +1,151 @@
-import sqlite3 from "sqlite3";
-import { Comment, ReturnedTeacherProps, User } from "@/types";
+import { Prisma } from "@/generated/prisma";
+import { prisma } from "@/lib/prisma";
+import {
+    Comment as CommentType,
+    ReturnedTeacherProps,
+    User as UserType,
+} from "@/types";
 
-export const db = new sqlite3.Database("database.db");
+type TeacherWithUniversities = Prisma.TeacherGetPayload<{
+    include: { teacherUniversities: { include: { university: true } } };
+}>;
 
-export const init = () => {
-    db.serialize(() => {
-        db.run(`
-            CREATE TABLE IF NOT EXISTS teachers (
-                id INTEGER PRIMARY KEY,
-                name TEXT,
-                totalRatingValue INTEGER DEFAULT 0,
-                numberOfVotes INTEGER DEFAULT 0,
-                subjects TEXT,
-                timestamp INTEGER DEFAULT (strftime('%s', 'now')),
-                reason TEXT DEFAULT null
-            )
-        `);
+export const init = () => prisma;
 
-        db.run(`
-            CREATE TABLE IF NOT EXISTS comments (
-                id INTEGER PRIMARY KEY,
-                teacherId INTEGER,
-                user TEXT,
-                comment TEXT,
-                timestamp INTEGER,
-                likes INTEGER,
-                FOREIGN KEY (teacherId) REFERENCES teachers(id)
-            )
-        `);
+const mapTeacher = (
+    teacher: TeacherWithUniversities,
+): ReturnedTeacherProps => ({
+    id: teacher.id,
+    name: teacher.name,
+    totalRatingValue: teacher.totalRatingValue,
+    numberOfVotes: teacher.numberOfVotes,
+    subjects: teacher.subjects,
+    universities: teacher.teacherUniversities
+        .map((tu) => tu.university?.name)
+        .filter(Boolean)
+        .join(", "),
+    timestamp: teacher.timestamp.getTime(),
+    reason: teacher.reason,
+});
 
-        db.run(`
-            CREATE TABLE IF NOT EXISTS universities (
-                id INTEGER PRIMARY KEY,
-                name TEXT
-            )
-        `);
-
-        db.run(`
-            CREATE TABLE IF NOT EXISTS teacher_universities (
-                teacherId INTEGER,
-                universityId INTEGER,
-                FOREIGN KEY (teacherId) REFERENCES teachers(id),
-                FOREIGN KEY (universityId) REFERENCES universities(id),
-                PRIMARY KEY (teacherId, universityId)
-            )
-        `);
-
-        //TODO: fix table to include role
-        //TODO: after adding a teacher to the db it allways has some more unis than it should
-        db.run(`
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email TEXT UNIQUE NOT NULL,
-                password TEXT,
-                name TEXT NOT NULL,
-                role TEXT DEFAULT 'user',
-                createdAt INTEGER DEFAULT (strftime('%s', 'now')),
-                updatedAt INTEGER DEFAULT (strftime('%s', 'now'))
-            )
-        `);
-    });
-};
+const teacherInclude = {
+    teacherUniversities: {
+        include: {
+            university: true,
+        },
+    },
+} satisfies Prisma.TeacherInclude;
 
 export const addTeacher = async (
-    teacher: { name: string; subjects: string; universities: number[] },
+    teacher: {
+        name: string;
+        subjects: string;
+        universities: Array<string | number | null>;
+    },
 ) => {
-    console.log("Adding teacher:", teacher);
-    return new Promise<void>((resolve, reject) => {
-        db.run(
-            "INSERT INTO teachers (name, subjects) VALUES (?, ?)",
-            [
-                teacher.name,
-                teacher.subjects,
-            ],
-            function (err) {
-                if (err) {
-                    reject(err);
-                } else {
-                    const teacherId = this.lastID;
+    const universityIds = Array.from(
+        new Set(teacher.universities.filter(Boolean).map((id) => String(id))),
+    );
 
-                    // Insert into teacher_universities
-                    if (Array.isArray(teacher.universities)) {
-                        teacher.universities.forEach((university) => {
-                            db.run(
-                                "INSERT INTO teacher_universities (teacherId, universityId) VALUES (?, ?)",
-                                [teacherId, university],
-                                (err) => {
-                                    if (err) {
-                                        reject(err);
-                                    }
-                                },
-                            );
-                        });
-                    }
-                    resolve(undefined);
+    await prisma.teacher.create({
+        data: {
+            name: teacher.name,
+            subjects: teacher.subjects,
+            teacherUniversities: universityIds.length
+                ? {
+                    create: universityIds.map((universityId) => ({
+                        university: {
+                            connect: { id: universityId },
+                        },
+                    })),
                 }
-            },
-        );
+                : undefined,
+        },
     });
 };
 
-export const getAllTeachers = () => {
-    return new Promise((resolve, reject) => {
-        db.all<ReturnedTeacherProps>(
-            `SELECT t.*, 
-                GROUP_CONCAT(DISTINCT u.name) AS universities
-         FROM teachers t
-         LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
-         LEFT JOIN universities u ON tu.universityId = u.id
-         GROUP BY t.id`,
-            (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            },
-        );
+export const getAllTeachers = async () => {
+    const teachers = await prisma.teacher.findMany({ include: teacherInclude });
+    return teachers.map(mapTeacher);
+};
+
+export const getVisibleTeachers = async () => {
+    const teachers = await prisma.teacher.findMany({
+        where: { reason: null },
+        include: teacherInclude,
+        orderBy: { timestamp: "desc" },
+    });
+
+    return teachers.map(mapTeacher);
+};
+
+export const getTeacherComments = async (teacherId: string) => {
+    const comments = await prisma.comment.findMany({
+        where: { teacherId },
+        orderBy: { timestamp: "desc" },
+    });
+
+    return comments.map((comment) => ({
+        ...comment,
+        timestamp: comment.timestamp.getTime(),
+    }));
+};
+
+export const hideTeacher = async (id: string, reason: string) => {
+    await prisma.teacher.update({
+        where: { id },
+        data: { reason },
     });
 };
 
-export const getVisibleTeachers = () => {
-    return new Promise((resolve, reject) => {
-        db.all<ReturnedTeacherProps>(
-            `SELECT t.*, 
-                GROUP_CONCAT(DISTINCT u.name) AS universities
-         FROM teachers t
-         LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
-         LEFT JOIN universities u ON tu.universityId = u.id
-         WHERE t.reason IS NULL
-         GROUP BY t.id`,
-            (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            },
-        );
+export const unhideTeacher = async (id: string) => {
+    await prisma.teacher.update({
+        where: { id },
+        data: { reason: null },
     });
 };
 
-export const getTeacherComments = (teacherId: string) => {
-    return new Promise((resolve, reject) => {
-        db.all(
-            "SELECT * FROM comments WHERE teacherId = ? ORDER BY timestamp DESC",
-            [teacherId],
-            (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            },
-        );
+export const addComment = async (
+    comment: Pick<CommentType, "teacherId" | "user" | "comment">,
+) => {
+    await prisma.comment.create({
+        data: {
+            teacherId: comment.teacherId,
+            user: comment.user,
+            comment: comment.comment,
+        },
     });
 };
 
-export const hideTeacher = (id: string, reason: string) => {
-    return new Promise((resolve, reject) => {
-        db.run(
-            "UPDATE teachers SET reason = ? WHERE id = ?",
-            [reason, id],
-            (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(undefined);
-                }
-            },
-        );
+export const getUniversities = async () =>
+    prisma.university.findMany({
+        orderBy: { name: "asc" },
     });
-};
-
-export const unhideTeacher = (id: string) => {
-    return new Promise((resolve, reject) => {
-        db.run(
-            "UPDATE teachers SET reason = NULL WHERE id = ?",
-            [id],
-            (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(undefined);
-                }
-            },
-        );
-    });
-};
-
-export const addComment = (comment: Comment) => {
-    return new Promise((resolve, reject) => {
-        db.run(
-            "INSERT INTO comments (teacherId, user, comment, timestamp, likes) VALUES (?, ?, ?, ?, ?)",
-            [comment.teacherId, comment.user, comment.comment, Date.now(), 0],
-            (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(undefined);
-                }
-            },
-        );
-    });
-};
-
-export const getUniversities = () => {
-    return new Promise((resolve, reject) => {
-        db.all("SELECT * FROM universities", (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(rows);
-            }
-        });
-    });
-};
 
 // ! Used only by the admin
-export const addUniversity = (name: string) => {
-    return new Promise((resolve, reject) => {
-        db.run("INSERT INTO universities (name) VALUES (?)", [name], (err) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(undefined);
-            }
-        });
-    });
+export const addUniversity = async (name: string) => {
+    await prisma.university.create({ data: { name } });
 };
 
-export const getTeacherById = (id: string) => {
-    return new Promise<ReturnedTeacherProps>((resolve, reject) => {
-        db.get<ReturnedTeacherProps>(
-            `SELECT t.*, 
-                        GROUP_CONCAT(DISTINCT u.name) AS universities
-                 FROM teachers t
-                 LEFT JOIN teacher_universities tu ON t.id = tu.teacherId
-                 LEFT JOIN universities u ON tu.universityId = u.id
-                 WHERE t.id = ?
-                 GROUP BY t.id`,
-            [id],
-            (err, row) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(row);
-                }
-            },
-        );
+export const getTeacherById = async (id: string) => {
+    const teacher = await prisma.teacher.findUnique({
+        where: { id },
+        include: teacherInclude,
     });
+
+    if (!teacher) return null;
+
+    return mapTeacher(teacher);
 };
 
 export const updateRating = async (id: string, rating: number) => {
     try {
-        new Promise<void>((resolve, reject) => {
-            db.run(
-                `UPDATE teachers SET totalRatingValue = totalRatingValue + ?, numberOfVotes = numberOfVotes + 1 WHERE id = ?`,
-                [rating, id],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve();
-                    }
-                },
-            );
+        await prisma.teacher.update({
+            where: { id },
+            data: {
+                totalRatingValue: { increment: rating },
+                numberOfVotes: { increment: 1 },
+            },
         });
         return true;
     } catch (error) {
@@ -279,49 +159,18 @@ export const addUser = async (
     hashedPassword: string | null,
     name: string,
 ) => {
-    return new Promise<void>((resolve, reject) => {
-        db.run(
-            "INSERT INTO users (email, password, name) VALUES (?, ?, ?)",
-            [email, hashedPassword, name],
-            (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            },
-        );
+    await prisma.user.create({
+        data: {
+            email,
+            password: hashedPassword,
+            name,
+        },
     });
 };
 
-export const getUserByEmail = (email: string) => {
-    return new Promise<User>((resolve, reject) => {
-        db.get(
-            "SELECT * FROM users WHERE email = ?",
-            [email],
-            (err, row) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(row as User);
-                }
-            },
-        );
-    });
-};
+export const getUserByEmail = async (email: string) =>
+    prisma.user.findUnique({ where: { email } }) as Promise<UserType | null>;
 
-export const deleteTeacher = (id: string) => {
-    return new Promise<void>((resolve, reject) => {
-        db.run(
-            "DELETE FROM teachers WHERE id = ?",
-            [id],
-            (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            },
-        );
-    });
+export const deleteTeacher = async (id: string) => {
+    await prisma.teacher.delete({ where: { id } });
 };

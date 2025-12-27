@@ -16,11 +16,11 @@ export function Combobox({
 }: {
   data: string;
   title: string;
-  onChange: (value: { id: number; name: string }) => void;
+  onChange: (value: { id: string; name: string }) => void;
 }) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState<{ id: number; name: string } | null>(null);
-  const [dataArray, setDataArray] = React.useState<{ id: number; name: string }[]>([]);
+  const [value, setValue] = React.useState<{ id: string; name: string } | null>(null);
+  const [dataArray, setDataArray] = React.useState<{ id: string; name: string }[]>([]);
 
   React.useEffect(() => {
     async function fetchData() {
@@ -35,7 +35,7 @@ export function Combobox({
   const handleSelect = (currentValue: string) => {
     if (currentValue === value?.name) {
       setValue(null);
-      onChange({ id: 0, name: "" });
+      onChange({ id: "", name: "" });
       setOpen(false);
     } else {
       const newValue = dataArray.find((item) => item.name === currentValue);
@@ -76,7 +76,7 @@ export function Combobox({
             <CommandEmpty>Nie znaleziono {title}.</CommandEmpty>
             <CommandGroup>
               {dataArray.map((item) => (
-                <CommandItem key={item.id} value={item.id as unknown as string} onSelect={handleSelect}>
+                <CommandItem key={item.id} value={item.name} onSelect={handleSelect}>
                   {item.name}
                   <Check className={cn("ml-auto", value?.name === item.name ? "opacity-100" : "opacity-0")} />
                 </CommandItem>

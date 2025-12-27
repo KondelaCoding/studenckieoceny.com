@@ -23,11 +23,11 @@ const AddTeacherForm = () => {
       name: "",
       subjects: "",
       primaryUniversity: {
-        id: 0,
+        id: "",
         name: "",
       },
       secondaryUniversity: {
-        id: 0,
+        id: "",
         name: "",
       },
     },
@@ -35,7 +35,7 @@ const AddTeacherForm = () => {
 
   const onSubmit = (values: z.infer<typeof AddTeacherSchema>) => {
     console.log("Form submitted", values);
-    if (values.primaryUniversity.id === 0 && values.secondaryUniversity.id === 0) {
+    if (!values.primaryUniversity.id && !values.secondaryUniversity.id) {
       setErrorMessage("Wybierz przynajmniej jedną uczelnię");
       setSuccessMessage(null);
       return;

@@ -62,8 +62,8 @@ export type User = {
     id: string;
     name: string;
     email: string;
-    password: string;
+    password: string | null;
     role: "user" | "admin";
-    createdAt: number;
-    updatedAt: number;
+    createdAt: Date;
+    updatedAt: Date;
 };

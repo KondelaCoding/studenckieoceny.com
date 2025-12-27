@@ -26,11 +26,11 @@ export const AddTeacherSchema = z.object({
     name: z.string().min(2, "Podaj prawidłowe imię"),
     subjects: z.string().min(2, "Podaj prawidłowe przedmioty"),
     primaryUniversity: z.object({
-        id: z.number(),
+        id: z.string(),
         name: z.string(),
     }),
     secondaryUniversity: z.object({
-        id: z.number(),
+        id: z.string(),
         name: z.string(),
     }),
 });
