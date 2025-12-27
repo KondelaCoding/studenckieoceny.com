@@ -28,7 +28,7 @@ export default function RootLayout({
       >
         <div className="flex-grow flex flex-col gap-10">
           <Navbar />
-          <div className="px-default w-full h-full">{children}</div>
+          <div className="w-full h-full">{children}</div>
           <Toaster closeButton={true} />
         </div>
         <Footer />

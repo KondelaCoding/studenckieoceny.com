@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import Logo from "../../../public/Logo.svg";
 import { Separator } from "@/components/ui/separator";
@@ -6,8 +5,7 @@ import { Separator } from "@/components/ui/separator";
 const Regulamin = () => {
   return (
     <>
-      <Navbar />
-      <div className="w-full mb-32">
+      <div className="w-full mb-32 px-default">
         <h1 className="text-3xl font-bold inline-flex gap-3 items-center justify-center text-center">
           Regulamin dla StudenckieOceny.pl
           <Image src={Logo} alt="absolwent-uczelni" width={32} className="foreground-filter" />

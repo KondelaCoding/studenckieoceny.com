@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col px-default">
       <Navbar />
       <Banner />
       <Presentation />

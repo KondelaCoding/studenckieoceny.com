@@ -7,7 +7,7 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }
   const teachers = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`).then((res) => res.json());
 
   return (
-    <div className="w-full flex flex-col gap-10 pt-12 pb-20">
+    <div className="w-full flex flex-col gap-10 pt-12 pb-20 px-default">
       <div>
         <h1 className="text-xl mb-5">Szukaj wybranego prowadzącego</h1>
         <SearchBar isInstant={true} />

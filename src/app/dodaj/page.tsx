@@ -1,7 +1,11 @@
 import AddTeacherForm from "@/components/AddTeacherForm";
 
 const Page = () => {
-  return <AddTeacherForm />;
+  return (
+    <div className="px-default">
+      <AddTeacherForm />
+    </div>
+  );
 };
 
 export default Page;
