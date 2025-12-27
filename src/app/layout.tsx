@@ -4,6 +4,7 @@ import "./globals.css";
 import Footer from "@/components/Footer";
 import DebugRWD from "@/components/DebugRWD";
 import { Toaster } from "@/components/ui/sonner";
+import Navbar from "@/components/Navbar";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -25,8 +26,11 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} antialiased font-[family-name:var(--font-montserrat)] flex justify-between min-h-svh pt-[60px] flex-col overflow-hidden`}
       >
-        <Toaster closeButton={true} />
-        <div className="px-default w-full">{children}</div>
+        <div className="flex-grow flex flex-col gap-10">
+          <Navbar />
+          <div className="px-default w-full h-full">{children}</div>
+          <Toaster closeButton={true} />
+        </div>
         <Footer />
         <DebugRWD />
       </body>

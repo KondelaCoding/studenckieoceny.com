@@ -1,13 +1,7 @@
-import Navbar from "@/components/Navbar";
 import AddTeacherForm from "@/components/AddTeacherForm";
 
 const Page = () => {
-  return (
-    <div>
-      <Navbar />
-      <AddTeacherForm />
-    </div>
-  );
+  return <AddTeacherForm />;
 };
 
 export default Page;

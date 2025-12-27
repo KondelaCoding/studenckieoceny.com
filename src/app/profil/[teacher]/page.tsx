@@ -22,31 +22,27 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
 
     if (teacherData.reason && session?.user?.role === "user") {
       return (
-        <>
-          <Navbar />
-          <div className="w-full flex flex-col items-center justify-center gap-5 flex-grow">
-            <div className="text-center">
-              <h1 className="text-2xl mb-2">Profil, który próbujesz wyszukać jest niedostępny.</h1>
-              <p className="text-muted-foreground">
-                Najprawdopodobniej został on zgłoszony i oczekuje na weryfikację od administratora.
-              </p>
-            </div>
-            <Link href="/">
-              <Button>
-                <Undo2 />
-                Strona główna
-              </Button>
-            </Link>
+        <div className="w-full flex flex-col items-center justify-center gap-5 flex-grow">
+          <div className="text-center">
+            <h1 className="text-2xl mb-2">Profil, który próbujesz wyszukać jest niedostępny.</h1>
+            <p className="text-muted-foreground">
+              Najprawdopodobniej został on zgłoszony i oczekuje na weryfikację od administratora.
+            </p>
           </div>
-        </>
+          <Link href="/">
+            <Button>
+              <Undo2 />
+              Strona główna
+            </Button>
+          </Link>
+        </div>
       );
     } else {
       return (
         <>
-          <Navbar />
-          <div className="w-screen bg-card p-2 flex-grow flex-column flex justify-center -ml-5 md:-ml-10 lg:-ml-20 xl:-ml-40">
-            <Profile teacherData={teacherData} />
-          </div>
+          {/* <div className="w-screen bg-card p-2 flex-grow flex-column flex justify-center -ml-5 md:-ml-10 lg:-ml-20 xl:-ml-40"> */}
+          <Profile teacherData={teacherData} />
+          {/* </div> */}
         </>
       );
     }

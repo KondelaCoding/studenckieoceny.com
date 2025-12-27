@@ -17,7 +17,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
 
 const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
   const seperatedSubjects = teacherData.subjects.split(",");

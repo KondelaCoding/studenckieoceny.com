@@ -1,7 +1,6 @@
 import SearchBar from "@/components/SearchBar";
 import SearchList from "@/components/SearchList";
 import { Separator } from "@/components/ui/separator";
-import Navbar from "@/components/Navbar";
 
 const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }> }) => {
   const { query } = await searchParams;
@@ -9,7 +8,6 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }
 
   return (
     <div className="w-full flex flex-col gap-10 pt-12 pb-20">
-      <Navbar />
       <div>
         <h1 className="text-xl mb-5">Szukaj wybranego prowadzącego</h1>
         <SearchBar isInstant={true} />

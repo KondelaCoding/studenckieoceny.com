@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
-import SearchBar from "./SearchBar";
 import Logo from "../../public/Logo.svg";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -9,8 +8,9 @@ import { auth, signOut } from "@/auth";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { NavbarClient } from "./NavbarClient";
 
-export async function Navbar({ isSearchBarVisible = true }: { isSearchBarVisible?: boolean }) {
+export async function Navbar() {
   const session = await auth();
 
   const handleSignOut = async () => {
@@ -28,9 +28,7 @@ export async function Navbar({ isSearchBarVisible = true }: { isSearchBarVisible
             <span className="hidden md:block">Studenckie oceny</span>
           </Link>
           <div className="inline-flex gap-3 flex-grow justify-end">
-            <div className="w-full max-w-md">
-              {isSearchBarVisible ? <SearchBar isInstant={false} buttonVariant="secondary" /> : null}
-            </div>
+            <NavbarClient />
           </div>
           <div className="flex gap-3 items-center">
             {session ? (
