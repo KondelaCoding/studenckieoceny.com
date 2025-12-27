@@ -26,13 +26,13 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} antialiased font-[family-name:var(--font-montserrat)] flex justify-between min-h-svh pt-[60px] flex-col overflow-hidden`}
       >
-        <div className="flex-grow flex flex-col gap-10">
+        <div className="flex-grow flex flex-col gap-10 h-full">
           <Navbar />
-          <div className="w-full h-full">{children}</div>
-          <Toaster closeButton={true} />
+          <div className="w-full h-full flex-grow">{children}</div>
         </div>
         <Footer />
         <DebugRWD />
+        <Toaster closeButton={true} />
       </body>
     </html>
   );

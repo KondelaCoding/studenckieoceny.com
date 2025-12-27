@@ -21,7 +21,7 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
 
     if (teacherData.reason && session?.user?.role === "user") {
       return (
-        <div className="w-full flex flex-col items-center justify-center gap-5 flex-grow px-default">
+        <div className="w-full flex flex-col items-center justify-center gap-5 flex-grow px-default h-full">
           <div className="text-center">
             <h1 className="text-2xl mb-2">Profil, który próbujesz wyszukać jest niedostępny.</h1>
             <p className="text-muted-foreground">
@@ -38,11 +38,9 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
       );
     } else {
       return (
-        <>
-          <div className="w-screen bg-card p-2 flex-grow flex-column flex justify-center">
-            <Profile teacherData={teacherData} />
-          </div>
-        </>
+        <div className="w-full bg-card p-2 flex-grow flex justify-center min-h-[calc(100vh-213px)]">
+          <Profile teacherData={teacherData} />
+        </div>
       );
     }
   } catch (error) {
