@@ -1,0 +1,12 @@
+# Prettier ignore rules
+node_modules/
+build/
+dist/
+.next/
+coverage/
+generated/
+*.snap
+*.lock
+*.log
+*.min.js
+*.d.ts

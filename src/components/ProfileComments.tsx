@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Comment, Months } from "@/types";
-import { Separator } from "./ui/separator";
-import { Avatar, AvatarFallback } from "./ui/avatar";
-import { Skeleton } from "./ui/skeleton";
-import { Button } from "./ui/button";
+import { useEffect, useState } from 'react';
+import { Comment, Months } from '@/types';
+import { Separator } from './ui/separator';
+import { Avatar, AvatarFallback } from './ui/avatar';
+import { Skeleton } from './ui/skeleton';
+import { Button } from './ui/button';
 
 const ProfileComments = ({ teacherId }: { teacherId: string }) => {
   const [comments, setComments] = useState<Comment[]>([]);
@@ -24,9 +24,9 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
     const formattedTime = `${hours < 9 ? `0${hours}` : hours}:${minutes < 9 ? `0${minutes}` : minutes}`;
 
     if (date.getDate() === new Date().getDate()) {
-      return "Dzisiaj " + formattedTime;
+      return 'Dzisiaj ' + formattedTime;
     } else if (date.getDate() === new Date().getDate() - 1) {
-      return "Wczoraj " + formattedTime;
+      return 'Wczoraj ' + formattedTime;
     } else {
       return `${day} ${Months[month]} ${year}`;
     }
@@ -38,7 +38,9 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
 
   useEffect(() => {
     const fetchComments = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teacher-comments?teacherId=${teacherId}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/teacher-comments?teacherId=${teacherId}`,
+      );
       const data = await response.json();
       setComments(data);
       setIsLoading(false);
@@ -121,7 +123,9 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
               </div>
               <Separator orientation="horizontal" />
               <q className="italic text-muted-foreground">
-                {comment.comment.length > 150 ? comment.comment.slice(0, 150) + "..." : comment.comment}
+                {comment.comment.length > 150
+                  ? comment.comment.slice(0, 150) + '...'
+                  : comment.comment}
               </q>
             </div>
           </div>

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState, useRef } from "react";
-import { MessageCirclePlus, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState, useRef } from 'react';
+import { MessageCirclePlus, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Drawer,
   DrawerClose,
@@ -12,11 +12,11 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
-import { toast } from "sonner";
-import { Textarea } from "./ui/textarea";
-import { Input } from "./ui/input";
-import Link from "next/link";
+} from '@/components/ui/drawer';
+import { toast } from 'sonner';
+import { Textarea } from './ui/textarea';
+import { Input } from './ui/input';
+import Link from 'next/link';
 
 export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
   const [message, setMessage] = useState<string | null>(null);
@@ -39,43 +39,43 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
     if (!isRatingClicked) return false;
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/rating`, {
-        method: "PATCH",
+        method: 'PATCH',
         body: JSON.stringify({ teacherId: teacherId, rating }),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
       if (response.ok) {
-        toast.success("Ocena dodata pomyślnie!");
+        toast.success('Ocena dodata pomyślnie!');
       } else {
-        throw new Error("Failed to add rating");
+        throw new Error('Failed to add rating');
       }
     } catch {
-      toast.error("Wystąpił błąd podczas dodawania oceny, spróbuj ponownie później.");
+      toast.error('Wystąpił błąd podczas dodawania oceny, spróbuj ponownie później.');
     }
     return true;
   };
 
   const handleAddComment = async () => {
     if (!messageRef.current?.value) return false;
-    const nick = nickRef.current?.value || "Anonim";
+    const nick = nickRef.current?.value || 'Anonim';
     const message = messageRef.current?.value;
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/comments`, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({ teacherId: teacherId, user: nick, comment: message }),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
       if (response.ok) {
-        toast.success("Komentarz dodany pomyślnie przez " + nick + "!");
+        toast.success('Komentarz dodany pomyślnie przez ' + nick + '!');
       } else {
-        throw new Error("Failed to add comment");
+        throw new Error('Failed to add comment');
       }
     } catch {
-      toast.error("Wystąpił błąd podczas dodawania komentarza, spróbuj ponownie później.");
+      toast.error('Wystąpił błąd podczas dodawania komentarza, spróbuj ponownie później.');
     }
     setMessage(null);
     return true;
@@ -87,7 +87,7 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
     const isRatingAdded = await postRating(ratingValue);
 
     if (!isCommentAdded && !isRatingAdded) {
-      toast.error("Wystąpił błąd podczas dodawania komentarza, spróbuj ponownie później.");
+      toast.error('Wystąpił błąd podczas dodawania komentarza, spróbuj ponownie później.');
     }
   };
 
@@ -120,7 +120,7 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
               </div>
               <div
                 className={`inline-flex justify-center w-full duration-200 ${
-                  isRatingClicked ? "gap-2 opacity-100" : "gap-1 opacity-50"
+                  isRatingClicked ? 'gap-2 opacity-100' : 'gap-1 opacity-50'
                 }`}
               >
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -129,8 +129,8 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
                     size={40}
                     onClick={() => handleClick(star)}
                     onMouseEnter={() => (isRatingClicked ? null : setRating(star))}
-                    fill={star <= ratingValue ? "var(--invisible-primary)" : "var(--accent)"}
-                    className={star <= ratingValue ? "text-primary" : "text-accent"}
+                    fill={star <= ratingValue ? 'var(--invisible-primary)' : 'var(--accent)'}
+                    className={star <= ratingValue ? 'text-primary' : 'text-accent'}
                   />
                 ))}
               </div>

@@ -1,29 +1,38 @@
-import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
-import Logo from "../../public/Logo.svg";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { LogIn, LogOut, User, Menu, CirclePlus } from "lucide-react";
-import { auth, signOut } from "@/auth";
-import { Avatar, AvatarFallback } from "./ui/avatar";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { NavbarClient } from "./NavbarClient";
+import Link from 'next/link';
+import { Separator } from '@/components/ui/separator';
+import Logo from '../../public/Logo.svg';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { LogIn, LogOut, User, Menu, CirclePlus } from 'lucide-react';
+import { auth, signOut } from '@/auth';
+import { Avatar, AvatarFallback } from './ui/avatar';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { NavbarClient } from './NavbarClient';
 
 export async function Navbar() {
   const session = await auth();
 
   const handleSignOut = async () => {
-    "use server";
-    console.log("Logging out...");
+    'use server';
+    console.log('Logging out...');
     await signOut();
   };
 
   return (
     <Sheet>
-      <div className={`fixed top-0 left-0 z-50 w-full bg-card ${session?.user?.role === "admin" ? "bg-primary" : ""}`}>
+      <div
+        className={`fixed top-0 left-0 z-50 w-full bg-card ${session?.user?.role === 'admin' ? 'bg-primary' : ''}`}
+      >
         <nav className="py-3 flex justify-between items-center px-default w-full gap-5">
-          <Link href={"/"} className="inline-flex gap-3 items-center text-xl font-semibold">
+          <Link href={'/'} className="inline-flex gap-3 items-center text-xl font-semibold">
             <Image src={Logo} alt="absolwent-uczelni" width={32} className="foreground-filter" />
             <span className="hidden md:block">Studenckie oceny</span>
           </Link>
@@ -36,7 +45,9 @@ export async function Navbar() {
                 <HoverCard>
                   <HoverCardTrigger>
                     <Avatar className="h-8 w-8">
-                      <AvatarFallback className={`cursor-pointer ${session.user?.role === "user" ? "bg-primary" : ""}`}>
+                      <AvatarFallback
+                        className={`cursor-pointer ${session.user?.role === 'user' ? 'bg-primary' : ''}`}
+                      >
                         {session.user?.name?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
@@ -59,7 +70,7 @@ export async function Navbar() {
                 </HoverCard>
               </div>
             ) : (
-              <Link href={"/login"} className="hidden md:inline-flex gap-2 items-center">
+              <Link href={'/login'} className="hidden md:inline-flex gap-2 items-center">
                 <Button>
                   <LogIn />
                   Zaloguj się
@@ -70,7 +81,9 @@ export async function Navbar() {
               <div className="block md:hidden">
                 <SheetTrigger>
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback className={`cursor-pointer ${session.user?.role === "user" ? "bg-primary" : ""}`}>
+                    <AvatarFallback
+                      className={`cursor-pointer ${session.user?.role === 'user' ? 'bg-primary' : ''}`}
+                    >
                       {session.user?.name?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
@@ -78,7 +91,9 @@ export async function Navbar() {
                 <SheetContent side="right" className="w-72">
                   <SheetHeader>
                     <SheetTitle className="text-sm font-semibold">{session.user?.name}</SheetTitle>
-                    <SheetDescription className="text-xs text-muted-foreground">{session.user?.email}</SheetDescription>
+                    <SheetDescription className="text-xs text-muted-foreground">
+                      {session.user?.email}
+                    </SheetDescription>
                     <Separator className="my-2" />
                     <div className="w-full flex justify-end">
                       <Button onClick={handleSignOut}>

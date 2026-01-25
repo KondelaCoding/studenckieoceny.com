@@ -1,16 +1,23 @@
-"use client";
+'use client';
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Input } from "./ui/input";
-import { UserPlus, Loader2, TriangleAlert, Smile } from "lucide-react";
-import { Button } from "./ui/button";
-import { useTransition, useState } from "react";
-import { AddTeacherSchema } from "@/schemas";
-import Combobox from "./Combobox";
+import * as z from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Input } from './ui/input';
+import { UserPlus, Loader2, TriangleAlert, Smile } from 'lucide-react';
+import { Button } from './ui/button';
+import { useTransition, useState } from 'react';
+import { AddTeacherSchema } from '@/schemas';
+import Combobox from './Combobox';
 
 const AddTeacherForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -20,29 +27,29 @@ const AddTeacherForm = () => {
   const form = useForm<z.infer<typeof AddTeacherSchema>>({
     resolver: zodResolver(AddTeacherSchema),
     defaultValues: {
-      name: "",
-      subjects: "",
+      name: '',
+      subjects: '',
       primaryUniversity: {
-        id: "",
-        name: "",
+        id: '',
+        name: '',
       },
       secondaryUniversity: {
-        id: "",
-        name: "",
+        id: '',
+        name: '',
       },
     },
   });
 
   const onSubmit = (values: z.infer<typeof AddTeacherSchema>) => {
-    console.log("Form submitted", values);
+    console.log('Form submitted', values);
     if (!values.primaryUniversity.id && !values.secondaryUniversity.id) {
-      setErrorMessage("Wybierz przynajmniej jedną uczelnię");
+      setErrorMessage('Wybierz przynajmniej jedną uczelnię');
       setSuccessMessage(null);
       return;
     }
     startTransition(async () => {
-      const result = await fetch("/api/teachers", {
-        method: "POST",
+      const result = await fetch('/api/teachers', {
+        method: 'POST',
         body: JSON.stringify({
           name: values.name,
           subjects: values.subjects,
@@ -50,14 +57,14 @@ const AddTeacherForm = () => {
           secondaryUniversity: values.secondaryUniversity.id,
         }),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }).then((res) => res.json());
       if (result?.error) {
         setErrorMessage(result.error);
         setSuccessMessage(null);
       } else {
-        setSuccessMessage("Dodano zajęcia do bazy!");
+        setSuccessMessage('Dodano zajęcia do bazy!');
         setErrorMessage(null);
       }
     });
@@ -95,7 +102,12 @@ const AddTeacherForm = () => {
                 <FormItem>
                   <FormLabel>Przedmiot</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Fizyka, Probabilistyka" {...field} disabled={isPending} />
+                    <Input
+                      type="text"
+                      placeholder="Fizyka, Probabilistyka"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

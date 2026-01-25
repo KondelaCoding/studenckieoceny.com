@@ -1,19 +1,26 @@
-"use client";
+'use client';
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "./ui/card";
-import { Input } from "./ui/input";
-import { Loader2, CirclePlus, TriangleAlert, Smile } from "lucide-react";
-import { Button } from "./ui/button";
-import { register } from "@/actions/register";
-import { useTransition } from "react";
-import { RegisterSchema } from "@/schemas";
-import Link from "next/link";
-import { useState } from "react";
-import Socials from "./Socials";
+import * as z from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from './ui/card';
+import { Input } from './ui/input';
+import { Loader2, CirclePlus, TriangleAlert, Smile } from 'lucide-react';
+import { Button } from './ui/button';
+import { register } from '@/actions/register';
+import { useTransition } from 'react';
+import { RegisterSchema } from '@/schemas';
+import Link from 'next/link';
+import { useState } from 'react';
+import Socials from './Socials';
 
 const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -23,10 +30,10 @@ const RegisterForm = () => {
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
-      email: "",
-      name: "",
-      password: "",
-      confirmPassword: "",
+      email: '',
+      name: '',
+      password: '',
+      confirmPassword: '',
     },
   });
 
@@ -34,10 +41,10 @@ const RegisterForm = () => {
     startTransition(async () => {
       const result = await register(values);
       if (result.success) {
-        setSuccessMessage("Rejestracja zakończona sukcesem!");
+        setSuccessMessage('Rejestracja zakończona sukcesem!');
         setErrorMessage(null);
       } else if (result.error) {
-        setErrorMessage("Wystąpił błąd podczas rejestracji. Spróbuj ponownie.");
+        setErrorMessage('Wystąpił błąd podczas rejestracji. Spróbuj ponownie.');
         setSuccessMessage(null);
       }
     });
@@ -61,7 +68,12 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Adres e-mail</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="jan.kowalski@gmail.com" {...field} disabled={isPending} />
+                    <Input
+                      type="email"
+                      placeholder="jan.kowalski@gmail.com"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -87,7 +99,12 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Hasło</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Wpisz hasło" {...field} disabled={isPending} />
+                    <Input
+                      type="password"
+                      placeholder="Wpisz hasło"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -100,7 +117,12 @@ const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Potwierdź hasło</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Wpisz hasło" {...field} disabled={isPending} />
+                    <Input
+                      type="password"
+                      placeholder="Wpisz hasło"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

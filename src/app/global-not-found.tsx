@@ -1,18 +1,18 @@
-import "./globals.css";
-import { Montserrat } from "next/font/google";
-import type { Metadata } from "next";
-import { Navbar } from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import DebugRWD from "@/components/DebugRWD";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Undo2 } from "lucide-react";
+import './globals.css';
+import { Montserrat } from 'next/font/google';
+import type { Metadata } from 'next';
+import { Navbar } from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import DebugRWD from '@/components/DebugRWD';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Undo2 } from 'lucide-react';
 
-const montserrat = Montserrat({ subsets: ["latin"] });
+const montserrat = Montserrat({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "404 - Page Not Found",
-  description: "The page you are looking for does not exist.",
+  title: '404 - Page Not Found',
+  description: 'The page you are looking for does not exist.',
 };
 
 export default function GlobalNotFound() {

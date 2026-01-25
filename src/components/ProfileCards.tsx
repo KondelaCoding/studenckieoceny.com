@@ -1,13 +1,13 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import TraitChart from "./TraitChart";
-import { Skeleton } from "./ui/skeleton";
-import { ChartLine, MessageCircle, Trophy, PiggyBank } from "lucide-react";
-import ProfileComments from "./ProfileComments";
-import { ReturnedTeacherProps } from "@/types";
-import { Separator } from "./ui/separator";
-import AddCommentDrawer from "./AddCommentDrawer";
-import { Button } from "./ui/button";
-import Link from "next/link";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import TraitChart from './TraitChart';
+import { Skeleton } from './ui/skeleton';
+import { ChartLine, MessageCircle, Trophy, PiggyBank } from 'lucide-react';
+import ProfileComments from './ProfileComments';
+import { ReturnedTeacherProps } from '@/types';
+import { Separator } from './ui/separator';
+import AddCommentDrawer from './AddCommentDrawer';
+import { Button } from './ui/button';
+import Link from 'next/link';
 
 const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
   return (
@@ -35,7 +35,8 @@ const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps
           {true ? (
             <div className="absolute top-0 left-0 w-full h-full flex justify-center flex-col p-10 items-center z-20 backdrop-blur-[1px] backdrop-brightness-25 text-center">
               <h3 className="text-2xl font-semibold tracking-tight text-muted-foreground">
-                Niestety funkcja wykresu <q className="text-primary">cech</q> prowadzącego nie jest jeszcze gotowa 😔
+                Niestety funkcja wykresu <q className="text-primary">cech</q> prowadzącego nie jest
+                jeszcze gotowa 😔
               </h3>
               <br /> <br />
               <p>
@@ -72,7 +73,11 @@ const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps
                 <span className="text-primary font-bold"> przyśpieszyć </span>rozwój? <br />
                 Piwko tego nie zrobi ale przynajmniej poprawi mi humor ♥️
               </p>
-              <Link href="https://buymeacoffee.com/mikolajkondela" target="_blank" rel="noopener noreferrer">
+              <Link
+                href="https://buymeacoffee.com/mikolajkondela"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Button className="mt-10">
                   <PiggyBank />
                   Wesprzyj

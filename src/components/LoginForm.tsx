@@ -1,17 +1,24 @@
-"use client";
+'use client';
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "./ui/card";
-import { Input } from "./ui/input";
-import { LogIn, Loader2, TriangleAlert, Smile } from "lucide-react";
-import { Button } from "./ui/button";
-import { login } from "@/actions/login";
-import { useTransition, useState } from "react";
-import { LoginSchema } from "@/schemas";
-import Link from "next/link";
+import * as z from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from './ui/card';
+import { Input } from './ui/input';
+import { LogIn, Loader2, TriangleAlert, Smile } from 'lucide-react';
+import { Button } from './ui/button';
+import { login } from '@/actions/login';
+import { useTransition, useState } from 'react';
+import { LoginSchema } from '@/schemas';
+import Link from 'next/link';
 
 const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -21,8 +28,8 @@ const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -34,7 +41,7 @@ const LoginForm = () => {
         setErrorMessage(result.error);
         setSuccessMessage(null);
       } else {
-        setSuccessMessage("Zalogowano pomyślnie!");
+        setSuccessMessage('Zalogowano pomyślnie!');
         setErrorMessage(null);
       }
     });
@@ -58,7 +65,12 @@ const LoginForm = () => {
                 <FormItem>
                   <FormLabel>Adres e-mail</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="jan.kowalski@gmail.com" {...field} disabled={isPending} />
+                    <Input
+                      type="email"
+                      placeholder="jan.kowalski@gmail.com"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -71,7 +83,12 @@ const LoginForm = () => {
                 <FormItem>
                   <FormLabel>Hasło</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Wpisz hasło" {...field} disabled={isPending} />
+                    <Input
+                      type="password"
+                      placeholder="Wpisz hasło"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

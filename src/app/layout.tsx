@@ -1,19 +1,19 @@
-import "./globals.css";
-import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
-import Footer from "@/components/Footer";
-import DebugRWD from "@/components/DebugRWD";
-import { Toaster } from "@/components/ui/sonner";
-import Navbar from "@/components/Navbar";
+import './globals.css';
+import type { Metadata } from 'next';
+import { Montserrat } from 'next/font/google';
+import Footer from '@/components/Footer';
+import DebugRWD from '@/components/DebugRWD';
+import { Toaster } from '@/components/ui/sonner';
+import Navbar from '@/components/Navbar';
 
 const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin"],
+  variable: '--font-montserrat',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "Studenckie Oceny",
-  description: "Oceniaj zajęcia i sprawdź opinie innych studentów!",
+  title: 'Studenckie Oceny',
+  description: 'Oceniaj zajęcia i sprawdź opinie innych studentów!',
 };
 
 export default function RootLayout({

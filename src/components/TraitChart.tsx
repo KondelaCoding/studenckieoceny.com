@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { RadarChart, PolarAngleAxis, PolarGrid, Radar } from "recharts";
-import { ChartConfig, ChartTooltipContent, ChartContainer, ChartTooltip } from "./ui/chart";
+import { RadarChart, PolarAngleAxis, PolarGrid, Radar } from 'recharts';
+import { ChartConfig, ChartTooltipContent, ChartContainer, ChartTooltip } from './ui/chart';
 
 // TODO: Mock data, replace later
 const chartData = [
-  { trait: "Klarowność", value: 50 },
-  { trait: "Zaangażowanie", value: 60 },
-  { trait: "Interakcja", value: 40 },
-  { trait: "Organizacja", value: 100 },
-  { trait: "Humor", value: 80 },
+  { trait: 'Klarowność', value: 50 },
+  { trait: 'Zaangażowanie', value: 60 },
+  { trait: 'Interakcja', value: 40 },
+  { trait: 'Organizacja', value: 100 },
+  { trait: 'Humor', value: 80 },
 ];
 
 const chartConfig = {
   trait: {
-    label: "trait",
-    color: "hsl(var(--chart-1))",
+    label: 'trait',
+    color: 'hsl(var(--chart-1))',
   },
 } satisfies ChartConfig;
 

@@ -1,13 +1,20 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import * as React from 'react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function Combobox({
   data,
@@ -24,8 +31,8 @@ export function Combobox({
 
   React.useEffect(() => {
     async function fetchData() {
-      if (data === "universities") {
-        const dataArray = await fetch("/api/universities").then((res) => res.json());
+      if (data === 'universities') {
+        const dataArray = await fetch('/api/universities').then((res) => res.json());
         setDataArray(dataArray);
       }
     }
@@ -35,7 +42,7 @@ export function Combobox({
   const handleSelect = (currentValue: string) => {
     if (currentValue === value?.name) {
       setValue(null);
-      onChange({ id: "", name: "" });
+      onChange({ id: '', name: '' });
       setOpen(false);
     } else {
       const newValue = dataArray.find((item) => item.name === currentValue);
@@ -53,11 +60,18 @@ export function Combobox({
         <Tooltip>
           <TooltipTrigger asChild>
             <PopoverTrigger asChild>
-              <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between bg-card">
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="justify-between bg-card"
+              >
                 {value
                   ? dataArray.find((item) => item.name === value.name)?.name.slice(0, 15) +
-                    (dataArray.find((item) => item.name === value.name)?.name.length ?? 0 > 15 ? "..." : "")
-                  : "Wybierz " + title}
+                    ((dataArray.find((item) => item.name === value.name)?.name.length ?? 0 > 15)
+                      ? '...'
+                      : '')
+                  : 'Wybierz ' + title}
                 <ChevronsUpDown className="opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -78,7 +92,12 @@ export function Combobox({
               {dataArray.map((item) => (
                 <CommandItem key={item.id} value={item.name} onSelect={handleSelect}>
                   {item.name}
-                  <Check className={cn("ml-auto", value?.name === item.name ? "opacity-100" : "opacity-0")} />
+                  <Check
+                    className={cn(
+                      'ml-auto',
+                      value?.name === item.name ? 'opacity-100' : 'opacity-0',
+                    )}
+                  />
                 </CommandItem>
               ))}
             </CommandGroup>
