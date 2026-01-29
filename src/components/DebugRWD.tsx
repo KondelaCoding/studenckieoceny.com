@@ -1,4 +1,5 @@
 const DebugRWD = () => {
+  // remove hidden if you want to see the current breakpoint
   return (
     <div className="hidden fixed bottom-0 left-0 z-50 w-fit bg-card p-10 text-5xl font-bold border-2 border-primary">
       <h1 className="sm:hidden">XS</h1>

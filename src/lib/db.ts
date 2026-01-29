@@ -107,16 +107,6 @@ export const addComment = async (comment: Pick<CommentType, 'teacherId' | 'user'
   });
 };
 
-export const getUniversities = async () =>
-  prisma.university.findMany({
-    orderBy: { name: 'asc' },
-  });
-
-// ! Used only by the admin
-export const addUniversity = async (name: string) => {
-  await prisma.university.create({ data: { name } });
-};
-
 export const getTeacherById = async (id: string) => {
   const teacher = await prisma.teacher.findUnique({
     where: { id },
@@ -143,19 +133,6 @@ export const updateRating = async (id: string, rating: number) => {
     return false;
   }
 };
-
-export const addUser = async (email: string, hashedPassword: string | null, name: string) => {
-  await prisma.user.create({
-    data: {
-      email,
-      password: hashedPassword,
-      name,
-    },
-  });
-};
-
-export const getUserByEmail = async (email: string) =>
-  prisma.user.findUnique({ where: { email } }) as Promise<UserType | null>;
 
 export const deleteTeacher = async (id: string) => {
   await prisma.teacher.delete({ where: { id } });

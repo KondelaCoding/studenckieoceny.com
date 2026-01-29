@@ -1,0 +1,9 @@
+// GET- Get teacher by ID
+// PATCH- Update teacher (admin or owner only)
+// DELETE- Delete teacher (admin only)
+import type { NextApiRequest, NextApiResponse } from 'next';
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Implementation here
+  console.log('Admin notified about adding a teacher.');
+  res.status(200).json({ message: 'Admin notified about adding a teacher.' });
+}

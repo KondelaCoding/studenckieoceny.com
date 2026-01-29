@@ -1,3 +1,6 @@
+// GET- List comments for a teacher
+// POST- Add a comment to a teacher
+
 import { NextApiRequest, NextApiResponse } from 'next';
 import { addComment, init } from '@/lib/db';
 import { Comment } from '@/types';

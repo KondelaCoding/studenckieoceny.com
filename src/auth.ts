@@ -26,6 +26,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           ({ user } = await response.json());
         } else {
           // User not found, create them in the DB
+          //TODO: replace with axios call
           const createRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

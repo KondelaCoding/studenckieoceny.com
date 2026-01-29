@@ -1,12 +1,17 @@
 import SearchBar from '@/components/SearchBar';
 import SearchList from '@/components/SearchList';
 import { Separator } from '@/components/ui/separator';
+import axios from 'axios';
 
 const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }> }) => {
   const { query } = await searchParams;
   const teachers = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`).then((res) =>
     res.json(),
   );
+
+  const axiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`);
+
+  console.log(axiosResponse);
 
   return (
     <div className="w-full flex flex-col gap-10 pt-12 pb-20 px-default">
