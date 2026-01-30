@@ -1,37 +1,48 @@
-// GET- List comments for a teacher
-// POST- Add a comment to a teacher
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
-import { NextApiRequest, NextApiResponse } from 'next';
-import { addComment, init } from '@/lib/db';
-import { Comment } from '@/types';
+export async function GET(req: Request, { params }: { params: { teacherId: string } }) {
+  try {
+    const { teacherId } = params;
 
-init();
+    if (!teacherId) {
+      return NextResponse.json({ error: 'Teacher ID is required' }, { status: 400 });
+    }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    try {
-      const {
+    const comments = await prisma.comment.findMany({ where: { teacherId } });
+
+    if (comments.length === 0) {
+      return NextResponse.json({ comments: [] }, { status: 404 });
+    }
+
+    return NextResponse.json({ comments }, { status: 200 });
+  } catch (error) {
+    console.error('GET /api/teachers/[teacherId]/comments error:', error);
+    return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
+  }
+}
+
+export async function POST(req: Request, { params }: { params: { teacherId: string } }) {
+  try {
+    const { teacherId } = params;
+    const body = await req.json();
+    const { user, comment } = body;
+
+    if (!user || !comment) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    await prisma.comment.create({
+      data: {
         teacherId,
         user,
         comment,
-      }: {
-        teacherId: string;
-        user: string;
-        comment: string;
-      } = req.body;
-      if (!teacherId || !user || !comment) {
-        return res.status(400).json({
-          error: 'Missing required fields',
-        });
-      }
-      await addComment({ teacherId, user, comment } as Comment);
-      res.status(200).json({ message: 'Comment added successfully' });
-    } catch (error) {
-      console.error('Error adding comment:', error);
-      res.status(500).json({ error: 'Failed to add comment' });
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+      },
+    });
+
+    return NextResponse.json({ message: 'Comment added successfully' }, { status: 200 });
+  } catch (error) {
+    console.error('POST /api/teachers/[teacherId]/comments error:', error);
+    return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
   }
 }

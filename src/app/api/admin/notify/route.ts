@@ -1,8 +1,2 @@
+//TODO: notifications are done by services/mail.ts
 // POST- Notify admin about adding a teacher
-
-import type { NextApiRequest, NextApiResponse } from 'next';
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Implementation here
-  console.log('Admin notified about adding a teacher.');
-  res.status(200).json({ message: 'Admin notified about adding a teacher.' });
-}

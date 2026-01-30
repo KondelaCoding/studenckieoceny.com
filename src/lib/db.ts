@@ -30,32 +30,6 @@ const teacherInclude = {
   },
 } satisfies Prisma.TeacherInclude;
 
-export const addTeacher = async (teacher: {
-  name: string;
-  subjects: string;
-  universities: Array<string | number | null>;
-}) => {
-  const universityIds = Array.from(
-    new Set(teacher.universities.filter(Boolean).map((id) => String(id))),
-  );
-
-  await prisma.teacher.create({
-    data: {
-      name: teacher.name,
-      subjects: teacher.subjects,
-      teacherUniversities: universityIds.length
-        ? {
-            create: universityIds.map((universityId) => ({
-              university: {
-                connect: { id: universityId },
-              },
-            })),
-          }
-        : undefined,
-    },
-  });
-};
-
 export const getAllTeachers = async () => {
   const teachers = await prisma.teacher.findMany({ include: teacherInclude });
   return teachers.map(mapTeacher);

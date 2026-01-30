@@ -1,7 +1,27 @@
-// POST- Report a teacher (hides teacher, notifies admin)
-import type { NextApiRequest, NextApiResponse } from 'next';
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Implementation here
-  console.log('Admin notified about adding a teacher.');
-  res.status(200).json({ message: 'Admin notified about adding a teacher.' });
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { reportTeacherNotification } from '@/services/mail';
+
+export async function POST(req: Request, { params }: { params: { teacherId: string } }) {
+  try {
+    const { teacherId } = params;
+    const body = await req.json();
+    const { reason } = body;
+
+    if (!reason) {
+      return NextResponse.json({ error: 'Missing reason field' }, { status: 400 });
+    }
+
+    await prisma.teacher.update({
+      where: { id: teacherId },
+      data: { reason },
+    });
+
+    await reportTeacherNotification(teacherId, reason);
+
+    return NextResponse.json({ message: 'Teacher reported successfully' }, { status: 200 });
+  } catch (error) {
+    console.error('POST /api/teachers/[teacherId]/report error:', error);
+    return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
+  }
 }
