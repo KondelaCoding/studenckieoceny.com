@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import { Textarea } from './ui/textarea';
 import { Input } from './ui/input';
 import Link from 'next/link';
+import axios from 'axios';
 
 export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
   const [message, setMessage] = useState<string | null>(null);
@@ -38,14 +39,13 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
   const postRating = async (rating: number) => {
     if (!isRatingClicked) return false;
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/rating`, {
-        method: 'PATCH',
-        body: JSON.stringify({ teacherId: teacherId, rating }),
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherId}/ratings`,
+        {
+          rating,
         },
-      });
-      if (response.ok) {
+      );
+      if (response.status === 200) {
         toast.success('Ocena dodata pomyślnie!');
       } else {
         throw new Error('Failed to add rating');
@@ -62,14 +62,14 @@ export function AddCommentDrawer({ teacherId }: { teacherId: string }) {
     const message = messageRef.current?.value;
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/comments`, {
-        method: 'POST',
-        body: JSON.stringify({ teacherId: teacherId, user: nick, comment: message }),
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherId}/comments`,
+        {
+          user: nick,
+          comment: message,
         },
-      });
-      if (response.ok) {
+      );
+      if (response.status === 200) {
         toast.success('Komentarz dodany pomyślnie przez ' + nick + '!');
       } else {
         throw new Error('Failed to add comment');

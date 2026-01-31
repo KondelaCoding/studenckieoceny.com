@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import axios from 'axios';
 
 export function Combobox({
   data,
@@ -32,8 +33,8 @@ export function Combobox({
   React.useEffect(() => {
     async function fetchData() {
       if (data === 'universities') {
-        const dataArray = await fetch('/api/universities').then((res) => res.json());
-        setDataArray(dataArray);
+        const dataArray = await axios.get('/api/universities');
+        setDataArray(dataArray.data.universities);
       }
     }
     fetchData();

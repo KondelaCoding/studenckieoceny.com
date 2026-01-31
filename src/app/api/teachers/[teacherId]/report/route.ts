@@ -4,7 +4,7 @@ import { reportTeacherNotification } from '@/services/mail';
 
 export async function POST(req: Request, { params }: { params: { teacherId: string } }) {
   try {
-    const { teacherId } = params;
+    const { teacherId } = await params;
     const body = await req.json();
     const { reason } = body;
 

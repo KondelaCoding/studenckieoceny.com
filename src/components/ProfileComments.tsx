@@ -6,6 +6,7 @@ import { Separator } from './ui/separator';
 import { Avatar, AvatarFallback } from './ui/avatar';
 import { Skeleton } from './ui/skeleton';
 import { Button } from './ui/button';
+import axios from 'axios';
 
 const ProfileComments = ({ teacherId }: { teacherId: string }) => {
   const [comments, setComments] = useState<Comment[]>([]);
@@ -38,11 +39,12 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
 
   useEffect(() => {
     const fetchComments = async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/teacher-comments?teacherId=${teacherId}`,
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherId}/comments`,
       );
-      const data = await response.json();
-      setComments(data);
+
+      const data = response.data;
+      setComments(data.comments);
       setIsLoading(false);
     };
 

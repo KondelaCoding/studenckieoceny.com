@@ -18,6 +18,7 @@ import { Button } from './ui/button';
 import { useTransition, useState } from 'react';
 import { AddTeacherSchema } from '@/schemas';
 import Combobox from './Combobox';
+import axios from 'axios';
 
 const AddTeacherForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -48,20 +49,15 @@ const AddTeacherForm = () => {
       return;
     }
     startTransition(async () => {
-      const result = await fetch('/api/teachers', {
-        method: 'POST',
-        body: JSON.stringify({
-          name: values.name,
-          subjects: values.subjects,
-          primaryUniversity: values.primaryUniversity.id,
-          secondaryUniversity: values.secondaryUniversity.id,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then((res) => res.json());
-      if (result?.error) {
-        setErrorMessage(result.error);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`, {
+        name: values.name,
+        subjects: values.subjects,
+        primaryUniversity: values.primaryUniversity.id,
+        secondaryUniversity: values.secondaryUniversity.id,
+      });
+
+      if (response.status !== 200) {
+        setErrorMessage(response.data.error);
         setSuccessMessage(null);
       } else {
         setSuccessMessage('Dodano zajęcia do bazy!');

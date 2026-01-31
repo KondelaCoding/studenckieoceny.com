@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(req: Request, { params }: { params: { teacherId: string } }) {
   try {
-    const { teacherId } = params;
+    const { teacherId } = await params;
 
     await prisma.teacher.update({
       where: { id: teacherId },

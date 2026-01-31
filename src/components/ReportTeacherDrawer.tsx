@@ -16,23 +16,20 @@ import {
 import { toast } from 'sonner';
 import { Textarea } from './ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import axios from 'axios';
 
 export function ReportTeacherDrawer({ teacherId }: { teacherId: string }) {
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
   const handleReportTeacher = async () => {
     try {
-      const response = await fetch('/api/report-teacher', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherId}/report`,
+        {
+          reason: messageRef.current?.value,
         },
-        body: JSON.stringify({
-          teacherId,
-          message: messageRef.current?.value,
-        }),
-      });
-      if (response.ok) {
+      );
+      if (response.status === 200) {
         toast.success('Pomyślnie zgłoszono profil.');
       } else {
         throw new Error('Failed to report teacher');

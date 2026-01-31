@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(req: Request, { params }: { params: { teacherId: string } }) {
   try {
-    const { teacherId } = params;
+    const { teacherId } = await params;
 
     if (!teacherId) {
       return NextResponse.json({ error: 'Teacher ID is required' }, { status: 400 });
@@ -24,7 +24,7 @@ export async function GET(req: Request, { params }: { params: { teacherId: strin
 
 export async function POST(req: Request, { params }: { params: { teacherId: string } }) {
   try {
-    const { teacherId } = params;
+    const { teacherId } = await params;
     const body = await req.json();
     const { user, comment } = body;
 

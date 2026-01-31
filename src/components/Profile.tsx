@@ -45,18 +45,12 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
 
   const handleDelete = async () => {
     'use server';
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/delete-teacher`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ teacherId: teacherData.id }),
-    });
-    if (!response.ok) {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherData.id}`,
+    );
+    if (response.status !== 200) {
       throw new Error('Failed to delete teacher');
     }
-    const data = await response.json();
-    console.log('Delete response:', data.message);
   };
 
   return (
