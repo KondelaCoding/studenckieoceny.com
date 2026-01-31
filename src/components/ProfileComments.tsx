@@ -43,8 +43,8 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherId}/comments`,
       );
 
-      const data = response.data;
-      setComments(data.comments);
+      const data = response.data.comments;
+      setComments(data);
       setIsLoading(false);
     };
 

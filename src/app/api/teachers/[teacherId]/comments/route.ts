@@ -12,7 +12,7 @@ export async function GET(req: Request, { params }: { params: { teacherId: strin
     const comments = await prisma.comment.findMany({ where: { teacherId } });
 
     if (comments.length === 0) {
-      return NextResponse.json({ comments: [] }, { status: 404 });
+      return NextResponse.json({ comments: [] }, { status: 200 });
     }
 
     return NextResponse.json({ comments }, { status: 200 });

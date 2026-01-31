@@ -3,9 +3,11 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   try {
-    const items = await prisma.university.findMany();
+    const universities = await prisma.university.findMany();
 
-    return NextResponse.json(items, { status: 200 });
+    console.log('Fetched universities:', universities);
+
+    return NextResponse.json({ universities }, { status: 200 });
   } catch (error) {
     console.error('GET /api/universities error:', error);
     return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });

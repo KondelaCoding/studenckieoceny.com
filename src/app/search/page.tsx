@@ -5,7 +5,8 @@ import axios from 'axios';
 
 const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }> }) => {
   const { query } = await searchParams;
-  const teachers = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`);
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`);
+  const teachers = response.data.teachers;
 
   return (
     <div className="w-full flex flex-col gap-10 pt-12 pb-20 px-default">
@@ -18,7 +19,7 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }
         <h1 className="text-xl mb-5">
           Wyniki wyszukiwania: {query ? <q className="text-primary">{query}</q> : null}
         </h1>
-        <SearchList teachers={teachers.data} query={query} />
+        <SearchList teachers={teachers} query={query} />
       </div>
     </div>
   );

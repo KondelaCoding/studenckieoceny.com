@@ -7,9 +7,9 @@ export async function GET() {
     const teachers = await prisma.teacher.findMany({ where: { reason: null } });
 
     if (teachers.length === 0) {
-      return new Response(JSON.stringify([]), { status: 200 });
+      return NextResponse.json({ teachers: [] }, { status: 200 });
     }
-    return new Response(JSON.stringify(teachers), { status: 200 });
+    return NextResponse.json({ teachers }, { status: 200 });
   } catch (error) {
     console.error('GET /api/teachers error:', error);
     return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });

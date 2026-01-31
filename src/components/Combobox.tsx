@@ -16,6 +16,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 export function Combobox({
   data,
@@ -26,15 +27,18 @@ export function Combobox({
   title: string;
   onChange: (value: { id: string; name: string }) => void;
 }) {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState<{ id: string; name: string } | null>(null);
-  const [dataArray, setDataArray] = React.useState<{ id: string; name: string }[]>([]);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState<{ id: string; name: string } | null>(null);
+  const [dataArray, setDataArray] = useState<{ id: string; name: string }[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function fetchData() {
       if (data === 'universities') {
-        const dataArray = await axios.get('/api/universities');
-        setDataArray(dataArray.data.universities);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/universities`);
+
+        const data = response.data.universities;
+        console.log('Fetched universities:', data);
+        setDataArray(data);
       }
     }
     fetchData();
@@ -54,6 +58,8 @@ export function Combobox({
       setOpen(false);
     }
   };
+
+  console.log(dataArray);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
