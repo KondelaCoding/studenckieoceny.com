@@ -17,10 +17,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import axios from 'axios';
 
 const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
   const seperatedSubjects = teacherData.subjects.split(',');
-  const seperatedUniversities = teacherData.universities.split(',');
+  // const seperatedUniversities = teacherData.universities.split(',');
   const date =
     new Date(teacherData.timestamp).getDate() +
     '.' +
@@ -30,17 +31,15 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
 
   const handleUnhide = async () => {
     'use server';
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/unhide-teacher`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ teacherId: teacherData.id }),
-    });
-    if (!response.ok) {
+
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherData.id}/unhide`,
+    );
+
+    if (response.status !== 200) {
       throw new Error('Failed to unhide teacher');
     }
-    const data = await response.json();
+    const data = response.data;
     console.log('Unhide response:', data.message);
   };
 
@@ -127,11 +126,11 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
                 <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">Uczelnie</h3>
               </span>
               <ul className="list-disc space-y-3">
-                {seperatedUniversities.map((subject, index) => (
+                {/* {seperatedUniversities.map((subject, index) => (
                   <li key={index} className="ml-6">
                     {subject}
                   </li>
-                ))}
+                ))} */}
               </ul>
             </div>
             <div className="flex gap-3 flex-col">

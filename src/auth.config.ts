@@ -4,6 +4,7 @@ import { NextAuthConfig } from 'next-auth';
 import { LoginSchema } from './schemas';
 import bcrypt from 'bcryptjs';
 import { AuthError } from 'next-auth';
+import axios from 'axios';
 
 export default {
   providers: [
@@ -20,23 +21,20 @@ export default {
         }
         const { email, password } = validatedFields.data;
 
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/validate?email=${email}`,
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/validate`,
           {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            email,
           },
         );
 
-        if (!response.ok) {
+        if (response.status !== 200) {
           console.error('[auth][error] Invalid credentials: User not found');
           throw new AuthError('Nie znaleziono użytkownika');
         }
 
         // Extract the user object from the response
-        const { user } = await response.json();
+        const { user } = response.data;
 
         if (!user) {
           console.error('[auth][error] Invalid credentials: Missing user or password');

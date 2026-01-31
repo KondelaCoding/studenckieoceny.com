@@ -3,9 +3,7 @@
 import * as z from 'zod';
 import { RegisterSchema } from '@/schemas';
 import bcript from 'bcryptjs';
-import { addUser, getUserByEmail, init } from '@/lib/db';
-
-init();
+import { prisma } from '@/lib/prisma';
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -15,12 +13,15 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const { email, name, password } = validatedFields.data;
   const hashedPassword = await bcript.hash(password, 10);
 
-  //TODO: replace with axios call
-  const existingUser = await getUserByEmail(email);
+  const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) return { error: 'User with this email already exists' };
 
-  //TODO: replace with axios call
-  await addUser(email, hashedPassword, name);
-
+  await prisma.user.create({
+    data: {
+      email,
+      password: hashedPassword,
+      name,
+    },
+  });
   return { success: 'Konto zostało stworzone!' };
 };

@@ -5,18 +5,19 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Undo2 } from 'lucide-react';
 import { auth } from '@/auth';
+import axios from 'axios';
 
 const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: string }> }) => {
   try {
     const session = await auth();
     const { teacher } = await params;
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/teacher-profile?id=${teacher}`,
-    );
-    if (!response.ok) {
+
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacher}`);
+    if (response.status !== 200) {
       throw new Error('Failed to fetch teacher');
     }
-    const teacherData: ReturnedTeacherProps = await response.json();
+    const teacherData: ReturnedTeacherProps = response.data;
+
     if (!teacherData) {
       notFound();
     }

@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import authConfig from './auth.config';
+import axios from 'axios';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
@@ -13,30 +14,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, account, profile }) {
       // Only check DB for OAuth logins (Google, etc.)
       if (account?.provider && token.email) {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/validate?email=${token.email}`,
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/validate`,
           {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
+            email: token.email,
           },
         );
 
         let user;
-        if (response.ok) {
-          ({ user } = await response.json());
+        if (response.status === 200) {
+          ({ user } = response.data);
         } else {
           // User not found, create them in the DB
-          //TODO: replace with axios call
-          const createRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: token.email,
-              password: null, // explicitly null for OAuth
-              name: profile?.name || token.name,
-            }),
+          const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
+            email: token.email,
+            password: null, // explicitly null for OAuth
+            name: profile?.name || token.name,
           });
-          user = await createRes.json();
+          user = response.data;
         }
 
         token.role = user?.role ?? 'user';
