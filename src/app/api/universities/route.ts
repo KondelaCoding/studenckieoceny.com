@@ -5,7 +5,9 @@ export async function GET() {
   try {
     const universities = await prisma.university.findMany();
 
-    console.log('Fetched universities:', universities);
+    if (universities.length === 0) {
+      return NextResponse.json({ universities: [] }, { status: 200 });
+    }
 
     return NextResponse.json({ universities }, { status: 200 });
   } catch (error) {
