@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-//TODO: OMGGGGG implement filtering by query idk why its so bad now
+//TODO: [Task - pagination] OMGGGGG implement filtering by query idk why its so bad now
 export async function GET() {
   try {
     const teachers = await prisma.teacher.findMany({ where: { reason: null } });
