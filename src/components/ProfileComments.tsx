@@ -1,37 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Comment, Months } from '@/types/types';
 import { Separator } from './ui/separator';
-import { Avatar, AvatarFallback } from './ui/avatar';
 import { Skeleton } from './ui/skeleton';
 import { Button } from './ui/button';
 import axios from 'axios';
+import { Comment } from '@/types/types';
+import UserComment from './UserComment';
 
-const ProfileComments = ({ teacherId }: { teacherId: string }) => {
+const ProfileComments = ({ teacherId, isAdmin }: { teacherId: string; isAdmin: boolean }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [filteredComments, setFilteredComments] = useState<Comment[]>(comments.slice(0, 4));
   const [isLoading, setIsLoading] = useState(true);
   const [commentCount, setCommentCount] = useState(5);
-
-  const date = (timestamp: number) => {
-    const date = new Date(timestamp);
-    const day = date.getDate();
-    const month = (date.getMonth() + 1).toString() as unknown as keyof typeof Months;
-    const year = date.getFullYear();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-
-    const formattedTime = `${hours < 9 ? `0${hours}` : hours}:${minutes < 9 ? `0${minutes}` : minutes}`;
-
-    if (date.getDate() === new Date().getDate()) {
-      return 'Dzisiaj ' + formattedTime;
-    } else if (date.getDate() === new Date().getDate() - 1) {
-      return 'Wczoraj ' + formattedTime;
-    } else {
-      return `${day} ${Months[month]} ${year}`;
-    }
-  };
 
   const increaseCommentCount = () => {
     setCommentCount((prev) => prev + 3);
@@ -114,23 +95,7 @@ const ProfileComments = ({ teacherId }: { teacherId: string }) => {
         </div>
       ) : filteredComments.length ? (
         filteredComments.map((comment) => (
-          <div key={comment.id} className="grid grid-cols-[auto_1fr] gap-5 w-full">
-            <Avatar className="capitalize w-12 h-12">
-              <AvatarFallback>{comment.user.slice(0, 2)}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col gap-1">
-              <div className="inline-flex items-center w-full gap-5">
-                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">{comment.user}</h4>
-                <p className="text-muted-foreground">{date(comment.timestamp)}</p>
-              </div>
-              <Separator orientation="horizontal" />
-              <q className="italic text-muted-foreground">
-                {comment.comment.length > 150
-                  ? comment.comment.slice(0, 150) + '...'
-                  : comment.comment}
-              </q>
-            </div>
-          </div>
+          <UserComment key={comment.id} comment={comment} isAdmin={isAdmin} />
         ))
       ) : (
         <span className="w-full text-center text-muted-foreground">
