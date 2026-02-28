@@ -51,7 +51,11 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
   }
 
   //TODO: this will be fixed by deleting the teacher-uni table
-  const teacherData: ReturnedTeacherProps = teacher;
+  const teacherData: ReturnedTeacherProps = {
+    ...teacher,
+    timestamp: teacher.timestamp.getTime(),
+    universities: '',
+  };
 
   return (
     <div className="w-full bg-card p-2 grow flex justify-center min-h-[calc(100vh-213px)]">

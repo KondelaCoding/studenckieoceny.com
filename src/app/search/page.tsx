@@ -30,7 +30,13 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }
   const session = await auth();
   const role = session?.user?.role as User['role'] | undefined;
 
-  const teachers = await getTeachers(role, query);
+  const returnedTeachers = await getTeachers(role, query);
+
+  const teachers = returnedTeachers.map((teacher) => ({
+    ...teacher,
+    timestamp: teacher.timestamp.getTime(),
+    universities: '', //TODO: this will be fixed by deleting the teacher-uni table
+  }));
 
   return (
     <div className="w-full flex flex-col gap-10 pt-12 pb-20 px-default">
@@ -38,14 +44,11 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }
         <h1 className="text-xl mb-5">Szukaj wybranego prowadzącego</h1>
         <SearchBar isInstant />
       </div>
-
       <Separator orientation="horizontal" />
-
       <div>
         <h1 className="text-xl mb-5">
           Wyniki wyszukiwania: {query ? <q className="text-primary">{query}</q> : null}
         </h1>
-
         <SearchList teachers={teachers} />
       </div>
     </div>
