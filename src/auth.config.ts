@@ -4,7 +4,8 @@ import { NextAuthConfig } from 'next-auth';
 import { LoginSchema } from './schemas';
 import bcrypt from 'bcryptjs';
 import { AuthError } from 'next-auth';
-import axios from 'axios';
+import { prisma } from '@/lib/prisma';
+import { User } from '@/types/types';
 
 export default {
   providers: [
@@ -21,20 +22,7 @@ export default {
         }
         const { email, password } = validatedFields.data;
 
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/validate`,
-          {
-            email,
-          },
-        );
-
-        if (response.status !== 200) {
-          console.error('[auth][error] Invalid credentials: User not found');
-          throw new AuthError('Nie znaleziono użytkownika');
-        }
-
-        // Extract the user object from the response
-        const { user } = response.data;
+        const user = await prisma.user.findUnique({ where: { email } });
 
         if (!user) {
           console.error('[auth][error] Invalid credentials: Missing user or password');
@@ -60,7 +48,7 @@ export default {
           name: user.name,
           email: user.email,
           role: user.role,
-        };
+        } as User;
       },
     }),
   ],
