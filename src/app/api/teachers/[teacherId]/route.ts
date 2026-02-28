@@ -4,7 +4,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(req: Request, { params }: { params: { teacherId: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ teacherId: string }> }) {
   try {
     const { teacherId } = await params;
 
@@ -20,7 +20,7 @@ export async function GET(req: Request, { params }: { params: { teacherId: strin
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { teacherId: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ teacherId: string }> }) {
   try {
     const { teacherId } = await params;
 
@@ -34,4 +34,4 @@ export async function DELETE(req: Request, { params }: { params: { teacherId: st
 }
 
 //TODO: implement when needed
-// export async function PATCH(req: Request) {}
+// export async function PATCH(req: Request, { params }: { params: Promise<{ teacherId: string }> }) {}

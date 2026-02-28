@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function POST(req: Request, { params }: { params: { teacherId: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ teacherId: string }> }) {
   try {
     const { teacherId } = await params;
 
