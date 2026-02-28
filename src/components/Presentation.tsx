@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import StarRatingDisplay from "./StarRatingDisplay";
-import { VenetianMask, ChartLine, Globe } from "lucide-react";
-import TraitChart from "./TraitChart";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import StarRatingDisplay from './StarRatingDisplay';
+import { VenetianMask, ChartLine, Globe } from 'lucide-react';
+import TraitChart from './TraitChart';
 
 const cardData = [
   {
-    header: "Prowadzący z całej Polski",
-    description: "Jury w postaci studentów mogących ocenić dowolne zajęcia na dowolnej uczelni.",
+    header: 'Prowadzący z całej Polski',
+    description: 'Jury w postaci studentów mogących ocenić dowolne zajęcia na dowolnej uczelni.',
     icon: <Globe />,
     presentation: (
       <div className="w-fit gap-3 flex flex-col h-full items-start">
@@ -19,15 +19,15 @@ const cardData = [
     ),
   },
   {
-    header: "Innowacyjny sposób oceniania",
+    header: 'Innowacyjny sposób oceniania',
     description: "Zainspirowany rozsyłanymi zdjęciami, wykres 'cech' prowadzącego zajęcia",
     icon: <ChartLine />,
     // TODO: Change label in tooltip from "value" to something else
     presentation: <TraitChart />,
   },
   {
-    header: "Anonimowość",
-    description: "Oceny zajęć są anonimowe, a ich wyniki są w pełni jawne.",
+    header: 'Anonimowość',
+    description: 'Oceny zajęć są anonimowe, a ich wyniki są w pełni jawne.',
     icon: <VenetianMask />,
   },
 ];

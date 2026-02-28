@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Loader2, SearchIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useState, useRef } from "react";
-import { Suspense } from "react";
-import Search from "@/components/Search";
+import { Loader2, SearchIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState, useRef } from 'react';
+import { Suspense } from 'react';
+import Search from '@/components/Search';
 
 const SearchBar = ({
   isInstant,
-  buttonVariant = "default",
+  buttonVariant = 'default',
 }: {
   isInstant: boolean;
-  buttonVariant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost";
+  buttonVariant?: 'link' | 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost';
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,7 +20,7 @@ const SearchBar = ({
 
   const handleSearch = (query: string, subject: string, university: string) => {
     setIsLoading(true);
-    console.log("Search triggered with:", { query, subject, university });
+    console.log('Search triggered with:', { query, subject, university });
     // Perform additional logic here if needed
     setTimeout(() => setIsLoading(false), 5000); // Simulate loading
   };
@@ -36,7 +36,11 @@ const SearchBar = ({
           <span className="hidden sm:block">Szukaj</span>
         </Button>
       ) : (
-        <Button variant={buttonVariant} type="button" onClick={() => searchRef.current?.handleSearch()}>
+        <Button
+          variant={buttonVariant}
+          type="button"
+          onClick={() => searchRef.current?.handleSearch()}
+        >
           <SearchIcon />
           <span className="hidden sm:block">Szukaj</span>
         </Button>

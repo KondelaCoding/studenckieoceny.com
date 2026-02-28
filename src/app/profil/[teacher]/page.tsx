@@ -1,25 +1,28 @@
-import { notFound } from "next/navigation";
-import Profile from "@/components/Profile";
-import { ReturnedTeacherProps } from "@/types";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Undo2 } from "lucide-react";
-import { auth } from "@/auth";
+import { notFound } from 'next/navigation';
+import Profile from '@/components/Profile';
+import { ReturnedTeacherProps } from '@/types';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Undo2 } from 'lucide-react';
+import { auth } from '@/auth';
+import axios from 'axios';
 
 const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: string }> }) => {
   try {
     const session = await auth();
     const { teacher } = await params;
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teacher-profile?id=${teacher}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch teacher");
+
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacher}`);
+    if (response.status !== 200) {
+      throw new Error('Failed to fetch teacher');
     }
-    const teacherData: ReturnedTeacherProps = await response.json();
+    const teacherData: ReturnedTeacherProps = response.data.teacher;
+
     if (!teacherData) {
       notFound();
     }
 
-    if (teacherData.reason && session?.user?.role === "user") {
+    if (teacherData.reason && session?.user?.role === 'user') {
       return (
         <div className="w-full flex flex-col items-center justify-center gap-5 flex-grow px-default h-full">
           <div className="text-center">
@@ -44,7 +47,7 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
       );
     }
   } catch (error) {
-    console.error("Error fetching teacher:", error);
+    console.error('Error fetching teacher:', error);
     notFound();
   }
 };

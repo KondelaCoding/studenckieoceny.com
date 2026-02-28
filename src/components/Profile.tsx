@@ -1,11 +1,11 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ReturnedTeacherProps } from "@/types";
-import ProfileCards from "./ProfileCards";
-import { Separator } from "./ui/separator";
-import StarRatingDisplay from "./StarRatingDisplay";
-import { User, BookOpenText, University, CalendarClock, Info } from "lucide-react";
-import ReportTeacherDrawer from "./ReportTeacherDrawer";
-import { Button } from "./ui/button";
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { ReturnedTeacherProps } from '@/types';
+import ProfileCards from './ProfileCards';
+import { Separator } from './ui/separator';
+import StarRatingDisplay from './StarRatingDisplay';
+import { User, BookOpenText, University, CalendarClock, Info } from 'lucide-react';
+import ReportTeacherDrawer from './ReportTeacherDrawer';
+import { Button } from './ui/button';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,55 +16,48 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
+import axios from 'axios';
 
 const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
-  const seperatedSubjects = teacherData.subjects.split(",");
-  const seperatedUniversities = teacherData.universities.split(",");
+  const seperatedSubjects = teacherData.subjects.split(',');
+  // const seperatedUniversities = teacherData.universities.split(',');
   const date =
     new Date(teacherData.timestamp).getDate() +
-    "." +
+    '.' +
     (new Date(teacherData.timestamp).getMonth() + 1) +
-    "." +
+    '.' +
     new Date(teacherData.timestamp).getFullYear();
 
   const handleUnhide = async () => {
-    "use server";
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/unhide-teacher`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ teacherId: teacherData.id }),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to unhide teacher");
+    'use server';
+
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherData.id}/unhide`,
+    );
+
+    if (response.status !== 200) {
+      throw new Error('Failed to unhide teacher');
     }
-    const data = await response.json();
-    console.log("Unhide response:", data.message);
+    const data = response.data;
+    console.log('Unhide response:', data.message);
   };
 
   const handleDelete = async () => {
-    "use server";
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/delete-teacher`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ teacherId: teacherData.id }),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to delete teacher");
+    'use server';
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherData.id}`,
+    );
+    if (response.status !== 200) {
+      throw new Error('Failed to delete teacher');
     }
-    const data = await response.json();
-    console.log("Delete response:", data.message);
   };
 
   return (
     <div className="grid grid-cols-1 grid-rows-1 w-full lg:grid-cols-[auto_1fr]">
       <div className="flex flex-col items-center py-10 -mt-5 gap-5 lg:max-w-lg lg:w-min xl:px-6">
         <Avatar className="uppercase w-40 h-40 text-4xl border mx-14">
-          <AvatarFallback>{teacherData.name.split(" ")[0][0] ?? ""}</AvatarFallback>
+          <AvatarFallback>{teacherData.name.split(' ')[0][0] ?? ''}</AvatarFallback>
         </Avatar>
         <div className="w-full flex flex-col gap-5 justify-center items-center lg:items-start">
           {teacherData.reason ? (
@@ -102,7 +95,10 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
             </div>
             <ReportTeacherDrawer teacherId={teacherData.id} />
           </h2>
-          <StarRatingDisplay totalValue={teacherData.totalRatingValue} numberOfVotes={teacherData.numberOfVotes} />
+          <StarRatingDisplay
+            totalValue={teacherData.totalRatingValue}
+            numberOfVotes={teacherData.numberOfVotes}
+          />
           <Separator orientation="horizontal" />
           <div className="grid gap-10 grid-cols-1 md:grid-cols-3 lg:grid-cols-1">
             <div className="flex gap-3 flex-col">
@@ -124,11 +120,11 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
                 <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">Uczelnie</h3>
               </span>
               <ul className="list-disc space-y-3">
-                {seperatedUniversities.map((subject, index) => (
+                {/* {seperatedUniversities.map((subject, index) => (
                   <li key={index} className="ml-6">
                     {subject}
                   </li>
-                ))}
+                ))} */}
               </ul>
             </div>
             <div className="flex gap-3 flex-col">

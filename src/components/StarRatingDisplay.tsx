@@ -1,6 +1,12 @@
-import { Star, Dot } from "lucide-react";
+import { Star, Dot } from 'lucide-react';
 
-const StarRatingDisplay = ({ numberOfVotes, totalValue }: { numberOfVotes: number; totalValue: number }) => {
+const StarRatingDisplay = ({
+  numberOfVotes,
+  totalValue,
+}: {
+  numberOfVotes: number;
+  totalValue: number;
+}) => {
   const calculateRating = (totalValue: number, numberOfVotes: number) => {
     if (numberOfVotes === 0) return 0;
     return parseFloat((totalValue / numberOfVotes).toFixed(1));
@@ -13,8 +19,14 @@ const StarRatingDisplay = ({ numberOfVotes, totalValue }: { numberOfVotes: numbe
             <Star
               key={star}
               size={24}
-              fill={star <= calculateRating(totalValue, numberOfVotes) ? "var(--invisible-primary)" : "var(--accent)"}
-              className={star <= calculateRating(totalValue, numberOfVotes) ? "text-primary" : "text-accent"}
+              fill={
+                star <= calculateRating(totalValue, numberOfVotes)
+                  ? 'var(--invisible-primary)'
+                  : 'var(--accent)'
+              }
+              className={
+                star <= calculateRating(totalValue, numberOfVotes) ? 'text-primary' : 'text-accent'
+              }
             />
           ))}
         </div>

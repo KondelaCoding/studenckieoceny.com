@@ -1,13 +1,22 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import * as React from 'react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 export function Combobox({
   data,
@@ -18,15 +27,18 @@ export function Combobox({
   title: string;
   onChange: (value: { id: string; name: string }) => void;
 }) {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState<{ id: string; name: string } | null>(null);
-  const [dataArray, setDataArray] = React.useState<{ id: string; name: string }[]>([]);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState<{ id: string; name: string } | null>(null);
+  const [dataArray, setDataArray] = useState<{ id: string; name: string }[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function fetchData() {
-      if (data === "universities") {
-        const dataArray = await fetch("/api/universities").then((res) => res.json());
-        setDataArray(dataArray);
+      if (data === 'universities') {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/universities`);
+
+        const universities = response.data.universities ?? [];
+        console.log('Fetched universities:', universities);
+        setDataArray(universities);
       }
     }
     fetchData();
@@ -35,7 +47,7 @@ export function Combobox({
   const handleSelect = (currentValue: string) => {
     if (currentValue === value?.name) {
       setValue(null);
-      onChange({ id: "", name: "" });
+      onChange({ id: '', name: '' });
       setOpen(false);
     } else {
       const newValue = dataArray.find((item) => item.name === currentValue);
@@ -47,17 +59,26 @@ export function Combobox({
     }
   };
 
+  console.log(dataArray);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <PopoverTrigger asChild>
-              <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between bg-card">
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="justify-between bg-card"
+              >
                 {value
                   ? dataArray.find((item) => item.name === value.name)?.name.slice(0, 15) +
-                    (dataArray.find((item) => item.name === value.name)?.name.length ?? 0 > 15 ? "..." : "")
-                  : "Wybierz " + title}
+                    ((dataArray.find((item) => item.name === value.name)?.name.length ?? 0 > 15)
+                      ? '...'
+                      : '')
+                  : 'Wybierz ' + title}
                 <ChevronsUpDown className="opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -78,7 +99,12 @@ export function Combobox({
               {dataArray.map((item) => (
                 <CommandItem key={item.id} value={item.name} onSelect={handleSelect}>
                   {item.name}
-                  <Check className={cn("ml-auto", value?.name === item.name ? "opacity-100" : "opacity-0")} />
+                  <Check
+                    className={cn(
+                      'ml-auto',
+                      value?.name === item.name ? 'opacity-100' : 'opacity-0',
+                    )}
+                  />
                 </CommandItem>
               ))}
             </CommandGroup>

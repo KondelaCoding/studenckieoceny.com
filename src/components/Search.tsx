@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/ui/input";
-import { useState, forwardRef, useImperativeHandle } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import Combobox from "@/components/Combobox";
+import { Input } from '@/components/ui/input';
+import { useState, forwardRef, useImperativeHandle } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import Combobox from '@/components/Combobox';
 
 const Search = forwardRef(
   (
@@ -14,11 +14,11 @@ const Search = forwardRef(
       isInstant: boolean;
       onSearch: (query: string, subject: string, university: string) => void;
     },
-    ref
+    ref,
   ) => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [subject, setSubject] = useState("");
-    const [university, setUniversity] = useState("");
+    const [searchQuery, setSearchQuery] = useState('');
+    const [subject, setSubject] = useState('');
+    const [university, setUniversity] = useState('');
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -33,19 +33,19 @@ const Search = forwardRef(
     const handleInstantSearch = (query: string, subject: string, university: string) => {
       const params = new URLSearchParams(searchParams?.toString());
       if (query) {
-        params.set("query", query.toLowerCase());
+        params.set('query', query.toLowerCase());
       } else {
-        params.delete("query");
+        params.delete('query');
       }
       if (subject) {
-        params.set("subject", subject.toLowerCase());
+        params.set('subject', subject.toLowerCase());
       } else {
-        params.delete("subject");
+        params.delete('subject');
       }
       if (university) {
-        params.set("university", university.toLowerCase());
+        params.set('university', university.toLowerCase());
       } else {
-        params.delete("university");
+        params.delete('university');
       }
       replace(`${pathname}?${params.toString()}`);
     };
@@ -53,23 +53,23 @@ const Search = forwardRef(
     const handleSearch = () => {
       const params = new URLSearchParams();
       if (searchQuery.trim()) {
-        params.set("query", searchQuery.toLowerCase());
+        params.set('query', searchQuery.toLowerCase());
       }
-      if (subject && subject !== "") {
-        params.set("subject", subject.toLowerCase());
+      if (subject && subject !== '') {
+        params.set('subject', subject.toLowerCase());
       }
-      if (university && university !== "") {
-        params.set("university", university.toLowerCase());
+      if (university && university !== '') {
+        params.set('university', university.toLowerCase());
       }
       router.push(`/search?${params.toString()}`);
-      setSearchQuery("");
+      setSearchQuery('');
 
       // Call the parent-provided onSearch callback
       onSearch(searchQuery, subject, university);
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === "Enter") {
+      if (event.key === 'Enter') {
         handleSearch();
       }
     };
@@ -108,9 +108,9 @@ const Search = forwardRef(
         ) : null}
       </>
     );
-  }
+  },
 );
 
-Search.displayName = "Search";
+Search.displayName = 'Search';
 
 export default Search;

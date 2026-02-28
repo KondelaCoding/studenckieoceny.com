@@ -1,11 +1,11 @@
-import { Separator } from "@/components/ui/separator";
-import { Mail } from "lucide-react";
-import Instagram from "../../public/instagram.svg";
-import Github from "../../public/github.svg";
-import BuyMeACoffee from "../../public/buy-me-a-coffee.svg";
-import Image from "next/image";
-import Link from "next/link";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Separator } from '@/components/ui/separator';
+import { Mail } from 'lucide-react';
+import Instagram from '../../public/instagram.svg';
+import Github from '../../public/github.svg';
+import BuyMeACoffee from '../../public/buy-me-a-coffee.svg';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const Footer = () => {
   return (
@@ -23,7 +23,11 @@ const Footer = () => {
               {/* Instagram */}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Link href="https://www.instagram.com/studenckie_oceny/" target="_blank" rel="noopener noreferrer">
+                  <Link
+                    href="https://www.instagram.com/studenckie_oceny/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Image src={Instagram} alt="instagram-logo" width={40} />
                   </Link>
                 </TooltipTrigger>
@@ -35,7 +39,11 @@ const Footer = () => {
               {/* GitHub */}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Link href="https://github.com/KondelaCoding" target="_blank" rel="noopener noreferrer">
+                  <Link
+                    href="https://github.com/KondelaCoding"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Image src={Github} alt="github-logo" width={40} />
                   </Link>
                 </TooltipTrigger>
@@ -47,7 +55,11 @@ const Footer = () => {
               {/* BuyMeACoffee */}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Link href="https://buymeacoffee.com/mikolajkondela" target="_blank" rel="noopener noreferrer">
+                  <Link
+                    href="https://buymeacoffee.com/mikolajkondela"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Image src={BuyMeACoffee} alt="buy-me-a-coffee-logo" width={40} />
                   </Link>
                 </TooltipTrigger>
@@ -75,9 +87,12 @@ const Footer = () => {
           <p>
             <Link href="/regulamin" className="text-primary underline hover:text-foreground">
               Regulamin
-            </Link>{" "}
-            i{" "}
-            <Link href="/polityka-prywatnosci" className="text-primary underline hover:text-foreground">
+            </Link>{' '}
+            i{' '}
+            <Link
+              href="/polityka-prywatnosci"
+              className="text-primary underline hover:text-foreground"
+            >
               polityka prywatności
             </Link>
           </p>

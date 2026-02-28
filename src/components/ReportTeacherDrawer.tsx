@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useRef } from "react";
-import { Flag } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useRef } from 'react';
+import { Flag } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Drawer,
   DrawerClose,
@@ -12,33 +12,30 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
-import { toast } from "sonner";
-import { Textarea } from "./ui/textarea";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+} from '@/components/ui/drawer';
+import { toast } from 'sonner';
+import { Textarea } from './ui/textarea';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import axios from 'axios';
 
 export function ReportTeacherDrawer({ teacherId }: { teacherId: string }) {
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
   const handleReportTeacher = async () => {
     try {
-      const response = await fetch("/api/report-teacher", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherId}/report`,
+        {
+          reason: messageRef.current?.value,
         },
-        body: JSON.stringify({
-          teacherId,
-          message: messageRef.current?.value,
-        }),
-      });
-      if (response.ok) {
-        toast.success("Pomyślnie zgłoszono profil.");
+      );
+      if (response.status === 200) {
+        toast.success('Pomyślnie zgłoszono profil.');
       } else {
-        throw new Error("Failed to report teacher");
+        throw new Error('Failed to report teacher');
       }
     } catch {
-      toast.error("Wystąpił błąd podczas zgłaszania profilu, spróbuj ponownie później.");
+      toast.error('Wystąpił błąd podczas zgłaszania profilu, spróbuj ponownie później.');
     }
   };
 
@@ -64,7 +61,8 @@ export function ReportTeacherDrawer({ teacherId }: { teacherId: string }) {
             <DrawerHeader>
               <DrawerTitle>Zgłoś profil</DrawerTitle>
               <DrawerDescription>
-                Taki prowadzący nie istnieje? Znalazłeś błąd? Zgłoś to <span className="text-primary">nam</span>!
+                Taki prowadzący nie istnieje? Znalazłeś błąd? Zgłoś to{' '}
+                <span className="text-primary">nam</span>!
               </DrawerDescription>
             </DrawerHeader>
             <div className="p-4 pb-0 flex flex-col items-center gap-5">

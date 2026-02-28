@@ -1,4 +1,4 @@
-import AddTeacherForm from "@/components/AddTeacherForm";
+import AddTeacherForm from '@/components/AddTeacherForm';
 
 const Page = () => {
   return (

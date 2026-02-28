@@ -1,10 +1,16 @@
-import SearchBar from "@/components/SearchBar";
-import SearchList from "@/components/SearchList";
-import { Separator } from "@/components/ui/separator";
+import SearchBar from '@/components/SearchBar';
+import SearchList from '@/components/SearchList';
+import { Separator } from '@/components/ui/separator';
+import axios from 'axios';
 
 const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }> }) => {
   const { query } = await searchParams;
-  const teachers = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`).then((res) => res.json());
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`).catch((error) => {
+    console.error('Error fetching teachers:', error);
+    return { data: { teachers: [] } };
+  });
+
+  const teachers = response.data.teachers ?? [];
 
   return (
     <div className="w-full flex flex-col gap-10 pt-12 pb-20 px-default">
@@ -14,7 +20,9 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }
       </div>
       <Separator orientation="horizontal" />
       <div>
-        <h1 className="text-xl mb-5">Wyniki wyszukiwania: {query ? <q className="text-primary">{query}</q> : null}</h1>
+        <h1 className="text-xl mb-5">
+          Wyniki wyszukiwania: {query ? <q className="text-primary">{query}</q> : null}
+        </h1>
         <SearchList teachers={teachers} query={query} />
       </div>
     </div>

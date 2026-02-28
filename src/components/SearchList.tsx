@@ -1,10 +1,18 @@
-import { ReturnedTeacherProps } from "@/types";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import StarRatingDisplay from "./StarRatingDisplay";
-import Link from "next/link";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { UserPlus } from "lucide-react";
+import { ReturnedTeacherProps } from '@/types';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import StarRatingDisplay from './StarRatingDisplay';
+import Link from 'next/link';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { UserPlus } from 'lucide-react';
 
 const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; query?: string }) => {
   const filterName = (name: string) => {
@@ -48,15 +56,20 @@ const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; que
                 <TableCell>
                   <Link href={`/profil/${teacher.id}`} className="inline-flex items-center gap-3">
                     <Avatar className="uppercase">
-                      <AvatarFallback>{teacher.name.split("+")[0][0] ?? ""}</AvatarFallback>
+                      <AvatarFallback>{teacher.name.split('+')[0][0] ?? ''}</AvatarFallback>
                     </Avatar>
                     <span className="hover:underline">{teacher.name}</span>
                   </Link>
                 </TableCell>
-                <TableCell>{teacher.subjects ? teacher.subjects.split(",")[0] : "null"}</TableCell>
-                <TableCell>{teacher.universities ? teacher.universities.split(",")[0] : "null"}</TableCell>
+                <TableCell>{teacher.subjects ? teacher.subjects.split(',')[0] : 'null'}</TableCell>
                 <TableCell>
-                  <StarRatingDisplay numberOfVotes={teacher.numberOfVotes} totalValue={teacher.totalRatingValue} />
+                  {teacher.universities ? teacher.universities.split(',')[0] : 'null'}
+                </TableCell>
+                <TableCell>
+                  <StarRatingDisplay
+                    numberOfVotes={teacher.numberOfVotes}
+                    totalValue={teacher.totalRatingValue}
+                  />
                 </TableCell>
               </TableRow>
             ))}
