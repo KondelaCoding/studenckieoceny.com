@@ -12,24 +12,28 @@ import StarRatingDisplay from './StarRatingDisplay';
 import Link from 'next/link';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, TriangleAlert } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
-const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; query?: string }) => {
-  const filterName = (name: string) => {
-    return query ? name.toLowerCase().includes(query.toLowerCase()) : true;
-  };
+const reasonTooltip = (reason: string) => {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <TriangleAlert className="text-primary" />
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{reason}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
 
-  // const filterSubject = (subjects: string) => {
-  //   console.log("subjects", subjects);
-  //   console.log("query", query);
-  //   return query && subjects ? subjects.toLowerCase().includes(query.toLowerCase()) : true;
-  // };
-
-  const filteredTeachers = teachers.filter((teacher) => filterName(teacher.name)) || [];
-
+const SearchList = ({ teachers }: { teachers: ReturnedTeacherProps[] }) => {
   return (
     <div>
-      {filteredTeachers.length === 0 ? (
+      {teachers.length === 0 ? (
         <div className="flex flex-col items-center gap-5 text-center text-muted-foreground">
           <p>Nie znaleziono prowadzącego pasującego do kryteriów wyszukiwania.</p>
           <Link href="/dodaj">
@@ -51,13 +55,14 @@ const SearchList = ({ teachers, query }: { teachers: ReturnedTeacherProps[]; que
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredTeachers.map((teacher: ReturnedTeacherProps) => (
+            {teachers.map((teacher: ReturnedTeacherProps) => (
               <TableRow key={teacher.id}>
-                <TableCell>
+                <TableCell className="w-full">
                   <Link href={`/profil/${teacher.id}`} className="inline-flex items-center gap-3">
                     <Avatar className="uppercase">
                       <AvatarFallback>{teacher.name.split('+')[0][0] ?? ''}</AvatarFallback>
                     </Avatar>
+                    {teacher.reason ? reasonTooltip(teacher.reason) : null}
                     <span className="hover:underline">{teacher.name}</span>
                   </Link>
                 </TableCell>

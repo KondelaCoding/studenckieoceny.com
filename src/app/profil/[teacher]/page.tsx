@@ -50,6 +50,7 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
     return <TeacherReportedMessage />;
   }
 
+  //TODO: this will be fixed by deleting the teacher-uni table
   const teacherData: ReturnedTeacherProps = teacher;
 
   return (
