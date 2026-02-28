@@ -4,14 +4,34 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
+import { hasPermission } from '@/lib/permissions';
+import { getRequestUser } from '@/lib/auth-helpers';
 
 export async function GET(req: Request, { params }: { params: Promise<{ teacherId: string }> }) {
   try {
     const { teacherId } = await params;
+    const user = await getRequestUser(req);
 
-    const teacher = await prisma.teacher.findUnique({ where: { id: teacherId } });
+    const teacher = await prisma.teacher.findUnique({
+      where: { id: teacherId },
+    });
+
     if (!teacher) {
       return NextResponse.json({ error: 'Teacher not found' }, { status: 404 });
+    }
+
+    if (!hasPermission(user?.role, 'teacher:read')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Teacher is suspended — only those with elevated permission can see the full record
+    if (teacher.reason !== null) {
+      if (!hasPermission(user?.role, 'teacher:read_reported')) {
+        return NextResponse.json(
+          { error: `This teacher is suspended: ${teacher.reason}` },
+          { status: 403 },
+        );
+      }
     }
 
     return NextResponse.json({ teacher }, { status: 200 });

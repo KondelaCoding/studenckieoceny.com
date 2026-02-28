@@ -3,7 +3,7 @@ import TraitChart from './TraitChart';
 import { Skeleton } from './ui/skeleton';
 import { ChartLine, MessageCircle, Trophy, PiggyBank } from 'lucide-react';
 import ProfileComments from './ProfileComments';
-import { ReturnedTeacherProps } from '@/types';
+import { ReturnedTeacherProps } from '@/types/types';
 import { Separator } from './ui/separator';
 import AddCommentDrawer from './AddCommentDrawer';
 import { Button } from './ui/button';

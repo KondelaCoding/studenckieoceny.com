@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { ReturnedTeacherProps } from '@/types';
+import { ReturnedTeacherProps } from '@/types/types';
 import ProfileCards from './ProfileCards';
 import { Separator } from './ui/separator';
 import StarRatingDisplay from './StarRatingDisplay';

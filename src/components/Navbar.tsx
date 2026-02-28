@@ -22,7 +22,6 @@ export async function Navbar() {
 
   const handleSignOut = async () => {
     'use server';
-    console.log('Logging out...');
     await signOut();
   };
 

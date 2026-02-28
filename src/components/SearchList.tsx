@@ -1,4 +1,4 @@
-import { ReturnedTeacherProps } from '@/types';
+import { ReturnedTeacherProps } from '@/types/types';
 import {
   Table,
   TableBody,
