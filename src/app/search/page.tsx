@@ -5,7 +5,11 @@ import axios from 'axios';
 
 const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }> }) => {
   const { query } = await searchParams;
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`);
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers`).catch((error) => {
+    console.error('Error fetching teachers:', error);
+    return { data: { teachers: [] } }; // Return an empty list on error
+  });
+  
   const teachers = response.data.teachers;
 
   return (
