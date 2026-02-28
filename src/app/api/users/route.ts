@@ -14,14 +14,14 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(user, { status: 201 });
-  } catch (error: any) {
+    return NextResponse.json({ user }, { status: 201 });
+  } catch (error: unknown) {
     // Prisma unique constraint (email already exists)
-    if (error.code === 'P2002') {
-      return NextResponse.json({ message: 'User with this email already exists' }, { status: 409 });
+    if (error instanceof Error && 'code' in error && error.code === 'P2002') {
+      return NextResponse.json({ error: 'User with this email already exists' }, { status: 409 });
     }
 
     console.error('POST /api/users error:', error);
-    return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }

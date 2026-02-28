@@ -16,7 +16,7 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
     if (response.status !== 200) {
       throw new Error('Failed to fetch teacher');
     }
-    const teacherData: ReturnedTeacherProps = response.data;
+    const teacherData: ReturnedTeacherProps = response.data.teacher;
 
     if (!teacherData) {
       notFound();

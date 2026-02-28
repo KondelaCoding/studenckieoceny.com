@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 export async function GET(req: Request, { params }: { params: Promise<{ userId: string }> }) {
-  const { userId } = await params;
-
   try {
+    const { userId } = await params;
+
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
     if (!user) {
@@ -14,7 +14,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ userId: 
     return NextResponse.json({ user }, { status: 200 });
   } catch (error) {
     console.error('GET /api/users/[userId] error:', error);
-    return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }
 

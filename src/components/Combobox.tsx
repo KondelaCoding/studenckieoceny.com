@@ -36,9 +36,9 @@ export function Combobox({
       if (data === 'universities') {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/universities`);
 
-        const data = response.data.universities;
-        console.log('Fetched universities:', data);
-        setDataArray(data);
+        const universities = response.data.universities ?? [];
+        console.log('Fetched universities:', universities);
+        setDataArray(universities);
       }
     }
     fetchData();

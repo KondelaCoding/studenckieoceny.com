@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { auth } from '@/auth';
 
 export async function GET(req: Request, { params }: { params: Promise<{ teacherId: string }> }) {
   try {
@@ -11,19 +12,20 @@ export async function GET(req: Request, { params }: { params: Promise<{ teacherI
 
     const comments = await prisma.comment.findMany({ where: { teacherId } });
 
-    if (comments.length === 0) {
-      return NextResponse.json({ comments: [] }, { status: 200 });
-    }
-
     return NextResponse.json({ comments }, { status: 200 });
   } catch (error) {
     console.error('GET /api/teachers/[teacherId]/comments error:', error);
-    return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }
 
 export async function POST(req: Request, { params }: { params: Promise<{ teacherId: string }> }) {
   try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { teacherId } = await params;
     const body = await req.json();
     const { user, comment } = body;
@@ -32,7 +34,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ teacher
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    await prisma.comment.create({
+    const newComment = await prisma.comment.create({
       data: {
         teacherId,
         user,
@@ -40,9 +42,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ teacher
       },
     });
 
-    return NextResponse.json({ message: 'Comment added successfully' }, { status: 200 });
+    return NextResponse.json({ comment: newComment, message: 'Comment added successfully' }, { status: 201 });
   } catch (error) {
     console.error('POST /api/teachers/[teacherId]/comments error:', error);
-    return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }

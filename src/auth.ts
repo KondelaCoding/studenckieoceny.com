@@ -23,15 +23,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         let user;
         if (response.status === 200) {
-          ({ user } = response.data);
+          user = response.data.user;
         } else {
           // User not found, create them in the DB
-          const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
+          const createResponse = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
             email: token.email,
             password: null, // explicitly null for OAuth
             name: profile?.name || token.name,
           });
-          user = response.data;
+          user = createResponse.data.user;
         }
 
         token.role = user?.role ?? 'user';

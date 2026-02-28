@@ -18,6 +18,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ user }, { status: 200 });
   } catch (error) {
     console.error('POST /api/users/validate error:', error);
-    return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }

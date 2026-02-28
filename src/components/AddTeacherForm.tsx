@@ -56,7 +56,7 @@ const AddTeacherForm = () => {
         secondaryUniversity: values.secondaryUniversity.id,
       });
 
-      if (response.status !== 200) {
+      if (response.status !== 201) {
         setErrorMessage(response.data.error);
         setSuccessMessage(null);
       } else {

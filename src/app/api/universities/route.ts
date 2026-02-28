@@ -5,14 +5,10 @@ export async function GET() {
   try {
     const universities = await prisma.university.findMany();
 
-    if (universities.length === 0) {
-      return NextResponse.json({ universities: [] }, { status: 200 });
-    }
-
     return NextResponse.json({ universities }, { status: 200 });
   } catch (error) {
     console.error('GET /api/universities error:', error);
-    return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }
 
