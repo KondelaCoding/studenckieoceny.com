@@ -3,13 +3,17 @@ import TraitChart from './TraitChart';
 import { Skeleton } from './ui/skeleton';
 import { ChartLine, MessageCircle, Trophy, PiggyBank } from 'lucide-react';
 import ProfileComments from './ProfileComments';
-import { ReturnedTeacherProps } from '@/types';
+import { ReturnedTeacherProps } from '@/types/types';
 import { Separator } from './ui/separator';
 import AddCommentDrawer from './AddCommentDrawer';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import { auth } from '@/auth';
 
 const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
+  const session = await auth();
+  const isAdmin = session?.user?.role === 'admin';
+
   return (
     <div className="bg-background rounded-xl border grid grid-cols-1 w-full p-5 gap-5 md:grid-cols-2">
       <Card className="w-full">
@@ -26,7 +30,7 @@ const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps
         <Separator orientation="horizontal" />
         <CardContent className="flex justify-between h-full flex-col items-end gap-5">
           <div className="w-full flex">
-            <ProfileComments teacherId={teacherData.id} />
+            <ProfileComments teacherId={teacherData.id} isAdmin={isAdmin} />
           </div>
         </CardContent>
       </Card>

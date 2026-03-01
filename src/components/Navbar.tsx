@@ -19,24 +19,23 @@ import { NavbarClient } from './NavbarClient';
 
 export async function Navbar() {
   const session = await auth();
+  const isAdmin = session?.user?.role === 'admin';
 
   const handleSignOut = async () => {
     'use server';
-    console.log('Logging out...');
     await signOut();
   };
 
   return (
     <Sheet>
-      <div
-        className={`fixed top-0 left-0 z-50 w-full bg-card ${session?.user?.role === 'admin' ? 'bg-primary' : ''}`}
-      >
+      <div className="fixed top-0 left-0 z-50 w-full bg-card">
         <nav className="py-3 flex justify-between items-center px-default w-full gap-5">
           <Link href={'/'} className="inline-flex gap-3 items-center text-xl font-semibold">
             <Image src={Logo} alt="absolwent-uczelni" width={32} className="foreground-filter" />
             <span className="hidden md:block">Studenckie oceny</span>
           </Link>
-          <div className="inline-flex gap-3 flex-grow justify-end">
+          {isAdmin && <span className="bg-primary rounded py-1 px-3">Admin</span>}
+          <div className="inline-flex gap-3 grow justify-end">
             <NavbarClient />
           </div>
           <div className="flex gap-3 items-center">
@@ -45,9 +44,7 @@ export async function Navbar() {
                 <HoverCard>
                   <HoverCardTrigger>
                     <Avatar className="h-8 w-8">
-                      <AvatarFallback
-                        className={`cursor-pointer ${session.user?.role === 'user' ? 'bg-primary' : ''}`}
-                      >
+                      <AvatarFallback className={`cursor-pointer ${isAdmin ? 'bg-primary' : ''}`}>
                         {session.user?.name?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
@@ -81,9 +78,7 @@ export async function Navbar() {
               <div className="block md:hidden">
                 <SheetTrigger>
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback
-                      className={`cursor-pointer ${session.user?.role === 'user' ? 'bg-primary' : ''}`}
-                    >
+                    <AvatarFallback className={`cursor-pointer ${isAdmin ? 'bg-primary' : ''}`}>
                       {session.user?.name?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>

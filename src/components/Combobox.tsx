@@ -37,7 +37,6 @@ export function Combobox({
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/universities`);
 
         const universities = response.data.universities ?? [];
-        console.log('Fetched universities:', universities);
         setDataArray(universities);
       }
     }
@@ -58,8 +57,6 @@ export function Combobox({
       setOpen(false);
     }
   };
-
-  console.log(dataArray);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -90,7 +87,7 @@ export function Combobox({
           ) : null}
         </Tooltip>
       </TooltipProvider>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-50 p-0">
         <Command>
           <CommandInput placeholder={`Szukaj ${title}...`} className="h-9" />
           <CommandList>

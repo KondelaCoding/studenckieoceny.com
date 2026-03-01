@@ -1,55 +1,67 @@
 import { notFound } from 'next/navigation';
 import Profile from '@/components/Profile';
-import { ReturnedTeacherProps } from '@/types';
+import { ReturnedTeacherProps, User } from '@/types/types';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Undo2 } from 'lucide-react';
 import { auth } from '@/auth';
-import axios from 'axios';
+import { hasPermission } from '@/lib/permissions';
+import { prisma } from '@/lib/prisma';
+
+const TeacherReportedMessage = () => {
+  return (
+    <div className="w-full flex flex-col items-center justify-center gap-5 grow px-default h-full">
+      <div className="text-center">
+        <h1 className="text-2xl mb-2">Profil, który próbujesz wyszukać jest niedostępny.</h1>
+        <p className="text-muted-foreground">
+          Najprawdopodobniej został on zgłoszony i oczekuje na weryfikację od administratora.
+        </p>
+      </div>
+      <Link href="/">
+        <Button>
+          <Undo2 />
+          Strona główna
+        </Button>
+      </Link>
+    </div>
+  );
+};
 
 const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: string }> }) => {
-  try {
-    const session = await auth();
-    const { teacher } = await params;
+  const { teacher: teacherId } = await params;
 
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacher}`);
-    if (response.status !== 200) {
-      throw new Error('Failed to fetch teacher');
-    }
-    const teacherData: ReturnedTeacherProps = response.data.teacher;
+  const session = await auth();
+  const role = session?.user?.role as User['role'] | undefined;
 
-    if (!teacherData) {
-      notFound();
-    }
+  // Apparently in server components its best to use prisma directly ¯\_(ツ)_/¯
+  const teacher = await prisma.teacher.findUnique({
+    where: { id: teacherId },
+  });
 
-    if (teacherData.reason && session?.user?.role === 'user') {
-      return (
-        <div className="w-full flex flex-col items-center justify-center gap-5 flex-grow px-default h-full">
-          <div className="text-center">
-            <h1 className="text-2xl mb-2">Profil, który próbujesz wyszukać jest niedostępny.</h1>
-            <p className="text-muted-foreground">
-              Najprawdopodobniej został on zgłoszony i oczekuje na weryfikację od administratora.
-            </p>
-          </div>
-          <Link href="/">
-            <Button>
-              <Undo2 />
-              Strona główna
-            </Button>
-          </Link>
-        </div>
-      );
-    } else {
-      return (
-        <div className="w-full bg-card p-2 flex-grow flex justify-center min-h-[calc(100vh-213px)]">
-          <Profile teacherData={teacherData} />
-        </div>
-      );
-    }
-  } catch (error) {
-    console.error('Error fetching teacher:', error);
+  if (!teacher) notFound();
+
+  // no read permission at all
+  if (!hasPermission(role, 'teacher:read')) {
     notFound();
   }
+
+  // teacher is reported → only admins can see
+  if (teacher.reason && !hasPermission(role, 'teacher:read_reported')) {
+    return <TeacherReportedMessage />;
+  }
+
+  //TODO: this will be fixed by deleting the teacher-uni table
+  const teacherData: ReturnedTeacherProps = {
+    ...teacher,
+    timestamp: teacher.timestamp.getTime(),
+    universities: '',
+  };
+
+  return (
+    <div className="w-full bg-card p-2 grow flex justify-center min-h-[calc(100vh-213px)]">
+      <Profile teacherData={teacherData} />
+    </div>
+  );
 };
 
 export default TeacherProfilePage;
