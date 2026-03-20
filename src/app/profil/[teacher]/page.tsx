@@ -29,6 +29,7 @@ const TeacherReportedMessage = () => {
 
 const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: string }> }) => {
   const { teacher: teacherId } = await params;
+  console.log('Fetching profile for teacher ID:', teacherId);
 
   const session = await auth();
   const role = session?.user?.role as User['role'] | undefined;
@@ -38,12 +39,9 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
     where: { id: teacherId },
   });
 
-  if (!teacher) notFound();
+  console.log('Fetched teacher data:', teacher);
 
-  // no read permission at all
-  if (!hasPermission(role, 'teacher:read')) {
-    notFound();
-  }
+  if (!teacher) notFound();
 
   // teacher is reported → only admins can see
   if (teacher.reason && !hasPermission(role, 'teacher:read_reported')) {

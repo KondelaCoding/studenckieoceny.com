@@ -1,7 +1,7 @@
 export const publicRoutes = [
   '/',
   '/search',
-  /^\/profil\/\d+$/, // Allow /profil/:id where :id is a number
+  /^\/profil\/.*$/, // Allow /profil/:id where :id is a UUID
   '/regulamin',
   '/polityka-prywatnosci',
 ];

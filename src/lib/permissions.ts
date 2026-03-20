@@ -1,7 +1,7 @@
 import type { User } from '../types/types';
 
 export type Action =
-  | 'teacher:read'
+  // | 'teacher:read' - Everyone should have access to read teachers, even not users not signed in
   | 'teacher:read_reported'
   | 'teacher:write'
   | 'teacher:report'
@@ -13,7 +13,6 @@ export type Action =
 
 const rolePermissions: Record<User['role'], Action[]> = {
   admin: [
-    'teacher:read',
     'teacher:read_reported',
     'teacher:write',
     'teacher:report',
@@ -22,7 +21,7 @@ const rolePermissions: Record<User['role'], Action[]> = {
     'comment:write',
     'comment:delete',
   ],
-  user: ['teacher:read', 'teacher:write', 'teacher:report', 'comment:write', 'comment:delete_own'],
+  user: ['teacher:write', 'teacher:report', 'comment:write', 'comment:delete_own'],
 };
 
 export function hasPermission(role: User['role'] | undefined | null, action: Action): boolean {

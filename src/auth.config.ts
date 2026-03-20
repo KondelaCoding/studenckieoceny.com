@@ -1,56 +1,29 @@
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
-import { NextAuthConfig } from 'next-auth';
-import { LoginSchema } from './schemas';
-import bcrypt from 'bcryptjs';
-import { AuthError } from 'next-auth';
-import { prisma } from '@/lib/prisma';
-import { User } from '@/types/types';
+import type { NextAuthConfig } from 'next-auth';
 
+/**
+ * Edge-compatible auth config (no Prisma, no bcrypt).
+ * Used by middleware which runs in Edge runtime with 1MB size limit.
+ * Actual credential validation happens in auth.ts which runs in Node.js runtime.
+ */
 export default {
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
+    // Credentials provider placeholder for Edge runtime
+    // Actual validation is in auth.ts
     Credentials({
-      async authorize(credentials) {
-        const validatedFields = LoginSchema.safeParse(credentials);
-        if (!validatedFields.success) {
-          console.error('[auth][error] Invalid credentials: Validation failed');
-          throw new AuthError('Nieoczekiwany błąd, spróbuj ponownie później');
-        }
-        const { email, password } = validatedFields.data;
-
-        const user = await prisma.user.findUnique({ where: { email } });
-
-        if (!user) {
-          console.error('[auth][error] Invalid credentials: Missing user or password');
-          throw new AuthError('Brakujący użytkownik lub hasło');
-        }
-
-        if (user.password === null) {
-          console.error('[auth][error] Invalid credentials: OAuth user');
-          throw new AuthError(
-            'Konto utworzone przez zewnętrznego dostawcę logowania, spróbuj zalogować się przez Google lub GitHub',
-          );
-        }
-
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-
-        if (!isPasswordValid) {
-          console.error('[auth][error] Invalid credentials: Password mismatch');
-          throw new AuthError('Nieprawidłowe hasło');
-        }
-
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        } as User;
+      async authorize() {
+        // This won't be called in middleware - actual auth happens in auth.ts
+        return null;
       },
     }),
   ],
   session: { strategy: 'jwt' },
-} as NextAuthConfig;
+  pages: {
+    signIn: '/login',
+  },
+} satisfies NextAuthConfig;

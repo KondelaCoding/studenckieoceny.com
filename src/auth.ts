@@ -1,9 +1,61 @@
 import NextAuth from 'next-auth';
-import authConfig from './auth.config';
+import Google from 'next-auth/providers/google';
+import Credentials from 'next-auth/providers/credentials';
+import { AuthError } from 'next-auth';
+import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
+import { LoginSchema } from './schemas';
 import { User } from '@/types/types';
 
+/**
+ * Full auth config with Prisma (Node.js runtime only).
+ * This is NOT used by middleware - see auth.config.ts for Edge-compatible config.
+ */
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers: [
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    }),
+    Credentials({
+      async authorize(credentials) {
+        const validatedFields = LoginSchema.safeParse(credentials);
+        if (!validatedFields.success) {
+          console.error('[auth][error] Invalid credentials: Validation failed');
+          throw new AuthError('Nieoczekiwany błąd, spróbuj ponownie później');
+        }
+        const { email, password } = validatedFields.data;
+
+        const user = await prisma.user.findUnique({ where: { email } });
+
+        if (!user) {
+          console.error('[auth][error] Invalid credentials: Missing user or password');
+          throw new AuthError('Brakujący użytkownik lub hasło');
+        }
+
+        if (user.password === null) {
+          console.error('[auth][error] Invalid credentials: OAuth user');
+          throw new AuthError(
+            'Konto utworzone przez zewnętrznego dostawcę logowania, spróbuj zalogować się przez Google lub GitHub',
+          );
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+          console.error('[auth][error] Invalid credentials: Password mismatch');
+          throw new AuthError('Nieprawidłowe hasło');
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        } as User;
+      },
+    }),
+  ],
   callbacks: {
     async session({ token, session }) {
       if (token.sub && session.user) {
@@ -40,5 +92,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
   },
-  ...authConfig,
+  session: { strategy: 'jwt' },
+  pages: {
+    signIn: '/login',
+  },
 });
