@@ -20,10 +20,6 @@ export async function GET(req: Request, { params }: { params: Promise<{ teacherI
       return NextResponse.json({ error: 'Teacher not found' }, { status: 404 });
     }
 
-    if (!hasPermission(user?.role, 'teacher:read')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     // Teacher is suspended — only those with elevated permission can see the full record
     if (teacher.reason !== null) {
       if (!hasPermission(user?.role, 'teacher:read_reported')) {
