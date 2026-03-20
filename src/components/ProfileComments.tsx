@@ -5,10 +5,10 @@ import { Separator } from './ui/separator';
 import { Skeleton } from './ui/skeleton';
 import { Button } from './ui/button';
 import axios from 'axios';
-import { Comment } from '@/types/types';
+import { Comment, User } from '@/types/types';
 import UserComment from './UserComment';
 
-const ProfileComments = ({ teacherId, isAdmin }: { teacherId: string; isAdmin: boolean }) => {
+const ProfileComments = ({ teacherId, role }: { teacherId: string; role?: User['role'] }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [filteredComments, setFilteredComments] = useState<Comment[]>(comments.slice(0, 4));
   const [isLoading, setIsLoading] = useState(true);
@@ -95,7 +95,7 @@ const ProfileComments = ({ teacherId, isAdmin }: { teacherId: string; isAdmin: b
         </div>
       ) : filteredComments.length ? (
         filteredComments.map((comment) => (
-          <UserComment key={comment.id} comment={comment} isAdmin={isAdmin} />
+          <UserComment key={comment.id} comment={comment} role={role} />
         ))
       ) : (
         <span className="w-full text-center text-muted-foreground">

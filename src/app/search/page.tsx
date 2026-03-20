@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { hasPermission } from '@/lib/permissions';
 import type { User } from '@/types/types';
+import { getRoleName } from '@/lib/utils';
 
 async function getTeachers(role: User['role'] | undefined, query?: string) {
   const canSeeReported = hasPermission(role, 'teacher:read_reported');
@@ -28,7 +29,7 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }
   const params = await searchParams;
   const query = params.query;
   const session = await auth();
-  const role = session?.user?.role as User['role'] | undefined;
+  const role = getRoleName(session);
 
   const returnedTeachers = await getTeachers(role, query);
 

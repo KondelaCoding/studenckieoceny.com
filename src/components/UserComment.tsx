@@ -1,7 +1,7 @@
 'use client';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Comment as CommentType, Months } from '@/types/types';
+import { Comment as CommentType, Months, User } from '@/types/types';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
@@ -26,7 +26,7 @@ const date = (timestamp: number) => {
   return `${day} ${Months[month]} ${year}`;
 };
 
-const UserComment = ({ comment, isAdmin }: { comment: CommentType; isAdmin: boolean }) => {
+const UserComment = ({ comment, role }: { comment: CommentType; role?: User['role'] }) => {
   const [pending, startTransition] = useTransition();
 
   const handleDelete = () => {
@@ -46,7 +46,7 @@ const UserComment = ({ comment, isAdmin }: { comment: CommentType; isAdmin: bool
             <h4 className="text-xl font-semibold">{comment.user}</h4>
             <p className="text-muted-foreground">{date(comment.timestamp)}</p>
           </div>
-          {isAdmin && (
+          {role === 'admin' && (
             <Button variant="ghost" size="icon" onClick={handleDelete} disabled={pending}>
               <Trash2 />
             </Button>

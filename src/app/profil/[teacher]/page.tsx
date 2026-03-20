@@ -1,12 +1,13 @@
 import { notFound } from 'next/navigation';
 import Profile from '@/components/Profile';
-import { ReturnedTeacherProps, User } from '@/types/types';
+import { ReturnedTeacherProps } from '@/types/types';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Undo2 } from 'lucide-react';
 import { auth } from '@/auth';
 import { hasPermission } from '@/lib/permissions';
 import { prisma } from '@/lib/prisma';
+import { getRoleName } from '@/lib/utils';
 
 const TeacherReportedMessage = () => {
   return (
@@ -31,7 +32,7 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
   const { teacher: teacherId } = await params;
 
   const session = await auth();
-  const role = session?.user?.role as User['role'] | undefined;
+  const role = getRoleName(session);
 
   // Apparently in server components its best to use prisma directly ¯\_(ツ)_/¯
   const teacher = await prisma.teacher.findUnique({

@@ -16,10 +16,11 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { NavbarClient } from './NavbarClient';
+import { getRoleName } from '@/lib/utils';
 
 export async function Navbar() {
   const session = await auth();
-  const isAdmin = session?.user?.role === 'admin';
+  const isAdmin = getRoleName(session) === 'admin';
 
   const handleSignOut = async () => {
     'use server';
