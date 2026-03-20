@@ -29,7 +29,6 @@ const TeacherReportedMessage = () => {
 
 const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: string }> }) => {
   const { teacher: teacherId } = await params;
-  console.log('Fetching profile for teacher ID:', teacherId);
 
   const session = await auth();
   const role = session?.user?.role as User['role'] | undefined;
@@ -38,8 +37,6 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
   const teacher = await prisma.teacher.findUnique({
     where: { id: teacherId },
   });
-
-  console.log('Fetched teacher data:', teacher);
 
   if (!teacher) notFound();
 
