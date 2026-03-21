@@ -1,12 +1,14 @@
 'use client';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Comment as CommentType, Months, User } from '@/types/types';
+import { Comment as CommentType, Months } from '@/types/types';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import { useTransition } from 'react';
 import { deleteCommentAction } from '@/actions/deleteComment';
+import { hasPermission } from '@/lib/permissions';
+import { Session } from 'next-auth';
 
 const date = (timestamp: number) => {
   const d = new Date(timestamp);
@@ -26,8 +28,11 @@ const date = (timestamp: number) => {
   return `${day} ${Months[month]} ${year}`;
 };
 
-const UserComment = ({ comment, role }: { comment: CommentType; role?: User['role'] }) => {
+const UserComment = ({ comment, user }: { comment: CommentType; user?: Session['user'] }) => {
   const [pending, startTransition] = useTransition();
+
+  //TODO: deleting your own comment doesnt work now because of the fact that comments dont store the user id, only the nick so we should change that in the future and make it work
+  const canDelete = hasPermission(user?.role, 'comment:delete') || user?.id === comment.user;
 
   const handleDelete = () => {
     startTransition(async () => {
@@ -46,7 +51,7 @@ const UserComment = ({ comment, role }: { comment: CommentType; role?: User['rol
             <h4 className="text-xl font-semibold">{comment.user}</h4>
             <p className="text-muted-foreground">{date(comment.timestamp)}</p>
           </div>
-          {role === 'admin' && (
+          {canDelete && (
             <Button variant="ghost" size="icon" onClick={handleDelete} disabled={pending}>
               <Trash2 />
             </Button>

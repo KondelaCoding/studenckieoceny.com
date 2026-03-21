@@ -5,10 +5,11 @@ import { Separator } from './ui/separator';
 import { Skeleton } from './ui/skeleton';
 import { Button } from './ui/button';
 import axios from 'axios';
-import { Comment, User } from '@/types/types';
+import { Comment } from '@/types/types';
 import UserComment from './UserComment';
+import { Session } from 'next-auth';
 
-const ProfileComments = ({ teacherId, role }: { teacherId: string; role?: User['role'] }) => {
+const ProfileComments = ({ teacherId, user }: { teacherId: string; user?: Session['user'] }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [filteredComments, setFilteredComments] = useState<Comment[]>(comments.slice(0, 4));
   const [isLoading, setIsLoading] = useState(true);
@@ -95,7 +96,7 @@ const ProfileComments = ({ teacherId, role }: { teacherId: string; role?: User['
         </div>
       ) : filteredComments.length ? (
         filteredComments.map((comment) => (
-          <UserComment key={comment.id} comment={comment} role={role} />
+          <UserComment key={comment.id} comment={comment} user={user} />
         ))
       ) : (
         <span className="w-full text-center text-muted-foreground">

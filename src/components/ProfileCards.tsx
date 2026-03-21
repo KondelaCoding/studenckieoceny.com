@@ -9,11 +9,10 @@ import AddCommentDrawer from './AddCommentDrawer';
 import { Button } from './ui/button';
 import Link from 'next/link';
 import { auth } from '@/auth';
-import { getRoleName } from '@/lib/utils';
 
 const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
   const session = await auth();
-  const role = getRoleName(session);
+  const user = session?.user;
 
   return (
     <div className="bg-background rounded-xl border grid grid-cols-1 w-full p-5 gap-5 md:grid-cols-2">
@@ -31,7 +30,7 @@ const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps
         <Separator orientation="horizontal" />
         <CardContent className="flex justify-between h-full flex-col items-end gap-5">
           <div className="w-full flex">
-            <ProfileComments teacherId={teacherData.id} role={role} />
+            <ProfileComments teacherId={teacherData.id} user={user} />
           </div>
         </CardContent>
       </Card>

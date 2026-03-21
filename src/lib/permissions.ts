@@ -8,8 +8,8 @@ export type Action =
   | 'teacher:unhide'
   | 'teacher:delete'
   | 'comment:write'
-  | 'comment:delete'
-  | 'comment:delete_own';
+  | 'comment:delete';
+// | 'comment:delete_own'; - Everyone should have access to delete their own comments, this would be everywhere so we can skip it
 
 const rolePermissions: Record<User['role'], Action[]> = {
   admin: [
@@ -21,7 +21,7 @@ const rolePermissions: Record<User['role'], Action[]> = {
     'comment:write',
     'comment:delete',
   ],
-  user: ['teacher:write', 'teacher:report', 'comment:write', 'comment:delete_own'],
+  user: ['teacher:write', 'teacher:report', 'comment:write'],
 };
 
 export function hasPermission(role: User['role'] | undefined | null, action: Action): boolean {
