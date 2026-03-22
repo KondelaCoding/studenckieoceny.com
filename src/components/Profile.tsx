@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { ReturnedTeacherProps } from '@/types/types';
+import { TeacherProps } from '@/types/types';
 import ProfileCards from './ProfileCards';
 import { Separator } from './ui/separator';
 import StarRatingDisplay from './StarRatingDisplay';
@@ -18,8 +18,9 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { prisma } from '@/lib/prisma';
+import { getUniversityName } from '@/lib/utils';
 
-const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
+const Profile = ({ teacherData }: { teacherData: TeacherProps }) => {
   const seperatedSubjects = teacherData.subjects.split(',');
   // const seperatedUniversities = teacherData.universities.split(',');
   const date =
@@ -119,11 +120,10 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
                 <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">Uczelnie</h3>
               </span>
               <ul className="list-disc space-y-3">
-                {/* {seperatedUniversities.map((subject, index) => (
-                  <li key={index} className="ml-6">
-                    {subject}
-                  </li>
-                ))} */}
+                <li className="ml-6">{getUniversityName(teacherData.primaryUniversityId)}</li>
+                {teacherData.secondaryUniversityId && (
+                  <li className="ml-6">{getUniversityName(teacherData.secondaryUniversityId)}</li>
+                )}
               </ul>
             </div>
             <div className="flex gap-3 flex-col">

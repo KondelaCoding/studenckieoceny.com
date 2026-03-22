@@ -14,7 +14,6 @@ export async function GET() {
   }
 }
 
-//TODO: remove teacher university table, just make 2 cols in teacher for primary and secondary university
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -24,21 +23,17 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const { name, subjects, primaryUniversity, secondaryUniversity } = body;
-    const universityIds = Array.from(
-      new Set([primaryUniversity, secondaryUniversity].filter(Boolean).map((id) => String(id))),
-    );
 
     const teacher = await prisma.teacher.create({
       data: {
         name,
         subjects,
-        teacherUniversities: universityIds.length
+        primaryUniversity: {
+          connect: { id: primaryUniversity },
+        },
+        secondaryUniversity: secondaryUniversity
           ? {
-              create: universityIds.map((universityId) => ({
-                university: {
-                  connect: { id: universityId },
-                },
-              })),
+              connect: { id: secondaryUniversity },
             }
           : undefined,
       },
