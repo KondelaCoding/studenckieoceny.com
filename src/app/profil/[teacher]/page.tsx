@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Profile from '@/components/Profile';
-import { ReturnedTeacherProps } from '@/types/types';
+import { TeacherProps } from '@/types/types';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Undo2 } from 'lucide-react';
@@ -46,11 +46,9 @@ const TeacherProfilePage = async ({ params }: { params: Promise<{ teacher: strin
     return <TeacherReportedMessage />;
   }
 
-  //TODO: this will be fixed by deleting the teacher-uni table
-  const teacherData: ReturnedTeacherProps = {
+  const teacherData: TeacherProps = {
     ...teacher,
     timestamp: teacher.timestamp.getTime(),
-    universities: '',
   };
 
   return (

@@ -20,6 +20,26 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+### Prisma
+
+Generate prisma assets
+
+```bash
+npx prisma generate
+```
+
+Validate prisma assets
+
+```bash
+npx prisma validate
+```
+
+Push db to Supabase
+
+```bash
+npx prisma db push
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

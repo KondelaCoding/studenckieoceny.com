@@ -1,4 +1,4 @@
-import { ReturnedTeacherProps } from '@/types/types';
+import { TeacherProps } from '@/types/types';
 import {
   Table,
   TableBody,
@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { UserPlus, TriangleAlert } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { getUniversityName } from '@/lib/utils';
 
 const reasonTooltip = (reason: string) => {
   return (
@@ -30,7 +31,7 @@ const reasonTooltip = (reason: string) => {
   );
 };
 
-const SearchList = ({ teachers }: { teachers: ReturnedTeacherProps[] }) => {
+const SearchList = ({ teachers }: { teachers: TeacherProps[] }) => {
   return (
     <div>
       {teachers.length === 0 ? (
@@ -55,7 +56,7 @@ const SearchList = ({ teachers }: { teachers: ReturnedTeacherProps[] }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {teachers.map((teacher: ReturnedTeacherProps) => (
+            {teachers.map(async (teacher: TeacherProps) => (
               <TableRow key={teacher.id}>
                 <TableCell className="w-full">
                   <Link href={`/profil/${teacher.id}`} className="inline-flex items-center gap-3">
@@ -67,9 +68,7 @@ const SearchList = ({ teachers }: { teachers: ReturnedTeacherProps[] }) => {
                   </Link>
                 </TableCell>
                 <TableCell>{teacher.subjects ? teacher.subjects.split(',')[0] : 'null'}</TableCell>
-                <TableCell>
-                  {teacher.universities ? teacher.universities.split(',')[0] : 'null'}
-                </TableCell>
+                <TableCell>{getUniversityName(teacher.primaryUniversityId)}</TableCell>
                 <TableCell>
                   <StarRatingDisplay
                     numberOfVotes={teacher.numberOfVotes}

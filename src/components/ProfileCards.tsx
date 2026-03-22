@@ -3,14 +3,14 @@ import TraitChart from './TraitChart';
 import { Skeleton } from './ui/skeleton';
 import { ChartLine, MessageCircle, Trophy, PiggyBank } from 'lucide-react';
 import ProfileComments from './ProfileComments';
-import { ReturnedTeacherProps } from '@/types/types';
+import { TeacherProps } from '@/types/types';
 import { Separator } from './ui/separator';
 import AddCommentDrawer from './AddCommentDrawer';
 import { Button } from './ui/button';
 import Link from 'next/link';
 import { auth } from '@/auth';
 
-const ProfileCards = async ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
+const ProfileCards = async ({ teacherData }: { teacherData: TeacherProps }) => {
   const session = await auth();
   const user = session?.user;
 

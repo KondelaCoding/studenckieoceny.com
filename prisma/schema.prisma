@@ -16,15 +16,18 @@ datasource db {
 }
 
 model Teacher {
-  id                  String               @id @default(cuid())
-  name                String
-  totalRatingValue    Int                  @default(0)
-  numberOfVotes       Int                  @default(0)
-  subjects            String
-  timestamp           DateTime             @default(now())
-  reason              String?
-  comments            Comment[]
-  teacherUniversities TeacherUniversity[]
+  id                    String      @id @default(cuid())
+  name                  String
+  totalRatingValue      Int         @default(0)
+  numberOfVotes         Int         @default(0)
+  subjects              String
+  timestamp             DateTime    @default(now())
+  reason                String?
+  primaryUniversityId   String
+  secondaryUniversityId String?
+  primaryUniversity     University  @relation("PrimaryUniversity", fields: [primaryUniversityId], references: [id], onDelete: Cascade)
+  secondaryUniversity   University? @relation("SecondaryUniversity", fields: [secondaryUniversityId], references: [id], onDelete: SetNull)
+  comments              Comment[]
 }
 
 model Comment {
@@ -38,18 +41,10 @@ model Comment {
 }
 
 model University {
-  id                  String               @id @default(cuid())
-  name                String               @unique
-  teacherUniversities TeacherUniversity[]
-}
-
-model TeacherUniversity {
-  teacherId    String
-  universityId String
-  teacher      Teacher    @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
-
-  @@id([teacherId, universityId])
+  id                String    @id @default(cuid())
+  name              String    @unique
+  primaryTeachers   Teacher[] @relation("PrimaryUniversity")
+  secondaryTeachers Teacher[] @relation("SecondaryUniversity")
 }
 
 model User {
