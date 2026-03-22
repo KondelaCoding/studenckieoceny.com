@@ -20,6 +20,7 @@ const SearchBar = ({
 
   const handleSearch = (query: string, subject: string, university: string) => {
     setIsLoading(true);
+    //just leave this here until i rewrite search
     console.log('Search triggered with:', { query, subject, university });
     // Perform additional logic here if needed
     setTimeout(() => setIsLoading(false), 5000); // Simulate loading

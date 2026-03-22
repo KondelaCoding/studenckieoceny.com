@@ -20,7 +20,6 @@ export type ReturnedTeacherProps = {
   subjects: string;
   universities: string;
   timestamp: number;
-  comments?: Comment[];
   reason?: string | null;
 };
 

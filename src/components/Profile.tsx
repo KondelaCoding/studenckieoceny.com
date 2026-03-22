@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { ReturnedTeacherProps } from '@/types';
+import { ReturnedTeacherProps } from '@/types/types';
 import ProfileCards from './ProfileCards';
 import { Separator } from './ui/separator';
 import StarRatingDisplay from './StarRatingDisplay';
@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import axios from 'axios';
+import { prisma } from '@/lib/prisma';
 
 const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
   const seperatedSubjects = teacherData.subjects.split(',');
@@ -31,24 +31,23 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
 
   const handleUnhide = async () => {
     'use server';
+    const teacher = await prisma.teacher.update({
+      where: { id: teacherData.id },
+      data: { reason: null },
+    });
 
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherData.id}/unhide`,
-    );
-
-    if (response.status !== 200) {
+    if (!teacher) {
       throw new Error('Failed to unhide teacher');
     }
-    const data = response.data;
-    console.log('Unhide response:', data.message);
   };
 
   const handleDelete = async () => {
     'use server';
-    const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/teachers/${teacherData.id}`,
-    );
-    if (response.status !== 200) {
+    const teacher = await prisma.teacher.delete({
+      where: { id: teacherData.id },
+    });
+
+    if (!teacher) {
       throw new Error('Failed to delete teacher');
     }
   };
@@ -80,7 +79,7 @@ const Profile = ({ teacherData }: { teacherData: ReturnedTeacherProps }) => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Anuluj</AlertDialogCancel>
-                  <AlertDialogAction className="!bg-destructive" asChild>
+                  <AlertDialogAction className="bg-destructive!" asChild>
                     <Button onClick={handleDelete}>Usuń z bazy</Button>
                   </AlertDialogAction>
                   <AlertDialogAction onClick={handleUnhide}>Przywróć konto</AlertDialogAction>

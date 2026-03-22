@@ -24,11 +24,11 @@ export default function RootLayout({
   return (
     <html lang="pl" className="overflow-x-hidden">
       <body
-        className={`${montserrat.variable} antialiased font-[family-name:var(--font-montserrat)] flex justify-between min-h-svh pt-[60px] flex-col overflow-hidden`}
+        className={`${montserrat.variable} antialiased font-(family-name:--font-montserrat) flex justify-between min-h-svh pt-15 flex-col overflow-hidden`}
       >
-        <div className="flex-grow flex flex-col gap-10 h-full">
+        <div className="grow flex flex-col gap-10 h-full">
           <Navbar />
-          <div className="w-full h-full flex-grow">{children}</div>
+          <div className="w-full h-full grow">{children}</div>
         </div>
         <Footer />
         <DebugRWD />
